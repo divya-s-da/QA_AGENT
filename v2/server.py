@@ -263,10 +263,14 @@ class Jobs:
         if job["manual"]:
             cmd.append("--manual")
         log = open(self._path(rid, "run.log"), "w", encoding="utf-8")
+        # Cross-run memory persists next to the runs dir (on the mounted volume), so "new since last run"
+        # survives a restart. The user can override with V2_MEMORY_DIR.
+        run_env = dict(os.environ, PYTHONUNBUFFERED="1")
+        run_env.setdefault("V2_MEMORY_DIR", os.path.join(os.path.dirname(os.path.abspath(self.dir)), "memory"))
         # start_new_session puts the run (and its browser subprocesses) in its own process group, so Stop can
         # kill the whole tree, not just the python parent.
         p = subprocess.Popen(cmd, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
-                             env=dict(os.environ, PYTHONUNBUFFERED="1"), start_new_session=True)
+                             env=run_env, start_new_session=True)
         job.update(status="running", started=time.time(), pid=p.pid)
         self._save({k: v for k, v in job.items() if k in ("id", "url", "status", "created", "owner", "allow_writes", "safe_writes", "scope_mode", "minutes",
                                                           "testers", "manual", "login", "accounts", "started", "pid")})
@@ -521,7 +525,9 @@ def main():
     if len(token) < 16:
         sys.exit("set V2_API_TOKEN (16 characters or more) before you start the server")
     jobs = Jobs(a.runs, a.parallel)
-    accounts = Accounts(os.getenv("V2_ACCOUNTS_DB") or os.path.join(ROOT, PKG, "state", "accounts.db"))
+    # accounts live NEXT TO the runs dir, so on a mounted volume (e.g. /data/runs -> /data/accounts.db) they
+    # survive a container restart. Override with V2_ACCOUNTS_DB.
+    accounts = Accounts(os.getenv("V2_ACCOUNTS_DB") or os.path.join(os.path.dirname(os.path.abspath(a.runs)), "accounts.db"))
     signup = "open" if os.getenv("V2_OPEN_SIGNUP") == "1" else ("bootstrap" if accounts.count() == 0 else "operator-only")
     print(f"QA Agent v2 server on http://{a.host}:{a.port}/  runs in {a.runs}", flush=True)
     print(f"  accounts: {accounts.count()} user(s); sign-up: {signup}. Operator token logs in as 'operator' (sees all).",

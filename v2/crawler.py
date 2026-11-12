@@ -440,7 +440,7 @@ class Crawler:
 
         def worker():
             with sync_playwright() as pw:
-                browser = pw.chromium.launch(headless=self.headless)
+                browser = pw.chromium.launch(headless=self.headless, args=["--no-sandbox", "--disable-dev-shm-usage"])
                 ctx = browser.new_context(viewport={"width": 1280, "height": 800}, ignore_https_errors=True,
                                           storage_state=storage)
                 ctx.route("**/*", self._guard)
@@ -624,7 +624,7 @@ class Crawler:
         _default_browsers_path()
         self.log(f"Crawling {self.site} (write mode: {write_guard.mode_label()})")
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=self.headless)
+            browser = pw.chromium.launch(headless=self.headless, args=["--no-sandbox", "--disable-dev-shm-usage"])
             ctx = browser.new_context(viewport={"width": 1280, "height": 800}, ignore_https_errors=True)
             ctx.route("**/*", self._guard)
             page = ctx.new_page()

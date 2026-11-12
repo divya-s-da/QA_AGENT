@@ -244,7 +244,7 @@ class DesignChecker:
             axe_src = None
         try:
             with sync_playwright() as pw:
-                browser = pw.chromium.launch(headless=self.headless)
+                browser = pw.chromium.launch(headless=self.headless, args=["--no-sandbox", "--disable-dev-shm-usage"])
                 ctx = browser.new_context(viewport={"width": 1280, "height": 800}, ignore_https_errors=True,
                                           storage_state=self.user_storage)
                 if self.guard:

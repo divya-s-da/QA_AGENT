@@ -246,7 +246,7 @@ def write_pdf(out_dir: str, html_path: str) -> str | None:
     pdf = os.path.join(out_dir, "report.pdf")
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
+            browser = pw.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
             try:
                 page = browser.new_page()
                 page.goto("file://" + os.path.abspath(html_path), wait_until="load", timeout=20000)

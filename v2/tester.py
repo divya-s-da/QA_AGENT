@@ -642,7 +642,7 @@ class Tester(threading.Thread):
         from playwright.sync_api import sync_playwright
         _default_browsers_path()
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=self.headless)
+            browser = pw.chromium.launch(headless=self.headless, args=["--no-sandbox", "--disable-dev-shm-usage"])
             try:
                 while not self.stop.is_set():
                     if time.time() + self.cfg["seconds"] > self.deadline:
