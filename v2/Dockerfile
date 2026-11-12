@@ -11,7 +11,10 @@ ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/app \
 
 WORKDIR /app
 COPY v2/requirements.txt /tmp/v2-requirements.txt
-RUN pip install --no-cache-dir -r /tmp/v2-requirements.txt \
+# libatomic1 is needed by Playwright's bundled Node before it can install Chromium; python:slim lacks it.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libatomic1 \
+    && pip install --no-cache-dir -r /tmp/v2-requirements.txt \
     && playwright install --with-deps chromium \
     && rm -rf /var/lib/apt/lists/*
 
