@@ -1,0 +1,4635 @@
+{
+ "engine": "v2 crawl + basic checks + 5 function testers",
+ "minutes": 23.14,
+ "first_check_s": 1.03,
+ "login": "LOGGED IN on /login",
+ "write_mode": "allow-writes",
+ "checker_rounds": 0,
+ "testers": 5,
+ "plan": {
+  "product_type": "E-commerce online shop",
+  "summary": "ShopLite is a simple e-commerce site where users browse a small product catalog, add items to a cart, manage orders, and (with admin role) view user lists. The demo should walk through logging in, browsing and adding a product, checking the cart, and reviewing orders.",
+  "demo_journeys": [
+   {
+    "name": "Browse and add to cart",
+    "pages": [
+     "/",
+     "/product/1",
+     "/cart"
+    ],
+    "steps": [
+     "Land on the Shop page and see the product grid with sort controls",
+     "Click 'Canvas Tote' to open its product detail page",
+     "Click 'Add to cart' on the product page",
+     "Navigate to /cart and confirm the item appears with its price"
+    ],
+    "needs_login": true
+   },
+   {
+    "name": "Log in and review orders",
+    "pages": [
+     "/login",
+     "/orders"
+    ],
+    "steps": [
+     "Open /login and enter Bob Tester's credentials",
+     "Click 'Log in' to authenticate",
+     "Navigate to /orders and see order #1000 ($45.00, 1 item)",
+     "Optionally click 'Delete' to remove the order and confirm removal"
+    ],
+    "needs_login": false
+   },
+   {
+    "name": "Admin user list",
+    "pages": [
+     "/admin"
+    ],
+    "steps": [
+     "Navigate to /admin while logged in as an admin",
+     "Confirm the table shows Bob Tester (user) and Alice Admin (admin)"
+    ],
+    "needs_login": true
+   }
+  ],
+  "page_risk": {
+   "/": "high",
+   "/product/1": "high",
+   "/product/2": "high",
+   "/product/3": "high",
+   "/product/4": "high",
+   "/cart": "high",
+   "/orders": "high",
+   "/login": "high",
+   "/register": "high",
+   "/admin": "high",
+   "/account": "medium",
+   "/contact": "medium",
+   "/about": "low"
+  },
+  "from_docs": false,
+  "model_ok": true
+ },
+ "judged": 20,
+ "model_usage": {
+  "planner": {
+   "model": "Qwen3.8",
+   "calls": 1,
+   "prompt_tokens": 1788,
+   "completion_tokens": 1456,
+   "seconds": 24.6
+  },
+  "planner_pages": {
+   "model": "DeepSeek-V4-Flash",
+   "calls": 9,
+   "prompt_tokens": 9029,
+   "completion_tokens": 11186,
+   "seconds": 506.2
+  },
+  "uiux": {
+   "model": "Qwen3.8",
+   "calls": 39,
+   "prompt_tokens": 142078,
+   "completion_tokens": 9326,
+   "seconds": 833.5
+  },
+  "journey": {
+   "model": "DeepSeek-V4-Flash",
+   "calls": 44,
+   "prompt_tokens": 168188,
+   "completion_tokens": 8535,
+   "seconds": 737.7
+  },
+  "function": {
+   "model": "DeepSeek-V4-Flash",
+   "calls": 164,
+   "prompt_tokens": 548056,
+   "completion_tokens": 32439,
+   "seconds": 2603.1
+  },
+  "judge": {
+   "model": "Qwen3.8",
+   "calls": 20,
+   "prompt_tokens": 57303,
+   "completion_tokens": 17245,
+   "seconds": 556.2
+  }
+ },
+ "blocked_writes": [],
+ "broken_targets": {
+  "/shop": {
+   "status": 404,
+   "from": "/cart"
+  }
+ },
+ "aborted": false,
+ "finished_at": "2026-11-03T18:36:24",
+ "site_url": "http://127.0.0.1:8793",
+ "screens": [
+  {
+   "screen_id": "/ (anon)",
+   "route": "/",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-001",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-002",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/: 1 JavaScript error(s) on load: uncaught JavaScript error: Cannot read properties of undefined (reading 'currency')",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-003",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/: 1 file(s) failed to load: broken image /static/img/lamp-large.png (404)",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-004",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-005",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/: 1 form field(s) have no label or accessible name (unlabeled input: nl); a screen reader cannot say what to type.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-006",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: heading levels are in order (minor: h1 then h3 - a one-level skip, common and not a WCAG failure).",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-007",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-load",
+     "task": "code-068",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort= loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-069",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-070",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-071",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort= has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-072",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-073",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: heading levels are in order (minor: h1 then h3 - a one-level skip, common and not a WCAG failure).",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-074",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-load",
+     "task": "code-075",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort= loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-076",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-077",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-078",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort= has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-079",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-080",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: heading levels are in order (minor: h1 then h3 - a one-level skip, common and not a WCAG failure).",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-081",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-link",
+     "task": "code-201",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "Link 'Help' on / has an empty href, so it goes nowhere (clicking it opened no page).",
+     "expected": "The link has a target.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/001_anon_home.png",
+     "element_id": "el-b41b036e2e"
+    },
+    {
+     "check_id": "uiux-001",
+     "task": "uiux-001",
+     "team": "uiux",
+     "verdict": "FAIL",
+     "reason": "Layout is clean on desktop and phone with clear CTAs, but the Desk Lamp image 404s, breaking layout consistency.\" | No overlap or cut-off text (desktop): PASS - 1280px view measured 0px sideways scroll, no overlapping text, cards/search/newsletter render cleanly.; No overlap or cut-off / no sideways scroll (phone): PASS - 390px view: 0px sideways scroll, no overlap, 0 tiny text; nav wraps, cards stack single column.; All images load: FAIL - lamp-large.png returns 404 (server + console), Desk Lamp shows broken-image icon; others only placeholders.; Main action easy to find: PASS - Red 'Add to cart' buttons visible on cards in both views; Search and Subscribe also clear.; Consistent card layout: FAIL - Desk Lamp card renders compressed with broken image, visually inconsistent with other cards on both views. | [tester: FAIL; judge: FAIL (0.85); final by judge]",
+     "expected": "Nothing overlaps or is cut off, text is readable, the main action is easy to find, and the phone view works without sideways scrolling.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-001.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-005",
+     "task": "uiux-005",
+     "team": "uiux",
+     "verdict": "UNCERTAIN",
+     "reason": "The reported uncaught JS 'currency' error is confirmed via console errors, with a 404 image side effect; prices still render and no layout breakage. | Console error 'reading currency' is real: PASS - console_errors contains 'uncaught: Cannot read properties of undefined (reading currency)' twice; concern confirmed with evidence.; Prices still render despite the error: PASS - Screenshot shows $45.00 on /product/3; card prices reported $20/$100/$45/$9.50; error does not block prices.; Broken image Desk Lamp (visible consequence): PASS - Server 404 on /static/img/lamp-large.png; screenshot shows broken-image icon with alt 'Desk Lamp'.; No overlap/scroll issues from the error: PASS - look reports 0px sideways scroll, no overlapping text, 0 tiny text on desktop 1280px and phone 390px. | [tester: FAIL; judge: PASS (0.90); final by the tester saw a failure that the judge did not confirm: a human decides]",
+     "expected": "The concern in the note is checked and confirmed or ruled out with evidence.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-005.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-008",
+     "task": "uiux-008",
+     "team": "uiux",
+     "verdict": "FAIL",
+     "reason": "The currency-error concern is confirmed for the shop listing and pagination, but not the cart, though the listing has a visible broken-image/misalignment defect.\" | currency uncaught error fires on shop listing page: PASS - GET / returned 200 and console logged the uncaught 'currency' error.; currency error also fires on paginated variant: PASS - Page 2 loaded with 200 and a second matching uncaught 'currency' console error.; currency error does NOT fire on non-listing pages: PASS - GET /cart returned 200 and the final page console messages were empty.; Visual layout on desktop and phone (listing page): FAIL - lamp-large.png returned 404, leaving a broken image and visibly misaligned shop cards. | [tester: FAIL; judge: FAIL (0.82); final by judge]",
+     "expected": "The concern in the note is checked and confirmed or ruled out with evidence.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-008.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "17 link(s) on / open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/cart (anon)",
+   "route": "/cart",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-008",
+     "team": "code",
+     "verdict": "BLOCKED",
+     "reason": "/cart sends a logged-out user to /login (login required).",
+     "expected": "The page loads.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/002_anon_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-003",
+     "task": "uiux-003",
+     "team": "uiux",
+     "verdict": "BLOCKED",
+     "reason": "The cart page could not be checked because /cart redirects anonymous users to /login; the two on-task checks are BLOCKED, though the login page itself renders cleanly on desktop and phone. | Desktop view of /cart renders without overlap/cut-off: BLOCKED - /cart 303-redirects to /login for anon; cart page never loaded, layout untestable.; Phone view of /cart without sideways scrolling: BLOCKED - Same 303 redirect to /login; phone cart view not shown.; Desktop view of the shown login page looks clean: PASS - look 1280px: 0px sideways scroll, no overlap, no tiny text, red Log in button visible; nav fits one line.; Phone view of the shown login page looks clean: PASS - look 390px: 0px sideways scroll, no overlap/tiny text, full-width uncut fields and button. | [tester: BLOCKED; judge: BLOCKED (0.85); final by judge]",
+     "expected": "Nothing overlaps or is cut off, text is readable, the main action is easy to find, and the phone view works without sideways scrolling.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-003.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-006",
+     "task": "uiux-006",
+     "team": "uiux",
+     "verdict": "PASS",
+     "reason": "Logged-in QA Tester opens /cart with a 200 (no 303 redirect), and the layout is clean at both 1280px and 390px with a visible 'Continue shopping' link, ruling out the uiux-003 concern.\" | Logged-in user can open /cart without redirect (uiux-003 concern): PASS - Server GET /cart returned 200 (not 303); screenshot shows 'Hi, QA Tester' and 'Your cart is empty.' with 'Continue shopping'.; Desktop /cart layout: PASS - 1280px measured: sideways scroll 0px, no overlapping text, no tiny text; footer present, readable.; Phone /cart layout: PASS - 390px measured: 0px sideways scroll, no overlap, no tiny text; screenshot confirms header wraps but no overlap.; Main action visibility when cart is empty: PASS - Screenshot shows 'Continue shopping' link directly under 'Your cart is empty.' on both viewports; easy to find. | [tester: UNCERTAIN; judge: PASS (0.90); final by judge]",
+     "expected": "The concern in the note is checked and confirmed or ruled out with evidence.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-006.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-009",
+     "task": "uiux-009",
+     "team": "uiux",
+     "verdict": "PASS",
+     "reason": "The phone crowding concern is confirmed with measurement evidence (no hard errors but tight layout), desktop is unaffected per screenshot, and the mobile-menu suggestion is valid since no collapse mechanism exists.\" | Phone: Log out button crowds wrapped nav links: PASS - Phone view examined via look tool; measurements confirm no hard errors (0px overlap, no overflow) but visual crowding from 7 links + greeting + button at 390px is a valid UX concern.; Phone: no overflow, illegible text, or broken images: PASS - Look tool measurements: sideways scroll 0px, overlapping text none, tiny text (<11px) 0, broken images none.; Desktop: header not affected: PASS - Screenshot at 1280px shows all nav links, greeting, and Log out button on a single line with no wrapping or overlap.; Suggestion: nav should collapse to a menu under phone: PASS - No hamburger or mobile menu observed; 7 links forced to wrap across 3 lines on phone, confirming the suggested fix is warranted. | [tester: PASS; judge: PASS (0.88); final by judge]",
+     "expected": "The concern in the note is checked and confirmed or ruled out with evidence.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-009.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-011",
+     "task": "uiux-011",
+     "team": "uiux",
+     "verdict": "PASS",
+     "reason": "390px wrap concern ruled out: no overlap/cutoff on phone (measured), desktop regression-free per screenshot. | Wrapped 3-line nav at 390px readable, no overlap/cutoff: PASS - look tool measured phone 390px: 0px sideways scroll, no overlapping text, no tiny text; nav wraps fully visible.; Wrapped 2-line greeting + Log out don't collide with nav: PASS - Measured no overlapping text; greeting/Log out/nav in separate columns, no collision or cutoff.; Continue shopping visible and not obscured on phone: PASS - Taller header pushes content down but cart text and Continue shopping fully visible, 0px scroll.; No regression on desktop: PASS - Final screenshot (1280px) shows single-line nav, greeting + Log out one line, all content visible, no overlap.; Concern checked and confirmed or ruled out with evidence: PASS - Pixel-overlap concern ruled out via measured 390px look output plus desktop screenshot confirmation. | [tester: PASS; judge: PASS (0.82); final by judge]",
+     "expected": "The concern in the note is checked and confirmed or ruled out with evidence.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-011.png",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/admin (anon)",
+   "route": "/admin",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-009",
+     "team": "code",
+     "verdict": "BLOCKED",
+     "reason": "/admin sends a logged-out user to /login (login required).",
+     "expected": "The page loads.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/003_anon_admin.png",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/orders (anon)",
+   "route": "/orders",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-010",
+     "team": "code",
+     "verdict": "BLOCKED",
+     "reason": "/orders sends a logged-out user to /login (login required).",
+     "expected": "The page loads.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/004_anon_orders.png",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/account (anon)",
+   "route": "/account",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-011",
+     "team": "code",
+     "verdict": "BLOCKED",
+     "reason": "/account sends a logged-out user to /login (login required).",
+     "expected": "The page loads.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/005_anon_account.png",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/contact (anon)",
+   "route": "/contact",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-012",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-013",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-014",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-015",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/contact has an empty <title>, so the browser tab shows no page name.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-019",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-023",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-027",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /contact open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/login (anon)",
+   "route": "/login",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-016",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-018",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-021",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-025",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login has the title 'ShopLite - Log in'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-030",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-033",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-036",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "journey-002",
+     "task": "journey-002",
+     "team": "journey",
+     "verdict": "FAIL",
+     "reason": "Login works, but /orders shows 'no orders yet' so expected order #1000 is missing and delete couldn't be tested. | Open /login page: PASS - GET /login 200, login form rendered.; Log in as Bob Tester: PASS - POST /login 303, header shows 'Hi, Bob Tester' and Log out.; See order #1000 ($45.00, 1 item) on /orders: FAIL - Page shows 'You have no orders yet.'; expected order #1000 missing.; Delete order (optional): BLOCKED - No order exists to delete; no Delete button rendered. | [tester: FAIL; judge: FAIL (0.90); final by judge]",
+     "expected": "Every step works, data carries across the pages, and the flow ends where the user expects; reload and back do not break it.",
+     "url": "http://127.0.0.1:8793/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/journey-002.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-004",
+     "task": "uiux-004",
+     "team": "uiux",
+     "verdict": "PASS",
+     "reason": "Login page renders cleanly on both desktop and phone: no sideways scrolling, no overlap or cutoff, readable text, and the red Log in button is clearly the primary action. | Desktop view: no overlap/cutoff, readable text: PASS - 1280px measured: 0px sideways scroll, no overlapping text, no tiny text, all elements render cleanly.; Phone view: no sideways scrolling, nothing cut off: PASS - 390px measured: 0px sideways scroll; screenshot shows nav wraps to 3 lines but stays in-bar, form/button/footer fit width.; Main action (Log in button) easy to find: PASS - Screenshot shows red 'Log in' button directly below fields, high contrast, plus 'Log in' header link.; Text readability: PASS - Measured 0 tiny text (<11px) on both viewports; labels/headings/links at normal readable sizes. | [tester: PASS; judge: PASS (0.85); final by judge]",
+     "expected": "Nothing overlaps or is cut off, text is readable, the main action is easy to find, and the phone view works without sideways scrolling.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-004.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-007",
+     "task": "uiux-007",
+     "team": "uiux",
+     "verdict": "PASS",
+     "reason": "The 3-line phone wrap is confirmed as real, but the 'cramped' concern is ruled out: no overlap, no cutoff, no sideways scroll, no tiny text, content fully accessible, and desktop layout unaffected. | 7 nav links wrap to 3 lines in the phone header: PASS - Action confirms 390px phone view rendered; observation describes 3 specific lines matching the 7 links exactly.; No overlap, cutoff, sideways scroll or tiny text in the phone header: PASS - Measured: 0px sideways scroll, 0 overlaps, 0 tiny-text elements, no broken images \u2014 rules out functional cramping.; Header does not push main content out of reach / is not cramped beyond usability: PASS - Form fields and button fully visible without scrolling; no content hidden behind header per observation and desktop screenshot.; Desktop header unaffected by the wrap: PASS - Final screenshot (1280px) shows all 7 links on one line, Log in/Register right-aligned, no overlaps or scroll. | [tester: PASS; judge: PASS (0.88); final by judge]",
+     "expected": "The concern in the note is checked and confirmed or ruled out with evidence.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-007.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-010",
+     "task": "uiux-010",
+     "team": "uiux",
+     "verdict": "PASS",
+     "reason": "All three checks pass: the 3-line phone nav wrap is confirmed functional with no overlap or tiny text, desktop is unaffected, and the login action is clearly findable on the phone view. | Phone nav 3-line wrap is functional (follow-up concern): PASS - Screenshot at 390px shows 3-line nav wrap (Shop\u00b7Cart\u00b7Orders / Account\u00b7Admin / Contact\u00b7About); look action confirms 0px scroll, no overlap, 0 tiny text elements.; Desktop layout unaffected: PASS - look at 1280px reports 0px sideways scroll, no overlapping text, no tiny text; no console errors or failed requests.; Main action findable on phone: PASS - Screenshot shows Log in button, Email/Password fields, and Register link clearly visible with no clipping or cutoff at 390px. | [tester: PASS; judge: PASS (0.92); final by judge]",
+     "expected": "The concern in the note is checked and confirmed or ruled out with evidence.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-010.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "12 link(s) on /login open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/about (anon)",
+   "route": "/about",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-017",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-020",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-024",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-028",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about has the title 'ShopLite - About'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-031",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-034",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/about: the heading levels skip a level (h1 then h4); the page hierarchy is broken for screen readers.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-037",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /about open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/register (anon)",
+   "route": "/register",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-022",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-026",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-029",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-032",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register has the title 'ShopLite - Register'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-035",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-038",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-039",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /register open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/1 (anon)",
+   "route": "/product/1",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-040",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-041",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-042",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-043",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1 has the title 'ShopLite - Canvas Tote'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-044",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-045",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-046",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "uiux-002",
+     "task": "uiux-002",
+     "team": "uiux",
+     "verdict": "PASS",
+     "reason": "All four checks pass: both desktop and phone views show no overlap/cut-off/sideways scroll, readable text, and a prominent 'Add to cart' button visible without scrolling. | Desktop view: no overlap, cut-off, or broken images: PASS - Tester measured 0px sideways scroll, no overlapping text, no text <11px, no broken images; server returned 200.; Main action easy to find (desktop): PASS - Red 'Add to cart' button directly under price, visible without scrolling per measurements.; Phone view: no overlap, cut-off, sideways scroll: PASS - Screenshot at 390px shows clean vertical stack, 0px sideways scroll measured, all text readable, no overlaps.; Main action easy to find (phone): PASS - Screenshot shows red 'Add to cart' button clearly visible in first viewport below price, nav wraps but doesn't obscure content. | [tester: PASS; judge: PASS (0.88); final by judge]",
+     "expected": "Nothing overlaps or is cut off, text is readable, the main action is easy to find, and the phone view works without sideways scrolling.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/uiux-002.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /product/1 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/3 (anon)",
+   "route": "/product/3",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-047",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/011_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-049",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/011_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-051",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/011_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-054",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3 has the title 'ShopLite - Desk Lamp'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/011_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-057",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/011_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-060",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/011_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-063",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/011_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /product/3 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/2 (anon)",
+   "route": "/product/2",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-048",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/012_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-050",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/012_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-053",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/012_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-056",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2 has the title 'ShopLite - Steel Bottle'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/012_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-059",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/012_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-062",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/012_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-065",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/012_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /product/2 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/4 (anon)",
+   "route": "/product/4",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-052",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-055",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-058",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-061",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4 has the title 'ShopLite - Notebook Set'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-064",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-066",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-067",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /product/4 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/cart (user)",
+   "route": "/cart",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-082",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/016_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-083",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/016_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-084",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/016_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-086",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart has the title 'ShopLite - Cart'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/016_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-089",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/016_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-091",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/016_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-092",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/016_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-link",
+     "task": "code-308",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "Link 'Continue shopping' on /cart goes to /shop, which returns 404 Not Found.",
+     "expected": "The link 'Continue shopping' opens a page.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/016_user_cart.png",
+     "element_id": "el-cc5f8dcad0"
+    },
+    {
+     "check_id": "function-005",
+     "task": "function-005",
+     "team": "function",
+     "verdict": "FAIL",
+     "reason": "Empty-cart message and retention work, but Continue shopping points to /shop (404) instead of the store /.\" | Empty cart message + no checkout actions on /cart: PASS - Screenshot shows 'Your cart is empty.' with only Continue shopping link, no Place order/coupon inputs.; Continue shopping opens the store /: FAIL - Link navigated to /shop which returned 404 'Page not found', not the store at /.; Empty-cart state retained on later return to /cart: PASS - Final /cart (GET 200) again shows 'Your cart is empty.' with Continue shopping link. | [tester: FAIL; judge: FAIL (0.90); final by judge]",
+     "expected": "Clicking Continue shopping opens the store (/), the empty-cart state is retained on a later return to /cart, and the 'Your cart is empty.' message is shown with no checkout actions.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/function-005.png",
+     "element_id": "el-cc5f8dcad0"
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /cart open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/admin (user)",
+   "route": "/admin",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-085",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/017_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-087",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/017_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-088",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/017_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-090",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin has the title 'ShopLite - Admin'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/017_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-093",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/017_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-096",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/017_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-099",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/017_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "function-009",
+     "task": "function-009",
+     "team": "function",
+     "verdict": "BLOCKED",
+     "reason": "The admin users table correctly renders Bob Tester and Alice Admin with all three fields (Name, Email, Role) in the expected order; edge-case rendering checks were blocked due to no user-creation UI. | Bob Tester row with all three fields: PASS - Screenshot shows 'Bob Tester | bob@shoplite.test | user' in the table with correct Name, Email, Role columns.; Alice Admin row with all three fields: PASS - Screenshot shows 'Alice Admin | alice@shoplite.test | admin' with correct role value in the table.; Catalog order first two users: PASS - Bob Tester appears as row 1, Alice Admin as row 2, matching the expected logged-in catalog order.; Empty/special-char/long-name rendering: BLOCKED - No UI or API to add users with empty names, long names, or special characters; cannot inject test data. | [tester: BLOCKED; judge: BLOCKED (0.95); final by judge]",
+     "expected": "The users table lists all registered accounts (Bob Tester/bob@shoplite.test/user and Alice Admin/alice@shoplite.test/admin) each with correct values in the Name, Email, and Role columns, matching the logged-in catalog order.",
+     "url": "http://127.0.0.1:8793/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/function-009.png",
+     "element_id": "el-4a3d93a892"
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /admin open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/ (user)",
+   "route": "/",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-094",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/019_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-load",
+     "task": "code-095",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/018_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-097",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/019_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-098",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/018_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-100",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/019_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-101",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/018_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-102",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/019_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-103",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/018_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-104",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/019_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-105",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/018_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-106",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: heading levels are in order (minor: h1 then h3 - a one-level skip, common and not a WCAG failure).",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/019_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-107",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: heading levels are in order (minor: h1 then h3 - a one-level skip, common and not a WCAG failure).",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/018_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-108",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/019_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-109",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/018_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-load",
+     "task": "code-178",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort= loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/030_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-179",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/030_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-180",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/030_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-181",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort= has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/030_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-182",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/030_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-183",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: heading levels are in order (minor: h1 then h3 - a one-level skip, common and not a WCAG failure).",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/030_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-184",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/030_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "journey-001",
+     "task": "journey-001",
+     "team": "journey",
+     "verdict": "PASS",
+     "reason": "All six journey steps passed: product grid, product detail, add to cart, cart display, reload persistence, and back navigation all worked correctly. Minor issues noted (sort select didn't visually reorder, 404 on lamp image, JS currency error) but none broke the core cart flow.\" | Shop page shows product grid with sort controls: PASS - 6 products displayed with sort select (Featured/Price low-high) visible on / page.; Click Canvas Tote opens product detail: PASS - GET /product/1 returned 200; page shows Canvas Tote $20.00 with Add to cart button.; Add to cart: PASS - POST /api/cart/add returned 200; 'Added to cart' message displayed on page.; Cart shows item with correct price: PASS - GET /cart 200; Canvas Tote $20.00, Total $20.00 matches price \u00d7 qty 1.; Reload keeps cart: PASS - Reload /cart returned 200; item and $20.00 total still present after reload.; Back from cart returns to product page and cart intact: PASS - Back navigated to /product/1 (200); subsequent /cart still shows Canvas Tote $20.00. | [tester: PASS; judge: PASS (0.82); final by judge]",
+     "expected": "Every step works, data carries across the pages, and the flow ends where the user expects; reload and back do not break it.",
+     "url": "http://127.0.0.1:8793/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/journey-001.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "15 link(s) on / open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/account (user)",
+   "route": "/account",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-110",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/020_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-112",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/020_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-114",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/020_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-116",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account has the title 'ShopLite - Account'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/020_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-118",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/020_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-120",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/020_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-122",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/020_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /account open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/orders (user)",
+   "route": "/orders",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-111",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/021_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-113",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/021_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-115",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/021_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-117",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders has the title 'ShopLite - Orders'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/021_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-119",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/021_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-121",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/021_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-123",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/orders: the page scrolls horizontally at 1280px: the content is 1760px wide.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/021_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /orders open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/about (user)",
+   "route": "/about",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-124",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/023_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-125",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/023_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-126",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/023_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-127",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about has the title 'ShopLite - About'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/023_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-128",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/023_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-129",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/023_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /about open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/contact (user)",
+   "route": "/contact",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-130",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/022_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-131",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/022_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-132",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/022_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-133",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/022_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-134",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/022_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-135",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/022_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /contact open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/1 (user)",
+   "route": "/product/1",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-136",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/026_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-139",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/026_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-142",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/026_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-146",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1 has the title 'ShopLite - Canvas Tote'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/026_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-150",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/026_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-154",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/026_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-158",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/026_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /product/1 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/login (user)",
+   "route": "/login",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-137",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/024_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-140",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/024_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-143",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/024_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-147",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login has the title 'ShopLite - Log in'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/024_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-151",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/024_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-155",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/024_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-159",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/024_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "function-006",
+     "task": "function-006",
+     "team": "function",
+     "verdict": "BLOCKED",
+     "reason": "Login with valid credentials works correctly: single POST, navigates to Shop, shows account state; double-submit and reload handled safely; back-button bfcache is browser behavior not an app bug. Upload check blocked (no file). | valid credentials log in and navigate away from /login: PASS - POST /login \u2192 303, GET / \u2192 200; screenshot shows 'Hi, Test User' + 'Log out' on Shop page, no 'Log in' link in nav.; double submit (rapid double-click) creates one session: PASS - Only one POST /login recorded; second click REJECTED because page already navigated (button gone). No duplicate session.; reload after save keeps logged-in state: PASS - After reload GET / \u2192 200; screenshot still shows 'Hi, Test User' + 'Log out' on Shop page, no login form.; back button mid-flow shows stale login form: PASS - Back showed bfcache login form but session remained active; standard browser cache behavior, not an app auth defect.; upload check: BLOCKED - No test file was provided for an upload check; could not be performed. | [tester: UNCERTAIN; judge: BLOCKED (0.92); final by judge]",
+     "expected": "Entering a registered email + matching password and submitting logs the user in, navigates away from /login (to the Shop/account page) and the Log in link is replaced by an account-appropriate state.",
+     "url": "http://127.0.0.1:8793/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/function-006.png",
+     "element_id": "el-cd670feefc"
+    },
+    {
+     "check_id": "function-007",
+     "task": "function-007",
+     "team": "function",
+     "verdict": "PASS",
+     "reason": "All inline email validation cases rejected without server submission, and a valid email proceeded to server password check. | plaintext (no @) rejected inline: PASS - Browser validation \"missing an '@'\"; no server POST issued.; a@ (no domain) rejected inline: PASS - Validation \"'a@' is incomplete\"; no server request.; whitespace-only email treated as empty: PASS - Spaces triggered \"Please fill out this field\", treated as empty.; empty email rejected: PASS - \"Please fill out this field\"; no server request.; valid email passes to password check: PASS - test@example.com no format error; POST /login 200 \"Wrong email or password\". | [tester: PASS; judge: PASS (0.95); final by judge]",
+     "expected": "Invalid email formats (missing @, extra dots, no domain) and an empty email field are rejected inline without submitting to the server; a valid email passes and proceeds to password check.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/function-007.png",
+     "element_id": "el-cd670feefc"
+    },
+    {
+     "check_id": "function-008",
+     "task": "function-008",
+     "team": "function",
+     "verdict": "PASS",
+     "reason": "Special-char, unicode, and 1000-char passwords reached the login handler (server returned 'Wrong email or password'), and empty password was correctly refused by browser validation. | Special-character password transmitted: PASS - Filled special-char+unicode password, POST /login -> 200 returned 'Wrong email or password'; not blocked by required validation, so non-empty value reached handler.; Very long (1000 char) password transmitted: PASS - 1000-char password submitted, POST /login -> 200 'Wrong email or password'; not blocked, full value transmitted not truncated to empty.; Empty password with valid email refused: PASS - Email filled, password empty, submit triggered 'Please fill out this field' on password (visible in screenshot), no POST fired. | [tester: PASS; judge: PASS (0.75); final by judge]",
+     "expected": "Passwords containing special characters (including &, <, >, quotes, unicode) and very long values are accepted and transmitted correctly (not truncated or mangled) to the login handler.",
+     "url": "http://127.0.0.1:8793/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/function-008.png",
+     "element_id": "el-0d12462e44"
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "12 link(s) on /login open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/register (user)",
+   "route": "/register",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-138",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/025_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-141",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/025_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-144",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/025_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-148",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register has the title 'ShopLite - Register'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/025_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-153",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/025_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-157",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/025_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-160",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/025_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "function-010",
+     "task": "function-010",
+     "team": "function",
+     "verdict": "FAIL",
+     "reason": "Registration submits via POST and creates the account with no duplicates on re-POST/double submit, but it does NOT redirect to home nor log the user in as expected. | valid registration submits via POST /register: PASS - Server log shows POST /register -> 200 after clicking Create account.; valid registration creates account: PASS - 'Your account was created'; reusing email shows 'already registered', proving account exists.; valid registration redirects to home page logged in: FAIL - Final URL stays /register with 'Your account was created. Log in'; header shows Log in/Register, not logged in; no redirect to /.; double submit does not create duplicate: PASS - Second click rejected; reload re-POST answered 'already registered'; no duplicate created.; reload after save does not duplicate: PASS - Reload re-POSTed /register but server answered 'That email is already registered.' | [tester: FAIL; judge: FAIL (0.90); final by judge]",
+     "expected": "Entering a valid name, well-formed email, and password of 8+ chars then clicking 'Create account' submits the form via POST to /register, creates the account, and redirects to the home page (logged in).",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/function-010.png",
+     "element_id": "el-21ff3f6da6"
+    },
+    {
+     "check_id": "function-011",
+     "task": "function-011",
+     "team": "function",
+     "verdict": "UNCERTAIN",
+     "reason": "Boundary (7 blocked, 8 passes) and empty required checks pass with clear evidence; the 10k very-long case was not actually tested, only ~100 chars. | 7-char password blocked: PASS - Browser validation message shown at 7 chars, no submit sent to server.; 8-char password passes: PASS - No client block; POST /register 200 reached server-side 'email already registered' check.; empty password required error: PASS - Browser 'Please fill out this field.' on password; submit blocked.; very long password handling: UNCERTAIN - Only ~100 chars were tested (accepted, account created); the 10k boundary was never actually exercised. | [tester: PASS; judge: UNCERTAIN (0.85); final by judge]",
+     "expected": "A password of exactly 8 characters passes validation; 7 characters or fewer shows an inline error and blocks submit; an empty field shows a required-field error.",
+     "url": "http://127.0.0.1:8793/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/evidence/function-011.png",
+     "element_id": "el-d5f34741d1"
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /register open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/3 (user)",
+   "route": "/product/3",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-145",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-149",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-152",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-156",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3 has the title 'ShopLite - Desk Lamp'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-161",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-162",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-163",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /product/3 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/2 (user)",
+   "route": "/product/2",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-164",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/028_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-165",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/028_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-166",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/028_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-167",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2 has the title 'ShopLite - Steel Bottle'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/028_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-168",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/028_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-170",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/028_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-172",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/028_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /product/2 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/4 (user)",
+   "route": "/product/4",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-169",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/029_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-171",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/029_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-173",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/029_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-174",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4 has the title 'ShopLite - Notebook Set'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/029_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-labels",
+     "task": "code-175",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: every visible form field has a name.",
+     "expected": "Every form field has a label.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/029_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-headings",
+     "task": "code-176",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: heading levels are in order.",
+     "expected": "Headings go down one level at a time.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/029_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-overflow",
+     "task": "code-177",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: no horizontal scroll at 1280px.",
+     "expected": "No horizontal scroll on a desktop screen.",
+     "url": "http://127.0.0.1:8793/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/screens/029_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /product/4 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  }
+ ],
+ "not_tested": [
+  {
+   "task": "journey-003",
+   "team": "journey",
+   "page": "/admin",
+   "user_state": "user",
+   "element_id": null,
+   "title": "Journey: Admin user list",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-001",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-49b7c04922",
+   "title": "Add to cart: single product added",
+   "reason": "stuck: task time limit (240s); tried 2 times"
+  },
+  {
+   "task": "function-002",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-79b8b63c41",
+   "title": "Search: filter product results",
+   "reason": "stuck: task time limit (240s); tried 2 times"
+  },
+  {
+   "task": "function-003",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-02b6b25bd9",
+   "title": "Sort dropdown: reorder catalog",
+   "reason": "stuck: task time limit (240s); tried 2 times"
+  },
+  {
+   "task": "function-004",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-56c9d769ea",
+   "title": "Newsletter subscribe: email validation",
+   "reason": "stuck: task time limit (240s); tried 2 times"
+  },
+  {
+   "task": "function-012",
+   "team": "function",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-45899f413c",
+   "title": "email field: valid format, invalid, empty",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-013",
+   "team": "function",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-21ff3f6da6",
+   "title": "name field: empty, very long, special characters",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-014",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-559c2f6916",
+   "title": "Add to cart: product is added and cart reflects it",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-015",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-2110f2411c",
+   "title": "Reviews tab (0 reviews): empty state shown in tab vs. description",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-016",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-ee1ce60353",
+   "title": "Description tab: default content and back-navigation state",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-017",
+   "team": "function",
+   "page": "/orders",
+   "user_state": "user",
+   "element_id": "el-392ce6030c",
+   "title": "Delete a single order successfully",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-018",
+   "team": "function",
+   "page": "/account",
+   "user_state": "user",
+   "element_id": "el-1cb622afaf",
+   "title": "display name: valid change saves and persists",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-019",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-c55e9172b8",
+   "title": "email field: valid / invalid format / empty",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-020",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-c55e9172b8",
+   "title": "message field: required, very long, special chars",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-021",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-c55e9172b8",
+   "title": "submit: double click and reload-after-save",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-022",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": null,
+   "title": "Follow-up of uiux-002: On phone the top nav wraps to three lines, which is functional but a bit tall; a hamburger menu migh",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "function-023",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": null,
+   "title": "Follow-up of uiux-008: Confirmed uiux-005 note: 'currency' uncaught error is scoped to the shop listing page and its pagina",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "uiux-012",
+   "team": "uiux",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": null,
+   "title": "Follow-up of uiux-011: uiux-006/009 concern confirmed as a cosmetic fact but not broken: at 390px the nav wraps to 3 lines ",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-001",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-a7fb15e92e",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-002",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-4460d912b8",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-003",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-e6770dfdfe",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-004",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-abe44811b5",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-005",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-5bce0d25de",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-006",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-bf58b9bbf5",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-007",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-a5c674b681",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-008",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-8976a5f820",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-009",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-6cc3c9a786",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-010",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-d9c2654ebc",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-011",
+   "team": "checker",
+   "page": "/contact",
+   "user_state": "anon",
+   "element_id": "el-28bf271197",
+   "title": "Not tested: element on /contact",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-012",
+   "team": "checker",
+   "page": "/contact",
+   "user_state": "anon",
+   "element_id": "el-fe24505237",
+   "title": "Not tested: element on /contact",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-013",
+   "team": "checker",
+   "page": "/contact",
+   "user_state": "anon",
+   "element_id": "el-e300e2f8b3",
+   "title": "Not tested: element on /contact",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-014",
+   "team": "checker",
+   "page": "/contact",
+   "user_state": "anon",
+   "element_id": "el-e653c4a700",
+   "title": "Not tested: element on /contact",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-015",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-edec03c8f4",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-016",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-00f19e5892",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-017",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-f76f67f012",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-018",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-7e8e520869",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-019",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-720b6c6924",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-020",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-b11e8139f1",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-021",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-c8f275e611",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-022",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-443c841771",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-023",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-1bd39f3d8c",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-024",
+   "team": "checker",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-20332b6774",
+   "title": "Not tested: element on /product/1",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-025",
+   "team": "checker",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-c3c52080c0",
+   "title": "Not tested: element on /product/1",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-026",
+   "team": "checker",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-1072d839db",
+   "title": "Not tested: element on /product/1",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-027",
+   "team": "checker",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-2a36a1e0ab",
+   "title": "Not tested: element on /product/1",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-028",
+   "team": "checker",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-2a6e249d5c",
+   "title": "Not tested: element on /product/1",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-029",
+   "team": "checker",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-18eafbdd8e",
+   "title": "Not tested: element on /product/1",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-030",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-cdd477390d",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-031",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-c3b2655d7d",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-032",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-9a5c4d03d2",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-033",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-c942362b12",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-034",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-976312a985",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-035",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-596de30151",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-036",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-e444efd708",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-037",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-d7146c8bb2",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-038",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-f85bac53eb",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-039",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-f028a37cef",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-040",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-b6fb5ad62f",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-041",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-96da828fa3",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-042",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-6c37d0c789",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-043",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-71847404de",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-044",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-3f2092e3f6",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-045",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-f2fe82fe99",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-046",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-f5f3293802",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-047",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-98add61a9a",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-048",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-b53c8b297e",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-049",
+   "team": "checker",
+   "page": "/admin",
+   "user_state": "user",
+   "element_id": "el-83b942c4e3",
+   "title": "Not tested: element on /admin",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-050",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-43e1d28e1a",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-051",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-90c38580f4",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-052",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-5f7c7f8aa8",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-053",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-81bd0280c7",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-054",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-edcdc08f60",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-055",
+   "team": "checker",
+   "page": "/account",
+   "user_state": "user",
+   "element_id": "el-85c51b7dba",
+   "title": "Not tested: element on /account",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-056",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "user",
+   "element_id": "el-31c12045cd",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-057",
+   "team": "checker",
+   "page": "/about",
+   "user_state": "user",
+   "element_id": "el-0a30b9a737",
+   "title": "Not tested: element on /about",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-058",
+   "team": "checker",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-fb8b65460c",
+   "title": "Not tested: element on /contact",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-059",
+   "team": "checker",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-1472c8ceae",
+   "title": "Not tested: element on /product/1",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-060",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-c92958c61b",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-061",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-6236c867a3",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-062",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-dd8e1f4903",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-063",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-689c23e4e7",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-064",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-62bed51064",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-065",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-6e144a8aa8",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-066",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-5de21bad0b",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-067",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-056d98f7c2",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-068",
+   "team": "checker",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-dcfe0ec1bc",
+   "title": "Not tested: element on /product/3",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-069",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-182fa5846c",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-070",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-7afe9aba75",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-071",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-9a1744e1f1",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-072",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-44d6ed56bb",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-073",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-cbf5bd422a",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-074",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-98cf8f88fb",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-075",
+   "team": "checker",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-318b6e8053",
+   "title": "Not tested: element on /product/2",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-076",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-43e6326aeb",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-077",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-f5716dab3c",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-078",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-87ca8b6273",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-079",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-0429bb5337",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-080",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-b9b26857f9",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-081",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-15ec96c3ff",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-082",
+   "team": "checker",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-2775d04859",
+   "title": "Not tested: element on /product/4",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-083",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-8316e61d16",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-084",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-c27b090ad4",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-085",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-a0cd9b837e",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-086",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-2545a7beb3",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-087",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-e38219784e",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-088",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-4e8e09faea",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-089",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-8cba9e1821",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-090",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-ba33af0a28",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-091",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-9fbc6ae62e",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-092",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-cc482bf062",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-093",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-33b8960f33",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-094",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-83a7ed5aa2",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-095",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-3735c14c6d",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-096",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-8c1f30dabb",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-097",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-6b7c626668",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-098",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-63684b8ba3",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-099",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-7cfb124d41",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-100",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-33b609dcc7",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-101",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-b8cbd4ff2e",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-102",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-626b45b263",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-103",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-53d5f9c29a",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-104",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-8f413ffead",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-105",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-9d0f45a998",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-106",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-9c5da423e6",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-107",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-9c8bfc6512",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-108",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-054f219fa0",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-109",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-9ddc9b7919",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-110",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-33c934a5c3",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-111",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-6d1a85571c",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-112",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-33eb27a7f7",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-113",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-9fe481c4c4",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-114",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-f468226b9c",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-115",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-d1338c3d01",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-116",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-546fbe38b0",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-117",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-ca01c3aeb4",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-118",
+   "team": "checker",
+   "page": "/shop",
+   "user_state": "user",
+   "element_id": "el-729c173d02",
+   "title": "Not tested: element on /shop",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-119",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-d09e7ef6a8",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-120",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-a63e27a7a6",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-121",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-873f392b43",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-122",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-3a48bef258",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-123",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-f042c59e55",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-124",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-e414328542",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-125",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-7b96a7ca90",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-126",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-34e372c62b",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-127",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-ea29f811ab",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-128",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-da83e484c0",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-129",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-585fa53649",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-130",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-a0fe3a69e3",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-131",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-c7bfb2f0e5",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-132",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-9a930dc397",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-133",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-210efe3fda",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-134",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-47827b1cdf",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-135",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-92533d2650",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-136",
+   "team": "checker",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-d7d7081a1e",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-137",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-04712b15c5",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-138",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-6c584a3528",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-139",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-f07d3e63f4",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-140",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-de040a4514",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-141",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-84a6309ab9",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-142",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-fab3dce088",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-143",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-b379b6ef04",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-144",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-61a4eb0d3c",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-145",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-0d3c41df7b",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-146",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-a9afcbfa15",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-147",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-5fcb473618",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-148",
+   "team": "checker",
+   "page": "/cart",
+   "user_state": "anon",
+   "element_id": "el-b177c21240",
+   "title": "Not tested: element on /cart",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-149",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-469910361e",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-150",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-f553542c21",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-151",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-f620f2a17a",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-152",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-66ec130f57",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-153",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-f21b4eb684",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-154",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-45bbecdde0",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-155",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-3639051333",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-156",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-6392f1dcf4",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-157",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-761548fc11",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-158",
+   "team": "checker",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-35e52f1694",
+   "title": "Not tested: element on /login",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-159",
+   "team": "checker",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-88f98eab1f",
+   "title": "Not tested: element on /",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-160",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-889a9f7740",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-161",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-dd0ea2aab2",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-162",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-bc456743f1",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-163",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-824736afd9",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-164",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-7776831b8f",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-165",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-53ce2f1b2b",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-166",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-61cc9d46b5",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-167",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-5eb66be256",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-168",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-5e6bac827d",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-169",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-d6f0150ae9",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-170",
+   "team": "checker",
+   "page": "/orders",
+   "user_state": "anon",
+   "element_id": "el-0bd4588e14",
+   "title": "Not tested: element on /orders",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-171",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-f0c73e8ab5",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-172",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-f582353fd2",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-173",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-ddee4dd444",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-174",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-7200aace57",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-175",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-6a82a06354",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-176",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-b21714d586",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-177",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-285cfbbab5",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-178",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-718ba96608",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-179",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-994c1bcdaf",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  },
+  {
+   "task": "checker-180",
+   "team": "checker",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-8b5b3eeb27",
+   "title": "Not tested: element on /register",
+   "reason": "no tester could finish it"
+  }
+ ],
+ "counts": {
+  "open": 0,
+  "claimed": 0,
+  "done": 0,
+  "judged": 461,
+  "not_tested": 198,
+  "verdicts": {
+   "BLOCKED": 7,
+   "FAIL": 34,
+   "PASS": 418,
+   "UNCERTAIN": 2
+  }
+ },
+ "report": {
+  "verdict": {
+   "key": "not_safe",
+   "line": "NOT SAFE TO DEMO",
+   "why": "8 critical failure(s) on the demo path or on high-risk features."
+  },
+  "summary": "The e-commerce online shop is not safe to demo, with 8 critical failures, 5 other failures, 2 items needing human review, 7 blocked, and 198 untested across 13 pages, although 418 checks passed. The critical issues include a broken login journey, a failing registration flow, a currency error on the shop listing page, broken links on the homepage and cart, and inconsistent mobile versus desktop rendering. We should hold the demo until at least the critical-path items are resolved.",
+  "critical": [
+   "code-003",
+   "code-201",
+   "code-308",
+   "journey-002",
+   "uiux-001",
+   "function-005",
+   "function-010",
+   "uiux-008"
+  ],
+  "other_failures": [
+   "code-002",
+   "code-005",
+   "code-015",
+   "code-034",
+   "code-123"
+  ],
+  "needs_human": [
+   "function-011",
+   "uiux-005"
+  ],
+  "not_tested": 198,
+  "demo_journeys": [
+   {
+    "name": "Browse and add to cart",
+    "pages": [
+     "/",
+     "/product/1",
+     "/cart"
+    ],
+    "steps": [
+     "Land on the Shop page and see the product grid with sort controls",
+     "Click 'Canvas Tote' to open its product detail page",
+     "Click 'Add to cart' on the product page",
+     "Navigate to /cart and confirm the item appears with its price"
+    ],
+    "needs_login": true
+   },
+   {
+    "name": "Log in and review orders",
+    "pages": [
+     "/login",
+     "/orders"
+    ],
+    "steps": [
+     "Open /login and enter Bob Tester's credentials",
+     "Click 'Log in' to authenticate",
+     "Navigate to /orders and see order #1000 ($45.00, 1 item)",
+     "Optionally click 'Delete' to remove the order and confirm removal"
+    ],
+    "needs_login": false
+   },
+   {
+    "name": "Admin user list",
+    "pages": [
+     "/admin"
+    ],
+    "steps": [
+     "Navigate to /admin while logged in as an admin",
+     "Confirm the table shows Bob Tester (user) and Alice Admin (admin)"
+    ],
+    "needs_login": true
+   }
+  ],
+  "counts": {
+   "PASS": 418,
+   "FAIL": 13,
+   "BLOCKED": 7,
+   "UNCERTAIN": 2
+  },
+  "files": {
+   "html": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/report.html",
+   "txt": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/report.txt",
+   "docx": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/report.docx",
+   "json": "/home/divya/react_qa_agent/benchmark/results/v2-full2_20261103_181314_v2/report.json"
+  },
+  "made_at": "2026-11-03T18:36:49"
+ }
+}

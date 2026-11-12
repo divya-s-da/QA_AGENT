@@ -1,0 +1,2572 @@
+{
+ "engine": "v2-crawl",
+ "minutes": 0.2,
+ "first_check_s": 0.68,
+ "login": "LOGGED IN on /login",
+ "write_mode": "read-only",
+ "checker_rounds": 1,
+ "blocked_writes": [],
+ "broken_targets": {
+  "/shop": {
+   "status": 404,
+   "from": "/cart"
+  }
+ },
+ "aborted": false,
+ "finished_at": "2026-11-03T02:41:30",
+ "site_url": "http://127.0.0.1:8798",
+ "screens": [
+  {
+   "screen_id": "/ (anon)",
+   "route": "/",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-001",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-002",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/: 1 JavaScript error(s) on load: uncaught JavaScript error: Cannot read properties of undefined (reading 'currency')",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-003",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/: 1 file(s) failed to load: broken image /static/img/lamp-large.png (404)",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-004",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/001_anon_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-load",
+     "task": "code-041",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort= loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-042",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-043",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-044",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort= has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/014_anon_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-load",
+     "task": "code-045",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort= loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-046",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-047",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-048",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort= has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/015_anon_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-link",
+     "task": "code-124",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "Link 'Help' on / has an empty href, so it goes nowhere.",
+     "expected": "The link has a target.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/001_anon_home.png",
+     "element_id": "el-b41b036e2e"
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "17 link(s) on / open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/cart (anon)",
+   "route": "/cart",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-005",
+     "team": "code",
+     "verdict": "BLOCKED",
+     "reason": "/cart sends a logged-out user to /login (login required).",
+     "expected": "The page loads.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/002_anon_cart.png",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/orders (anon)",
+   "route": "/orders",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-006",
+     "team": "code",
+     "verdict": "BLOCKED",
+     "reason": "/orders sends a logged-out user to /login (login required).",
+     "expected": "The page loads.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/003_anon_orders.png",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/account (anon)",
+   "route": "/account",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-007",
+     "team": "code",
+     "verdict": "BLOCKED",
+     "reason": "/account sends a logged-out user to /login (login required).",
+     "expected": "The page loads.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/004_anon_account.png",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/admin (anon)",
+   "route": "/admin",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-008",
+     "team": "code",
+     "verdict": "BLOCKED",
+     "reason": "/admin sends a logged-out user to /login (login required).",
+     "expected": "The page loads.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/005_anon_admin.png",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/contact (anon)",
+   "route": "/contact",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-009",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-010",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-011",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-012",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "/contact has an empty <title>, so the browser tab shows no page name.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/006_anon_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /contact open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/about (anon)",
+   "route": "/about",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-013",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-014",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-015",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-016",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about has the title 'ShopLite - About'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/007_anon_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /about open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/login (anon)",
+   "route": "/login",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-017",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-018",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-019",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-020",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login has the title 'ShopLite - Log in'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/008_anon_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "12 link(s) on /login open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/register (anon)",
+   "route": "/register",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-021",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-022",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-023",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-024",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register has the title 'ShopLite - Register'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/009_anon_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /register open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/1 (anon)",
+   "route": "/product/1",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-025",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-026",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-027",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-028",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1 has the title 'ShopLite - Canvas Tote'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/010_anon_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /product/1 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/2 (anon)",
+   "route": "/product/2",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-029",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/011_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-030",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/011_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-031",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/011_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-032",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2 has the title 'ShopLite - Steel Bottle'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/011_anon_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /product/2 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/3 (anon)",
+   "route": "/product/3",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-033",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/012_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-034",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/012_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-035",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/012_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-036",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3 has the title 'ShopLite - Desk Lamp'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/012_anon_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /product/3 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/4 (anon)",
+   "route": "/product/4",
+   "user_state": "anon",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-037",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-038",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-039",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-040",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4 has the title 'ShopLite - Notebook Set'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/013_anon_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /product/4 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/ (user)",
+   "route": "/",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-049",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/016_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-050",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/016_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-051",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/016_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-052",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/ has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/016_user_home.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-load",
+     "task": "code-100",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort= loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/029_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-101",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/029_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-102",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort=: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/029_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-103",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=1&q=&sort= has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/?page=1&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/029_user_page_1_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-load",
+     "task": "code-104",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort= loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/030_user_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-105",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: no JavaScript error on load (site-wide errors reported once).",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/030_user_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-106",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort=: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/030_user_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-107",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/?page=2&q=&sort= has the title 'ShopLite - Shop'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/?page=2&q=&sort=",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/030_user_page_2_q_sort.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "15 link(s) on / open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/cart (user)",
+   "route": "/cart",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-053",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/017_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-054",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/017_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-055",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/017_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-056",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/cart has the title 'ShopLite - Cart'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/017_user_cart.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-link",
+     "task": "code-247",
+     "team": "code",
+     "verdict": "FAIL",
+     "reason": "Link 'Continue shopping' on /cart goes to /shop, which returns 404 Not Found.",
+     "expected": "The link 'Continue shopping' opens a page.",
+     "url": "http://127.0.0.1:8798/cart",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/017_user_cart.png",
+     "element_id": "el-cc5f8dcad0"
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /cart open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/orders (user)",
+   "route": "/orders",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-057",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/018_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-058",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/018_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-059",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/018_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-060",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/orders has the title 'ShopLite - Orders'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/orders",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/018_user_orders.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /orders open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/account (user)",
+   "route": "/account",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-061",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/019_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-062",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/019_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-063",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/019_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-064",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/account has the title 'ShopLite - Account'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/account",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/019_user_account.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /account open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/admin (user)",
+   "route": "/admin",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-065",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/020_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-066",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/020_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-067",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/020_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-068",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/admin has the title 'ShopLite - Admin'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/admin",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/020_user_admin.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /admin open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/contact (user)",
+   "route": "/contact",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-069",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/021_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-070",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/021_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-071",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/contact: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/contact",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/021_user_contact.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /contact open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/about (user)",
+   "route": "/about",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-072",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/022_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-073",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/022_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-074",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/022_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-075",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/about has the title 'ShopLite - About'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/about",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/022_user_about.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /about open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/login (user)",
+   "route": "/login",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-076",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/023_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-077",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/023_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-078",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/023_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-079",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/login has the title 'ShopLite - Log in'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/login",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/023_user_login.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "12 link(s) on /login open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/register (user)",
+   "route": "/register",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-080",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/024_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-081",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/024_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-082",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/024_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-083",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/register has the title 'ShopLite - Register'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/register",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/024_user_register.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "11 link(s) on /register open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/1 (user)",
+   "route": "/product/1",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-084",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/025_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-085",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/025_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-086",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/025_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-087",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/1 has the title 'ShopLite - Canvas Tote'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/product/1",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/025_user_product_1.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /product/1 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/2 (user)",
+   "route": "/product/2",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-088",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/026_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-089",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/026_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-090",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/026_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-091",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/2 has the title 'ShopLite - Steel Bottle'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/product/2",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/026_user_product_2.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /product/2 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/3 (user)",
+   "route": "/product/3",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-092",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-093",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-094",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-095",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/3 has the title 'ShopLite - Desk Lamp'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/product/3",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/027_user_product_3.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /product/3 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  },
+  {
+   "screen_id": "/product/4 (user)",
+   "route": "/product/4",
+   "user_state": "user",
+   "verdicts": [
+    {
+     "check_id": "basic-load",
+     "task": "code-096",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4 loads (HTTP 200).",
+     "expected": "The page loads with no error page.",
+     "url": "http://127.0.0.1:8798/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/028_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-errors",
+     "task": "code-097",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: no JavaScript error on load.",
+     "expected": "No uncaught JavaScript error or console error.",
+     "url": "http://127.0.0.1:8798/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/028_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-resources",
+     "task": "code-098",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4: all images, scripts and styles load.",
+     "expected": "Every image, script, style and font loads.",
+     "url": "http://127.0.0.1:8798/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/028_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-title",
+     "task": "code-099",
+     "team": "code",
+     "verdict": "PASS",
+     "reason": "/product/4 has the title 'ShopLite - Notebook Set'.",
+     "expected": "The page has a title.",
+     "url": "http://127.0.0.1:8798/product/4",
+     "screenshot": "/home/divya/react_qa_agent/benchmark/results/v2-step2_20261103_024116_v2/screens/028_user_product_4.png",
+     "element_id": null
+    },
+    {
+     "check_id": "basic-links",
+     "verdict": "PASS",
+     "reason": "9 link(s) on /product/4 open a page.",
+     "expected": "Every link opens a page.",
+     "url": "",
+     "element_id": null
+    }
+   ]
+  }
+ ],
+ "not_tested": [
+  {
+   "task": "function-001",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-a7fb15e92e",
+   "title": "Test form '/' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-002",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-4460d912b8",
+   "title": "Test button 'Search' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-003",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-e6770dfdfe",
+   "title": "Test button 'Add to cart' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-004",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-abe44811b5",
+   "title": "Test button 'Add to cart' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-005",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-5bce0d25de",
+   "title": "Test button 'Add to cart' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-006",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-bf58b9bbf5",
+   "title": "Test button 'Add to cart' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-007",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-a5c674b681",
+   "title": "Test button 'Subscribe' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-008",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-8976a5f820",
+   "title": "Test input 'Search products' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-009",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-6cc3c9a786",
+   "title": "Test input 'nl' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-010",
+   "team": "function",
+   "page": "/",
+   "user_state": "anon",
+   "element_id": "el-d9c2654ebc",
+   "title": "Test select 'Featured Price: low to high' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-011",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "anon",
+   "element_id": "el-28bf271197",
+   "title": "Test form '/contact' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-012",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "anon",
+   "element_id": "el-fe24505237",
+   "title": "Test button 'Send' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-013",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "anon",
+   "element_id": "el-e300e2f8b3",
+   "title": "Test input 'Your email' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-014",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "anon",
+   "element_id": "el-e653c4a700",
+   "title": "Test textarea 'Message' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-015",
+   "team": "function",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-edec03c8f4",
+   "title": "Test form '/login' on /login",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-016",
+   "team": "function",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-00f19e5892",
+   "title": "Test button 'Log in' on /login",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-017",
+   "team": "function",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-f76f67f012",
+   "title": "Test input 'Email' on /login",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-018",
+   "team": "function",
+   "page": "/login",
+   "user_state": "anon",
+   "element_id": "el-7e8e520869",
+   "title": "Test input 'Password' on /login",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-019",
+   "team": "function",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-720b6c6924",
+   "title": "Test form '/register' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-020",
+   "team": "function",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-b11e8139f1",
+   "title": "Test button 'Create account' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-021",
+   "team": "function",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-c8f275e611",
+   "title": "Test input 'Name' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-022",
+   "team": "function",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-443c841771",
+   "title": "Test input 'Email' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-023",
+   "team": "function",
+   "page": "/register",
+   "user_state": "anon",
+   "element_id": "el-1bd39f3d8c",
+   "title": "Test input 'Password (8+ characters)' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-024",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-20332b6774",
+   "title": "Test form 'None' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-025",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-c3c52080c0",
+   "title": "Test button 'Add to cart' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-026",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-1072d839db",
+   "title": "Test button 'Description' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-027",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-2a36a1e0ab",
+   "title": "Test button 'Reviews (0)' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-028",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-2a6e249d5c",
+   "title": "Test tab 'Description' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-029",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "anon",
+   "element_id": "el-18eafbdd8e",
+   "title": "Test tab 'Reviews (0)' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-030",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-e444efd708",
+   "title": "Test form 'None' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-031",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-d7146c8bb2",
+   "title": "Test button 'Add to cart' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-032",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-f85bac53eb",
+   "title": "Test button 'Description' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-033",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-f028a37cef",
+   "title": "Test button 'Reviews (0)' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-034",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-b6fb5ad62f",
+   "title": "Test tab 'Description' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-035",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "anon",
+   "element_id": "el-96da828fa3",
+   "title": "Test tab 'Reviews (0)' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-036",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-cdd477390d",
+   "title": "Test form 'None' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-037",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-c3b2655d7d",
+   "title": "Test button 'Add to cart' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-038",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-9a5c4d03d2",
+   "title": "Test button 'Description' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-039",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-c942362b12",
+   "title": "Test button 'Reviews (0)' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-040",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-976312a985",
+   "title": "Test tab 'Description' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-041",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "anon",
+   "element_id": "el-596de30151",
+   "title": "Test tab 'Reviews (0)' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-042",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-6c37d0c789",
+   "title": "Test form 'None' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-043",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-71847404de",
+   "title": "Test button 'Add to cart' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-044",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-3f2092e3f6",
+   "title": "Test button 'Description' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-045",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-f2fe82fe99",
+   "title": "Test button 'Reviews (0)' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-046",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-f5f3293802",
+   "title": "Test tab 'Description' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-047",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "anon",
+   "element_id": "el-98add61a9a",
+   "title": "Test tab 'Reviews (0)' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-048",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-43e1d28e1a",
+   "title": "Test form '/' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-049",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-90c38580f4",
+   "title": "Test button 'Log out' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-050",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-ac53716adb",
+   "title": "Test button 'Search' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-051",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-49b7c04922",
+   "title": "Test button 'Add to cart' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-052",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-5f7c7f8aa8",
+   "title": "Test button 'Add to cart' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-053",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-81bd0280c7",
+   "title": "Test button 'Add to cart' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-054",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-edcdc08f60",
+   "title": "Test button 'Add to cart' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-055",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-439b18f684",
+   "title": "Test button 'Subscribe' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-056",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-79b8b63c41",
+   "title": "Test input 'Search products' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-057",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-56c9d769ea",
+   "title": "Test input 'nl' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-058",
+   "team": "function",
+   "page": "/",
+   "user_state": "user",
+   "element_id": "el-02b6b25bd9",
+   "title": "Test select 'Featured Price: low to high' on /",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-059",
+   "team": "function",
+   "page": "/cart",
+   "user_state": "user",
+   "element_id": "el-b53c8b297e",
+   "title": "Test button 'Log out' on /cart",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-060",
+   "team": "function",
+   "page": "/orders",
+   "user_state": "user",
+   "element_id": "el-31c12045cd",
+   "title": "Test button 'Log out' on /orders",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-061",
+   "team": "function",
+   "page": "/orders",
+   "user_state": "user",
+   "element_id": "el-392ce6030c",
+   "title": "Test button 'Delete' on /orders",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-062",
+   "team": "function",
+   "page": "/account",
+   "user_state": "user",
+   "element_id": "el-1cb622afaf",
+   "title": "Test form 'None' on /account",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-063",
+   "team": "function",
+   "page": "/account",
+   "user_state": "user",
+   "element_id": "el-85c51b7dba",
+   "title": "Test button 'Log out' on /account",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-064",
+   "team": "function",
+   "page": "/account",
+   "user_state": "user",
+   "element_id": "el-35005ae3df",
+   "title": "Test button 'Save' on /account",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-065",
+   "team": "function",
+   "page": "/account",
+   "user_state": "user",
+   "element_id": "el-9682af2f2d",
+   "title": "Test input 'Bob Tester' on /account",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-066",
+   "team": "function",
+   "page": "/admin",
+   "user_state": "user",
+   "element_id": "el-83b942c4e3",
+   "title": "Test button 'Log out' on /admin",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-067",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-c55e9172b8",
+   "title": "Test form '/contact' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-068",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-fb8b65460c",
+   "title": "Test button 'Log out' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-069",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-75551b0d4d",
+   "title": "Test button 'Send' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-070",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-147af09cd9",
+   "title": "Test input 'Your email' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-071",
+   "team": "function",
+   "page": "/contact",
+   "user_state": "user",
+   "element_id": "el-d99b05accf",
+   "title": "Test textarea 'Message' on /contact",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-072",
+   "team": "function",
+   "page": "/about",
+   "user_state": "user",
+   "element_id": "el-0a30b9a737",
+   "title": "Test button 'Log out' on /about",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-073",
+   "team": "function",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-c92958c61b",
+   "title": "Test form '/login' on /login",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-074",
+   "team": "function",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-2243bff1d2",
+   "title": "Test button 'Log in' on /login",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-075",
+   "team": "function",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-cd670feefc",
+   "title": "Test input 'Email' on /login",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-076",
+   "team": "function",
+   "page": "/login",
+   "user_state": "user",
+   "element_id": "el-0d12462e44",
+   "title": "Test input 'Password' on /login",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-077",
+   "team": "function",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-6236c867a3",
+   "title": "Test form '/register' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-078",
+   "team": "function",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-bc1bf40b00",
+   "title": "Test button 'Create account' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-079",
+   "team": "function",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-21ff3f6da6",
+   "title": "Test input 'Name' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-080",
+   "team": "function",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-45899f413c",
+   "title": "Test input 'Email' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-081",
+   "team": "function",
+   "page": "/register",
+   "user_state": "user",
+   "element_id": "el-d5f34741d1",
+   "title": "Test input 'Password (8+ characters)' on /register",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-082",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-8b2c8eb241",
+   "title": "Test form 'None' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-083",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-1472c8ceae",
+   "title": "Test button 'Log out' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-084",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-559c2f6916",
+   "title": "Test button 'Add to cart' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-085",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-ee1ce60353",
+   "title": "Test button 'Description' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-086",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-2110f2411c",
+   "title": "Test button 'Reviews (0)' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-087",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-45d3ff0c50",
+   "title": "Test tab 'Description' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-088",
+   "team": "function",
+   "page": "/product/1",
+   "user_state": "user",
+   "element_id": "el-92bf00460d",
+   "title": "Test tab 'Reviews (0)' on /product/1",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-089",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-182fa5846c",
+   "title": "Test form 'None' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-090",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-7afe9aba75",
+   "title": "Test button 'Log out' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-091",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-9a1744e1f1",
+   "title": "Test button 'Add to cart' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-092",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-44d6ed56bb",
+   "title": "Test button 'Description' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-093",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-cbf5bd422a",
+   "title": "Test button 'Reviews (0)' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-094",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-98cf8f88fb",
+   "title": "Test tab 'Description' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-095",
+   "team": "function",
+   "page": "/product/2",
+   "user_state": "user",
+   "element_id": "el-318b6e8053",
+   "title": "Test tab 'Reviews (0)' on /product/2",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-096",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-dd8e1f4903",
+   "title": "Test form 'None' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-097",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-689c23e4e7",
+   "title": "Test button 'Log out' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-098",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-62bed51064",
+   "title": "Test button 'Add to cart' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-099",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-6e144a8aa8",
+   "title": "Test button 'Description' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-100",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-5de21bad0b",
+   "title": "Test button 'Reviews (0)' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-101",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-056d98f7c2",
+   "title": "Test tab 'Description' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-102",
+   "team": "function",
+   "page": "/product/3",
+   "user_state": "user",
+   "element_id": "el-dcfe0ec1bc",
+   "title": "Test tab 'Reviews (0)' on /product/3",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-103",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-43e6326aeb",
+   "title": "Test form 'None' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-104",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-f5716dab3c",
+   "title": "Test button 'Log out' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-105",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-87ca8b6273",
+   "title": "Test button 'Add to cart' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-106",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-0429bb5337",
+   "title": "Test button 'Description' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-107",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-b9b26857f9",
+   "title": "Test button 'Reviews (0)' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-108",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-15ec96c3ff",
+   "title": "Test tab 'Description' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  },
+  {
+   "task": "function-109",
+   "team": "function",
+   "page": "/product/4",
+   "user_state": "user",
+   "element_id": "el-2775d04859",
+   "title": "Test tab 'Reviews (0)' on /product/4",
+   "reason": "no tester team yet (QA Agent v2 build step 3)"
+  }
+ ],
+ "counts": {
+  "open": 0,
+  "claimed": 0,
+  "done": 0,
+  "judged": 364,
+  "not_tested": 109,
+  "verdicts": {
+   "BLOCKED": 4,
+   "FAIL": 26,
+   "PASS": 334
+  }
+ }
+}

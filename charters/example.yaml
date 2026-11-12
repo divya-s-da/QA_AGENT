@@ -1,0 +1,21 @@
+# Test charter: copy per client project and pass with --charter.
+# The pipeline refuses to run without one.
+product:
+  name: Example App
+  type: web-app
+  environments: [staging]
+
+# Writes (create/edit/delete/submit/send) are BLOCKED in the browser unless
+# this is exactly `true`. Keep it false for production and for real client data.
+destructive_actions_allowed: false
+
+# URL patterns that may still write in a read-only run - for example an app
+# that reads data through POST, or a token refresh. Keep this list short.
+write_allowlist: []
+#  - "*/api/search"
+#  - "*/api/auth/refresh"
+
+critical_user_journeys: []
+out_of_scope: []
+known_issues: []
+by_design: []

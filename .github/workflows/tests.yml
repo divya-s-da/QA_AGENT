@@ -1,0 +1,30 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # The package imports itself as `react_qa_agent`, so the checkout
+      # directory must have that name.
+      - uses: actions/checkout@v4
+        with:
+          path: react_qa_agent
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: react_qa_agent/requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install -r react_qa_agent/requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Unit tests (verdict rules, write guard, benchmark app and scorer)
+        working-directory: react_qa_agent
+        run: python -W ignore -m unittest discover -s tests -v
+      - name: Pipeline imports
+        run: python -c "import react_qa_agent.run_pipeline"

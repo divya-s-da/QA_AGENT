@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QA Navigator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f6f4; --panel:#ffffff; --ink:#0f1f17; --muted:#5d6f66; --faint:#8a9a91;
+  --line:#e4eae6; --line-2:#eef2f0;
+  --brand:#0f3d2c; --brand-2:#123d2e; --accent:#167a48; --accent-h:#12623a;
+  --sidebar:#0b2017; --sidebar-2:#0e2a1e; --sidebar-ink:#cfe0d7; --sidebar-ink-2:#8fae9f;
+  --pass:#16a34a; --fail:#d4493f; --warn:#c7791a; --blocked:#64748b; --run:#2a7de1; --queued:#7c8a82;
+  --radius:12px; --radius-s:9px;
+  --shadow:0 1px 2px rgba(16,31,23,.05), 0 6px 20px rgba(16,31,23,.05);
+  --font:'Inter', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --mono:ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:14px}
+::selection{background:#bfe6cf}
+
+/* layout */
+.app{display:grid;grid-template-columns:244px 1fr;min-height:100vh}
+.side{background:linear-gradient(180deg,var(--sidebar-2),var(--sidebar));color:var(--sidebar-ink);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:20px 20px 18px;font-weight:700;color:#fff;font-size:16px;letter-spacing:-.01em}
+.brand .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#1f8f57,#0f3d2c);display:grid;place-items:center;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.nav{padding:6px 12px;display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:var(--sidebar-ink);font-weight:500}
+.nav a svg{width:17px;height:17px;opacity:.85}
+.nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav a.on{background:rgba(31,143,87,.22);color:#fff}
+.nav a.on svg{opacity:1}
+.nav .sep{height:1px;background:rgba(255,255,255,.08);margin:10px 12px}
+.side .foot{margin-top:auto;padding:16px 20px;font-size:12px;color:var(--sidebar-ink-2);border-top:1px solid rgba(255,255,255,.07)}
+.side .foot b{color:var(--sidebar-ink)}
+
+.main{display:flex;flex-direction:column;min-width:0}
+.top{display:flex;align-items:center;gap:14px;padding:14px 28px;background:rgba(243,246,244,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.crumb{font-size:13px;color:var(--muted);font-weight:500}
+.crumb b{color:var(--ink);font-weight:600}
+.top .spacer{flex:1}
+.pill-env{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--brand);background:#e6f2ea;border:1px solid #cfe6d8;padding:4px 10px;border-radius:999px}
+.pill-env .dot{width:7px;height:7px;border-radius:50%;background:var(--pass)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:600;font-size:12px}
+.content{padding:28px;max-width:1240px;width:100%;margin:0 auto}
+
+/* generic */
+.page-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+.page-head h1{margin:0;font-size:22px;letter-spacing:-.02em;font-weight:700}
+.page-head p{margin:4px 0 0;color:var(--muted)}
+.page-head .spacer{flex:1}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.panel.pad{padding:20px}
+.grid{display:grid;gap:16px}
+.muted{color:var(--muted)}
+.faint{color:var(--faint)}
+h2.sec{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px;font-weight:600}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:9px 14px;border-radius:9px;font-weight:600;font-size:13px;transition:.12s}
+.btn:hover{border-color:#cdd8d2;background:#fbfdfc}
+.btn svg{width:15px;height:15px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.pri:hover{background:var(--accent-h);border-color:var(--accent-h)}
+.btn.danger{color:var(--fail);border-color:#eccfcc}
+.btn.danger:hover{background:#fcf2f1;border-color:#e3b7b2}
+.btn.sm{padding:6px 10px;font-size:12px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid transparent;white-space:nowrap}
+.badge .dot{width:7px;height:7px;border-radius:50%}
+.badge.running{color:var(--run);background:#eaf2fc;border-color:#cfe1f7}
+.badge.running .dot{background:var(--run);animation:pulse 1.3s infinite}
+.badge.done{color:var(--pass);background:#e8f6ec;border-color:#cdebd6}
+.badge.done .dot{background:var(--pass)}
+.badge.failed{color:var(--fail);background:#fbeceb;border-color:#f1cfcc}
+.badge.failed .dot{background:var(--fail)}
+.badge.queued{color:var(--queued);background:#f0f3f1;border-color:#e0e6e2}
+.badge.queued .dot{background:var(--queued)}
+.badge.stopped{color:#6b5a1e;background:#f7f0db;border-color:#ebdfbc}
+.badge.stopped .dot{background:#b79324}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(42,125,225,.5)}70%{box-shadow:0 0 0 5px rgba(42,125,225,0)}100%{box-shadow:0 0 0 0 rgba(42,125,225,0)}}
+
+.verdict{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;padding:5px 12px;border-radius:8px}
+.verdict.ok{color:#0c5a32;background:#e3f5e9;border:1px solid #c3e8cf}
+.verdict.no{color:#8f2a22;background:#fbe9e7;border:1px solid #f0c7c2}
+.verdict.mid{color:#7a4c0e;background:#fbf1dd;border:1px solid #efd9ad}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.tile .k{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.tile .v{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-top:6px}
+.tile .v small{font-size:14px;color:var(--muted);font-weight:600}
+.tile.pass .v{color:var(--pass)} .tile.fail .v{color:var(--fail)}
+.tile.warn .v{color:var(--warn)} .tile.block .v{color:var(--blocked)}
+
+/* table */
+table.t{width:100%;border-collapse:collapse}
+table.t th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:11px 14px;border-bottom:1px solid var(--line);letter-spacing:.02em}
+table.t td{padding:13px 14px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+table.t tr:last-child td{border-bottom:none}
+table.t tr.row:hover{background:#fafcfb;cursor:pointer}
+.site{font-weight:600}
+.site .path{color:var(--faint);font-weight:400}
+.rowtime{color:var(--muted);font-size:13px;white-space:nowrap}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* forms */
+.form{display:grid;gap:18px;max-width:720px}
+.field label{display:block;font-weight:600;margin-bottom:6px;font-size:13px}
+.field .hint{color:var(--muted);font-weight:400;font-size:12px;margin-top:5px}
+.field input[type=text],.field input[type=url],.field input[type=password],.field input[type=number],.field textarea,.field select{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);transition:.12s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#9ccdb1;box-shadow:0 0 0 3px rgba(22,122,72,.12)}
+.field textarea{min-height:96px;resize:vertical;line-height:1.55}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.check{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:#fbfdfc}
+.check input{margin-top:3px}
+.check .t{font-weight:600} .check .d{color:var(--muted);font-size:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{border:1px solid var(--line);background:#fff;color:var(--brand);padding:6px 11px;border-radius:999px;font-size:12px;font-weight:600}
+.chip:hover{background:#eef6f1;border-color:#bfe0cc}
+.acct{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center;margin-bottom:8px}
+.acct .x{border:1px solid var(--line);background:#fff;border-radius:8px;width:38px;height:38px;display:grid;place-items:center;color:var(--muted)}
+.caution{border:1px solid #efd9ad;background:#fdf6e6;color:#7a4c0e;border-radius:9px;padding:11px 13px;font-size:13px;display:none}
+.caution.show{display:block}
+
+/* session detail */
+.sv-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.sv-head .url{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.sv-head .spacer{flex:1}
+.timer{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 11px;font-weight:600}
+.timer b{color:var(--ink)}
+.sv-grid{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start}
+.log{background:#0c1a13;color:#cfe6d8;border-radius:var(--radius);padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;height:300px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.log .l{opacity:.92}
+.log .l.err{color:#ff9d93}
+.log .l.ok{color:#7fe0a1}
+.shot{width:100%;border-radius:10px;border:1px solid var(--line);background:#f6f8f7;display:block;aspect-ratio:16/10;object-fit:cover;object-position:top}
+.shot-wrap .cap{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:8px}
+.findlist{display:flex;flex-direction:column}
+.find{display:flex;gap:11px;padding:11px 2px;border-bottom:1px solid var(--line-2)}
+.find:last-child{border-bottom:none}
+.find .bar{width:3px;border-radius:3px;flex:none}
+.find .bar.FAIL{background:var(--fail)} .find .bar.UNCERTAIN{background:var(--warn)}
+.find .tt{font-weight:600} .find .mt{color:var(--muted);font-size:12px;margin-top:2px}
+
+/* chat */
+.chat{display:flex;flex-direction:column;height:430px}
+.chat .msgs{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.5}
+.msg.user{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+.msg.agent{align-self:flex-start;background:#eef2f0;color:var(--ink);border-bottom-left-radius:4px}
+.msg .ts{display:block;font-size:10.5px;opacity:.65;margin-top:4px}
+.chat .box{border-top:1px solid var(--line);padding:10px;display:flex;gap:8px;align-items:flex-end}
+.chat textarea{flex:1;border:1px solid var(--line);border-radius:9px;padding:9px 11px;min-height:40px;max-height:120px;resize:none}
+.chat .empty{margin:auto;text-align:center;color:var(--faint);font-size:13px;padding:20px}
+.chatrec{display:flex;flex-wrap:wrap;gap:6px;padding:0 10px 10px}
+
+/* misc */
+.menu{position:relative;display:inline-block}
+.menu .items{position:absolute;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:6px;min-width:160px;display:none;z-index:30}
+.menu.open .items{display:block}
+.menu .items a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;font-size:13px;font-weight:500}
+.menu .items a:hover{background:#f2f6f4}
+.menu .items a .ext{margin-left:auto;font-size:11px;color:var(--faint);text-transform:uppercase}
+.empty-box{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-box svg{width:40px;height:40px;opacity:.4;margin-bottom:10px}
+.banner{background:#fef6e3;border:1px solid #efdcae;color:#7a4c0e;padding:10px 14px;border-radius:9px;margin-bottom:18px;font-size:13px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #cfe0d7;border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1000px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;left:-260px;transition:.2s;z-index:50;width:244px}
+  .side.open{left:0}
+  .tiles{grid-template-columns:1fr 1fr}
+  .sv-grid{grid-template-columns:1fr}
+  .row2{grid-template-columns:1fr}
+  .menu-btn{display:inline-flex}
+}
+.menu-btn{display:none}
+
+/* ---------- motion ---------- */
+@keyframes viewUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@keyframes shimmer{100%{background-position:-200% 0}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes gradShift{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+@keyframes splashOut{to{opacity:0;visibility:hidden}}
+@keyframes loadbar{to{width:100%}}
+.btn,.chip,.tile,.nav a,.row,.feature,.menu .items a{transition:transform .12s ease,box-shadow .16s ease,background .12s,border-color .12s,color .12s}
+.btn:hover{transform:translateY(-1px)} .btn:active{transform:translateY(0)}
+.tile:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(16,31,23,.06),0 12px 30px rgba(16,31,23,.09)}
+.feature:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(16,31,23,.06),0 14px 34px rgba(16,31,23,.10)}
+.chip:hover{transform:translateY(-1px)}
+.skel{background:linear-gradient(90deg,#edf1ef 25%,#e4eae6 37%,#edf1ef 63%);background-size:200% 100%;animation:shimmer 1.3s infinite;border-radius:8px;color:transparent}
+
+/* boot splash */
+#splash{position:fixed;inset:0;z-index:100;background:linear-gradient(140deg,#0e2a1e,#0b2017);display:grid;place-items:center;animation:splashOut .6s ease 1.5s forwards}
+#splash.hide{opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s}
+#splash .s-logo{display:flex;align-items:center;gap:14px;color:#fff;font-weight:700;font-size:23px;letter-spacing:-.01em;animation:popIn .55s cubic-bezier(.22,.61,.36,1) both}
+#splash .s-mark{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#1f8f57,#0f3d2c);display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+#splash .s-bar{position:absolute;bottom:0;left:0;height:3px;width:0;background:linear-gradient(90deg,#1f8f57,#7fe0a1);animation:loadbar 1.25s ease forwards}
+
+/* hero / welcome */
+.hero{position:relative;overflow:hidden;border-radius:16px;padding:60px 48px;color:#eaf4ee;background:linear-gradient(130deg,#0e2a1e,#0f3d2c 55%,#124c37);background-size:170% 170%;animation:gradShift 12s ease-in-out infinite alternate}
+.hero h1{font-size:40px;line-height:1.08;letter-spacing:-.03em;margin:0 0 14px;color:#fff;max-width:16ch}
+.hero p.lead{font-size:17px;line-height:1.55;color:#bfe0cf;max-width:54ch;margin:0 0 26px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero .glow{position:absolute;border-radius:50%;filter:blur(64px);opacity:.45;pointer-events:none}
+.hero .g1{width:320px;height:320px;background:#2aa468;top:-90px;right:-30px;animation:floatY 7s ease-in-out infinite}
+.hero .g2{width:240px;height:240px;background:#0a6b3f;bottom:-110px;left:28%;animation:floatY 9s ease-in-out infinite}
+.hero .badge-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#dff3e7;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:20px;position:relative}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.feature .ic{width:38px;height:38px;border-radius:10px;background:#e8f5ed;color:var(--accent);display:grid;place-items:center;margin-bottom:12px}
+.feature .ic svg{width:19px;height:19px}
+.feature h3{margin:0 0 6px;font-size:15px} .feature p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.btn.lg{padding:12px 20px;font-size:15px;border-radius:10px}
+.btn.ghost-w{background:transparent;border-color:rgba(255,255,255,.32);color:#fff}
+.btn.ghost-w:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.55)}
+
+@media (prefers-reduced-motion: no-preference){
+  #view>*{animation:viewUp .5s cubic-bezier(.22,.61,.36,1) both}
+  #view>*:nth-child(2){animation-delay:.06s}
+  #view>*:nth-child(3){animation-delay:.12s}
+  #view>*:nth-child(4){animation-delay:.18s}
+  #view>*:nth-child(5){animation-delay:.24s}
+}
+@media (prefers-reduced-motion: reduce){*,#splash{animation-duration:.001ms!important;animation-delay:0!important;transition-duration:.001ms!important}}
+@media(max-width:1000px){.features{grid-template-columns:1fr}.hero{padding:40px 24px}.hero h1{font-size:30px}}
+</style>
+</head>
+<body>
+<div id="splash"><div class="s-logo"><span class="s-mark">
+  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+</span>QA Navigator</div><div class="s-bar"></div></div>
+<div class="app">
+  <aside class="side" id="side">
+    <a class="brand" href="#/welcome" style="cursor:pointer"><span class="mark">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+    </span>QA Navigator</a>
+    <nav class="nav" id="nav">
+      <a href="#/" data-r="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Overview</a>
+      <a href="#/sessions" data-r="/sessions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1.2"/><circle cx="3.5" cy="12" r="1.2"/><circle cx="3.5" cy="18" r="1.2"/></svg>Sessions</a>
+      <a href="#/new" data-r="/new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>New test</a>
+      <div class="sep"></div>
+      <a href="#/settings" data-r="/settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 3.6 15a1.65 1.65 0 0 0-1.51-1H2a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 3.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8 4.6h.09A1.65 1.65 0 0 0 9.6 3.1V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.2.61.78 1.03 1.42 1.1H21a2 2 0 0 1 0 4h-.09c-.64 0-1.22.39-1.51 1z"/></svg>Settings</a>
+    </nav>
+    <div class="foot">Supervised QA engine<br><b>v2</b> &middot; proof-first testing</div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <button class="btn sm menu-btn" onclick="document.getElementById('side').classList.toggle('open')">Menu</button>
+      <div class="crumb" id="crumb">Overview</div>
+      <div class="spacer"></div>
+      <span class="pill-env"><span class="dot"></span><span id="envlabel">Local server</span></span>
+      <div class="avatar" id="avatar">QA</div>
+    </header>
+    <main class="content" id="view"></main>
+  </div>
+</div>
+
+<script>
+const SERVED=("__SERVED__"==="1");            // the server injects "1"; a static file keeps the marker = demo
+let T=(new URLSearchParams(location.search).get('token')||"")||(SERVED?(sessionStorage.getItem('qa_session')||""):"");
+const DEMO=!SERVED;                           // opened as a static file, not from the server
+const H=()=>({'Authorization':'Bearer '+T,'Content-Type':'application/json'});
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=(s,r=document)=>r.querySelector(s);
+
+/* ---------- demo data (only when opened without a token) ---------- */
+const DEMO_RUNS=[{
+  id:"demo00000001",url:"https://app.example.com/",status:"running",created:Date.now()/1000-420,started:Date.now()/1000-420,
+  minutes:40,testers:3,login:true,allow_writes:false,
+  board:{judged:128,claimed:3,open:54},verdicts:{PASS:96,FAIL:7,UNCERTAIN:2,BLOCKED:1},
+  fails:[{verdict:"FAIL",title:"Checkout button does nothing on the cart page",page:"/cart",team:"journey"},
+         {verdict:"FAIL",title:"Heading levels skip from h1 to h4",page:"/contact",team:"uiux"},
+         {verdict:"UNCERTAIN",title:"Save profile shows success but sends no request",page:"/settings",team:"function"}],
+  log_tail:["  [journey-1] claimed journey-014: add an item to the cart","  [function-2] function-031 PASS (judge PASS): search returns results",
+            "  [uiux-1] uiux-009 FAIL: contrast too low on .text-muted","  login: LOGGED IN on /login (guided)"],
+  chat:[{role:"agent",text:"Session started. Send a note any time to guide the testers.",ts:Date.now()/1000-420}]
+},{
+  id:"demo00000002",url:"https://staging.shop.test/",status:"done",created:Date.now()/1000-7200,started:Date.now()/1000-7200,ended:Date.now()/1000-5100,
+  minutes:35,testers:3,login:false,allow_writes:false,
+  verdict:{line:"NOT SAFE TO DEMO"},board:{judged:341},verdicts:{PASS:320,FAIL:18,UNCERTAIN:3},
+  fails:[{verdict:"FAIL",title:"Promo code field accepts any value",page:"/checkout",team:"function"}]
+}];
+
+async function api(path,opts){
+  if(DEMO){
+    if(path==='/api/runs') return DEMO_RUNS;
+    const m=path.match(/^\/api\/runs\/([a-z0-9]+)$/); if(m) return DEMO_RUNS.find(r=>r.id===m[1])||null;
+    if(/\/note$/.test(path)) return {reply:"(demo) Noted. Open with a token for live testing.",ts:Date.now()/1000};
+    if(/\/stop$/.test(path)) return {stopped:true};
+    return {};
+  }
+  const r=await fetch(path,{headers:H(),...opts});
+  if(r.status===401 && SERVED){sessionStorage.removeItem('qa_session');T="";showLogin();throw new Error('login required');}
+  if(!r.ok) throw new Error(await r.text());
+  return r.status===204?null:r.json();
+}
+
+/* ---------- helpers ---------- */
+function statusBadge(s){const t={running:"Running",done:"Done",failed:"Failed",queued:"Queued",stopped:"Stopped"}[s]||s;
+  return `<span class="badge ${esc(s)}"><span class="dot"></span>${esc(t)}</span>`;}
+function verdictPill(v){if(!v||!v.line)return '';const l=v.line.toUpperCase();
+  const cls=l.includes('NOT SAFE')?'no':(l.includes('SAFE')?'ok':'mid');
+  return `<span class="verdict ${cls}">${esc(v.line)}</span>`;}
+function siteCell(url){try{const u=new URL(url);return `<span class="site">${esc(u.host)}<span class="path">${esc(u.pathname!=='/'?u.pathname:'')}</span></span>`;}catch(e){return esc(url);}}
+function ago(sec){const d=Date.now()/1000-sec;if(d<60)return 'just now';if(d<3600)return Math.floor(d/60)+' min ago';
+  if(d<86400)return Math.floor(d/3600)+' h ago';return new Date(sec*1000).toLocaleDateString();}
+function clock(s){s=Math.max(0,Math.floor(s));const m=Math.floor(s/60),ss=s%60;return m+':'+String(ss).padStart(2,'0');}
+function counts(j){const v=j.verdicts||{};return {PASS:v.PASS||0,FAIL:v.FAIL||0,UNCERTAIN:v.UNCERTAIN||0,BLOCKED:v.BLOCKED||0};}
+
+/* ---------- router ---------- */
+let poll=null, tick=null;
+function stopTimers(){if(poll){clearInterval(poll);poll=null;}if(tick){clearInterval(tick);tick=null;}}
+window.addEventListener('hashchange',route);
+function start(){
+  if(!location.hash && !sessionStorage.getItem('seen'))location.hash='#/welcome';
+  sessionStorage.setItem('seen','1');
+  route();
+}
+async function whoami(){
+  try{const me=await api('/api/me');if(me&&me.user){
+    $('#avatar').textContent=me.operator?'OP':me.user.slice(0,2).toUpperCase();
+    $('#avatar').title='Signed in as '+(me.operator?'operator':me.user)+' — click to sign out';
+    $('#envlabel').textContent=me.operator?'Operator':me.user;
+    $('#avatar').style.cursor='pointer';
+    $('#avatar').onclick=()=>{if(confirm('Sign out?'))logout();};
+  }}catch(e){}
+}
+async function logout(){try{await api('/api/logout',{method:'POST'});}catch(e){}sessionStorage.removeItem('qa_session');T="";location.hash='';showLogin();}
+function showLogin(){
+  if($('#login'))return; stopTimers();
+  const d=document.createElement('div');d.id='login';
+  d.style.cssText='position:fixed;inset:0;z-index:90;background:linear-gradient(140deg,#0e2a1e,#0b2017);display:grid;place-items:center;padding:20px';
+  d.innerHTML=`<div class="panel pad" style="width:360px;max-width:94vw">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <span style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#25b06d,#0f3d2c);display:inline-block"></span>
+      <b style="font-size:17px">QA Navigator</b></div>
+    <h2 class="sec" id="lg-title" style="margin-bottom:12px">Sign in</h2>
+    <div class="field"><label>Username</label><input type="text" id="lg-user" autocomplete="username"></div>
+    <div class="field" style="margin-top:10px"><label>Password</label><input type="password" id="lg-pass" autocomplete="current-password"></div>
+    <div id="lg-msg" style="min-height:18px;margin:8px 0;font-size:13px;color:var(--fail)"></div>
+    <button class="btn pri" id="lg-go" style="width:100%;justify-content:center">Sign in</button>
+    <div class="muted" style="margin-top:12px;font-size:13px">New here? <a href="#" id="lg-reg" style="color:var(--accent);font-weight:600">Create an account</a></div>
+  </div>`;
+  document.body.appendChild(d);
+  let mode='login';
+  const go=async()=>{
+    const u=$('#lg-user').value.trim(),p=$('#lg-pass').value,msg=$('#lg-msg');msg.style.color='var(--fail)';msg.textContent='';
+    try{
+      if(mode==='register'){
+        const rr=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+        const rj=await rr.json().catch(()=>({}));
+        if(!rr.ok||rj.ok===false){msg.textContent=rj.error||rj.message||'Could not create the account';return;}
+      }
+      const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||!j.token){msg.textContent=j.error||'Wrong username or password';return;}
+      T=j.token;sessionStorage.setItem('qa_session',T);d.remove();whoami().then(start);
+    }catch(e){msg.textContent=String(e).slice(0,160);}
+  };
+  $('#lg-go').onclick=go;
+  $('#lg-pass').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+  $('#lg-reg').onclick=e=>{e.preventDefault();mode=mode==='login'?'register':'login';
+    $('#lg-title').textContent=mode==='login'?'Sign in':'Create an account';
+    $('#lg-go').textContent=mode==='login'?'Sign in':'Create account';
+    $('#lg-reg').textContent=mode==='login'?'Create an account':'Back to sign in';
+    $('#lg-msg').textContent='';};
+  setTimeout(()=>$('#lg-user').focus(),50);
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  const sp=$('#splash');if(sp){setTimeout(()=>sp.classList.add('hide'),1050);setTimeout(()=>sp.remove(),1700);}
+  if(DEMO){$('#envlabel').textContent='Demo mode';start();return;}
+  if(!T){showLogin();return;}
+  whoami().then(start);
+});
+
+function setNav(r){document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===r));}
+function crumb(txt){$('#crumb').innerHTML=txt;}
+
+function route(){
+  stopTimers();
+  const h=(location.hash||'#/').slice(1);
+  const mSess=h.match(/^\/s\/([a-z0-9]+)$/);
+  if(h==='/welcome'){setNav('');return viewWelcome();}
+  if(mSess){setNav('/sessions');return viewSession(mSess[1]);}
+  if(h==='/sessions'){setNav('/sessions');return viewSessions();}
+  if(h==='/new'){setNav('/new');return viewNew();}
+  if(h==='/settings'){setNav('/settings');return viewSettings();}
+  setNav('/');return viewOverview();
+}
+
+/* ---------- Overview ---------- */
+async function viewOverview(){
+  crumb('Overview');
+  $('#view').innerHTML=`
+    ${DEMO?`<div class="banner">Demo mode. Open this page with <b>?token=&lt;V2_API_TOKEN&gt;</b> to run and see live tests.</div>`:''}
+    <div class="page-head"><div><h1>Overview</h1><p>Supervised testing that gives a verdict only with proof.</p></div>
+      <div class="spacer"></div><a class="btn pri" href="#/new">+ New test</a></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="panel" style="margin-top:22px">
+      <div style="padding:16px 20px;display:flex;align-items:center"><h2 class="sec" style="margin:0">Recent sessions</h2>
+        <div class="spacer" style="flex:1"></div><a class="btn sm" href="#/sessions">View all</a></div>
+      <div id="recent"></div>
+    </div>`;
+  async function load(){
+    let runs=[];try{runs=await api('/api/runs');}catch(e){$('#recent').innerHTML=err(e);return;}
+    const active=runs.filter(r=>r.status==='running'||r.status==='queued').length;
+    const done=runs.filter(r=>r.status==='done').length;
+    const totalFail=runs.reduce((a,r)=>a+((r.verdicts||{}).FAIL||0),0);
+    $('#tiles').innerHTML=`
+      ${tile('Active sessions',active,active?'<span class="spin"></span>':'')}
+      ${tile('Total sessions',runs.length)}
+      ${tile('Completed',done)}
+      ${tile('Open findings',totalFail,'',totalFail?'fail':'')}`;
+    $('#recent').innerHTML=runs.length?sessTable(runs.slice(0,6)):emptyRuns();
+  }
+  await load();poll=setInterval(load,5000);
+}
+function tile(k,v,extra='',cls=''){return `<div class="tile ${cls}"><div class="k">${esc(k)}</div><div class="v">${esc(v)} ${extra}</div></div>`;}
+
+/* ---------- Sessions list ---------- */
+async function viewSessions(){
+  crumb('Sessions');
+  $('#view').innerHTML=`
+    <div class="page-head"><div><h1>Sessions</h1><p>Every test run, newest first.</p></div>
+      <div class="spacer"></div><a class="btn pri" href="#/new">+ New test</a></div>
+    <div class="panel" id="wrap"></div>`;
+  async function load(){let runs=[];try{runs=await api('/api/runs');}catch(e){$('#wrap').innerHTML='<div class="pad">'+err(e)+'</div>';return;}
+    $('#wrap').innerHTML=runs.length?sessTable(runs):emptyRuns();}
+  await load();poll=setInterval(load,5000);
+}
+function sessTable(runs){
+  return `<table class="t"><thead><tr><th>Site</th><th>Status</th><th>Verdict / progress</th><th>Started</th><th></th></tr></thead><tbody>${
+    runs.map(j=>{
+      const c=counts(j);const prog=j.status==='running'
+        ? `<span class="tnum muted">${(j.board&&j.board.judged)||0} judged &middot; <span style="color:var(--fail)">${c.FAIL} fail</span></span>`
+        : (j.verdict?verdictPill(j.verdict):'<span class="faint">—</span>');
+      return `<tr class="row" onclick="location.hash='#/s/${j.id}'">
+        <td>${siteCell(j.url)}</td><td>${statusBadge(j.status)}</td><td>${prog}</td>
+        <td class="rowtime">${ago(j.started||j.created)}</td>
+        <td style="text-align:right">${j.status==='running'?`<button class="btn sm danger" onclick="event.stopPropagation();stopRun('${j.id}')">Stop</button>`:`<span class="faint">open ›</span>`}</td></tr>`;
+    }).join('')}</tbody></table>`;
+}
+function emptyRuns(){return `<div class="empty-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
+  <div>No sessions yet.</div><div style="margin-top:12px"><a class="btn pri" href="#/new">Start your first test</a></div></div>`;}
+
+/* ---------- New test ---------- */
+const RECS=[
+  {t:"Company field",v:"After the email and password, fill the 'Company' field, then continue."},
+  {t:"Two-step login",v:"The login has two steps: enter the email, press Next, then enter the password."},
+  {t:"No real orders",v:"Do not place real orders or payments. Stop before the final confirm step."},
+  {t:"Focus on checkout",v:"Give most attention to the cart and the checkout flow."},
+  {t:"Search and filters",v:"Test the search box and the list filters with care."},
+  {t:"Cookie banner",v:"Accept the cookie banner first, then start the task."}
+];
+function viewNew(){
+  crumb('New test');
+  $('#view').innerHTML=`
+    <div class="page-head"><div><h1>New test</h1><p>Describe the site and how to get in. The engine does the rest.</p></div></div>
+    <div class="panel pad"><form class="form" id="f">
+      <div class="field"><label>Website URL</label>
+        <input type="url" name="url" required placeholder="https://app.example.com">
+        <div class="hint">A real, reachable address. The test starts here.</div></div>
+
+      <div class="field"><label>Test scope</label>
+        <select name="scope_mode">
+          <option value="site">Whole site (crawl and test everything)</option>
+          <option value="section">This section only (the URL's path and under it)</option>
+          <option value="page">Just this one page</option>
+        </select>
+        <div class="hint">Use a section or a single page when the team split the work and you own only part of the site.</div></div>
+
+      <div class="field"><label>Test login (optional)</label>
+        <div id="accts"></div>
+        <button type="button" class="btn sm" id="addacct">+ Add another account (one per tester)</button>
+        <div class="hint">The login is sent once, kept in the run folder with strict file permissions, and deleted when the run ends.</div></div>
+
+      <div class="field"><label>Notes for the testers (optional)</label>
+        <textarea name="docs" placeholder="Extra login steps, fields to fill, areas to focus on, things to avoid."></textarea>
+        <div class="chips">${RECS.map((r,i)=>`<button type="button" class="chip" data-i="${i}">${esc(r.t)}</button>`).join('')}</div>
+        <div class="hint">You can also send notes while the test runs, from the session page.</div></div>
+
+      <div class="row2">
+        <div class="field"><label>Minutes</label><input type="number" name="minutes" value="40" min="5" max="120"></div>
+        <div class="field"><label>Testers</label><input type="number" name="testers" value="3" min="1" max="6"></div>
+      </div>
+
+      <label class="check"><input type="checkbox" name="manual"><span><span class="t">Also write a user manual</span><br><span class="d">The engine writes a short manual of what it found.</span></span></label>
+
+      <div class="field" style="margin:0"><label>Write mode</label>
+        <div id="wmode" style="display:flex;flex-direction:column;gap:8px">
+          <label class="check"><input type="radio" name="wmode" value="read-only" checked><span><span class="t">Read-only — safe for any site</span><br><span class="d">The agent never creates, edits, or deletes. Login still works.</span></span></label>
+          <label class="check"><input type="radio" name="wmode" value="safe"><span><span class="t">Safe-write — create only</span><br><span class="d">May create new records to test forms. Never deletes or edits existing data; payments are blocked. Every write is logged.</span></span></label>
+          <label class="check"><input type="radio" name="wmode" value="allow"><span><span class="t">Allow all writes</span><br><span class="d">Create, edit, and delete. Test environment only.</span></span></label>
+        </div>
+        <div class="caution" id="awcaution" style="margin-top:8px"><b>CAUTION:</b> "Allow all writes" can change or delete real data. Use it only on a throwaway test site.</div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn pri" type="submit" id="go">Start test</button>
+        <span class="muted" id="fmsg"></span></div>
+    </form></div>`;
+
+  const accts=$('#accts');
+  function acctRow(first){const d=document.createElement('div');d.className='acct';
+    d.innerHTML=`<input type="text" placeholder="email or user name" class="ae"><input type="password" placeholder="password" class="ap">
+      ${first?'<span class="x" style="visibility:hidden">×</span>':'<button type="button" class="x" title="Remove">×</button>'}`;
+    if(!first)d.querySelector('.x').onclick=()=>d.remove();
+    accts.appendChild(d);}
+  acctRow(true);
+  $('#addacct').onclick=()=>{if(accts.children.length<6)acctRow(false);};
+
+  document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+    const r=RECS[+c.dataset.i],ta=$('textarea[name=docs]');
+    ta.value=(ta.value.trim()?ta.value.trim()+'\n':'')+r.v;ta.focus();});
+
+  document.querySelectorAll('#wmode input').forEach(r=>r.onchange=()=>{
+    const v=(document.querySelector('#wmode input:checked')||{}).value;
+    $('#awcaution').classList.toggle('show',v==='allow');});
+
+  $('#f').onsubmit=async e=>{
+    e.preventDefault();const f=e.target;const go=$('#go');
+    const rows=[...accts.children].map(d=>({email:d.querySelector('.ae').value.trim(),password:d.querySelector('.ap').value}))
+      .filter(a=>a.email&&a.password);
+    const d={url:f.url.value.trim(),scope_mode:f.scope_mode.value,minutes:+f.minutes.value,testers:+f.testers.value,
+      manual:f.manual.checked,docs:f.docs.value.trim()};
+    const wm=(document.querySelector('#wmode input:checked')||{}).value||'read-only';
+    d.allow_writes=wm==='allow';d.safe_writes=wm==='safe';
+    if(rows.length){d.email=rows[0].email;d.password=rows[0].password;if(rows.length>1)d.accounts=rows.slice(1);}
+    go.disabled=true;$('#fmsg').innerHTML='<span class="spin"></span> starting…';
+    try{const r=await api('/api/runs',{method:'POST',body:JSON.stringify(d)});
+      location.hash='#/s/'+r.id;}
+    catch(err){go.disabled=false;$('#fmsg').innerHTML='<span style="color:var(--fail)">'+esc(String(err))+'</span>';}
+  };
+}
+
+/* ---------- Session detail ---------- */
+const CHATRECS=["Skip the delete buttons.","Do not submit the payment.","Focus on the checkout flow now.","Log in again, the session dropped."];
+let SV=null;
+function viewSession(id){
+  crumb(`<a href="#/sessions" style="color:var(--muted)">Sessions</a> / <b>${esc(id)}</b>`);
+  SV={id,started:0,minutes:0,status:'',ended:0};
+  $('#view').innerHTML=`
+    <div class="sv-head">
+      <div><div class="url" id="sv-url">${esc(id)}</div><div class="muted" id="sv-sub"></div></div>
+      <div class="spacer"></div>
+      <span class="timer" id="sv-timer"></span>
+      <span id="sv-status"></span>
+      <div class="menu" id="dlmenu"><button class="btn sm" onclick="document.getElementById('dlmenu').classList.toggle('open')">Download ▾</button>
+        <div class="items" id="dlitems"></div></div>
+      <button class="btn sm danger" id="sv-stop" style="display:none">■ Stop</button>
+    </div>
+    <div id="sv-verdict" style="margin-bottom:16px"></div>
+    <div class="tiles" id="sv-tally" style="margin-bottom:16px"></div>
+    <div class="sv-grid">
+      <div class="grid" style="gap:16px">
+        <div class="panel"><div style="padding:14px 16px 0"><h2 class="sec">Live activity</h2></div><div style="padding:0 16px 16px"><div class="log" id="sv-log"></div></div></div>
+        <div class="panel"><div style="padding:14px 16px 0"><h2 class="sec">Findings</h2></div><div style="padding:0 16px 14px" id="sv-findings"></div></div>
+      </div>
+      <div class="grid" style="gap:16px">
+        <div class="panel shot-wrap"><div style="padding:14px 16px 0"><h2 class="sec">Live browser</h2></div>
+          <div style="padding:0 16px 14px"><img class="shot" id="sv-shot" alt="latest screen" style="display:none"><div class="faint" id="sv-noshot" style="padding:24px;text-align:center">Waiting for the first screen…</div><div class="cap"><span id="sv-shotname"></span></div></div></div>
+        <div class="panel"><div style="padding:14px 16px 0"><h2 class="sec">Chat with this test</h2></div>
+          <div class="chat"><div class="msgs" id="sv-chat"></div>
+            <div class="chatrec" id="sv-chatrec">${CHATRECS.map(r=>`<button class="chip" data-v="${esc(r)}">${esc(r)}</button>`).join('')}</div>
+            <div class="box"><textarea id="sv-cin" placeholder="Send a note to the testers…" rows="1"></textarea><button class="btn pri sm" id="sv-csend">Send</button></div></div></div>
+      </div>
+    </div>`;
+
+  $('#sv-stop').onclick=()=>stopRun(id,true);
+  $('#sv-csend').onclick=sendNote;
+  $('#sv-cin').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendNote();}});
+  document.querySelectorAll('#sv-chatrec .chip').forEach(c=>c.onclick=()=>{$('#sv-cin').value=c.dataset.v;$('#sv-cin').focus();});
+
+  async function load(){
+    let j;try{j=await api('/api/runs/'+id);}catch(e){$('#sv-log').innerHTML=err(e);return;}
+    if(!j){$('#view').innerHTML='<div class="empty-box">No such session.</div>';stopTimers();return;}
+    SV.started=j.started||j.created;SV.minutes=j.minutes||0;SV.status=j.status;SV.ended=j.ended||0;
+    $('#sv-url').innerHTML=siteCell(j.url);
+    $('#sv-sub').textContent=`${j.testers||'?'} testers · ${j.login?'with login':'no login'} · ${j.allow_writes?'writes ON':j.safe_writes?'safe-write':'read-only'}`;
+    $('#sv-status').innerHTML=statusBadge(j.status);
+    $('#sv-stop').style.display=j.status==='running'?'':'none';
+    $('#sv-verdict').innerHTML=(j.verdict?verdictPill(j.verdict)+(j.summary?` <span class="muted" style="margin-left:8px">${esc(j.summary)}</span>`:''):'')
+      +(j.memory_on?` <span class="badge" style="background:#e8f6ec;color:#0c5a32;border-color:#cdebd6;margin-left:8px"><span class="dot" style="background:#16a34a"></span><b>${j.new_count} new</b> · ${j.recurring_count} seen before</span>`:'');
+    const c=counts(j);
+    $('#sv-tally').innerHTML=tile('Passed',c.PASS,'','pass')+tile('Failed',c.FAIL,'','fail')+tile('Uncertain',c.UNCERTAIN,'','warn')+tile('Blocked',c.BLOCKED,'','block');
+    const lines=(j.log_tail||[]);
+    $('#sv-log').innerHTML=lines.map(l=>{const cl=/error|FAIL|Traceback|Error/.test(l)?' err':(/PASS|LOGGED IN|done/.test(l)?' ok':'');return `<div class="l${cl}">${esc(l)}</div>`;}).join('')||'<div class="faint">No activity yet.</div>';
+    const lg=$('#sv-log');lg.scrollTop=lg.scrollHeight;
+    if(j.latest_shot&&!DEMO){const img=$('#sv-shot');img.src=`/runs/${id}/evidence/${encodeURIComponent(j.latest_shot)}?token=${encodeURIComponent(T)}&t=${Date.now()}`;
+      img.style.display='';$('#sv-noshot').style.display='none';$('#sv-shotname').textContent=j.latest_shot;}
+    const fails=j.fails||[];
+    $('#sv-findings').innerHTML=fails.length?`<div class="findlist">${fails.map(f=>`<div class="find"><div class="bar ${esc(f.verdict)}"></div><div><div class="tt">${esc(f.title)}</div><div class="mt">${esc(f.verdict)} · ${esc(f.page||'')} · ${esc(f.team||'')}</div></div></div>`).join('')}</div>`
+      :'<div class="faint" style="padding:8px 2px">No failing findings so far.</div>';
+    const have=j.status==='done'||j.status==='stopped';
+    $('#dlitems').innerHTML=have?[['report.html','HTML'],['report.pdf','PDF'],['report.txt','TXT'],['report.docx','DOCX'],['report.json','JSON']]
+      .map(([f,l])=>`<a href="${DEMO?'#':`/runs/${id}/${f}?token=${encodeURIComponent(T)}`}" target="_blank">${l} report<span class="ext">${f.split('.').pop()}</span></a>`).join('')
+      :'<div class="faint" style="padding:8px 10px">Reports appear when the test finishes.</div>';
+    renderChat(j.chat||[]);
+    const live=j.status==='running'||j.status==='queued';
+    $('#sv-cin').disabled=!live&&!DEMO;$('#sv-csend').disabled=!live&&!DEMO;
+  }
+  function updTimer(){
+    const t=$('#sv-timer');if(!t)return;
+    if(SV.status==='running'&&SV.started){const rem=SV.started+SV.minutes*60-Date.now()/1000;
+      t.innerHTML=`<b>${clock(Date.now()/1000-SV.started)}</b> elapsed · ${clock(rem)} left`;}
+    else if(SV.ended&&SV.started){t.innerHTML=`ran <b>${clock(SV.ended-SV.started)}</b>`;}
+    else if(SV.status==='queued'){t.textContent='queued';}
+    else t.textContent='';
+  }
+  load();poll=setInterval(load,3000);tick=setInterval(updTimer,1000);updTimer();
+}
+function renderChat(chat){
+  const box=$('#sv-chat');if(!box)return;
+  const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<40;
+  box.innerHTML=chat.length?chat.map(m=>`<div class="msg ${m.role==='user'?'user':'agent'}">${esc(m.text)}<span class="ts">${new Date((m.ts||0)*1000).toLocaleTimeString()}</span></div>`).join('')
+    :'<div class="empty">No notes yet. Send one to steer the testers while they work.</div>';
+  if(atBottom)box.scrollTop=box.scrollHeight;
+}
+async function sendNote(){
+  const inp=$('#sv-cin'),btn=$('#sv-csend');const msg=inp.value.trim();if(!msg||!SV)return;
+  btn.disabled=true;inp.disabled=true;
+  try{await api('/api/runs/'+SV.id+'/note',{method:'POST',body:JSON.stringify({message:msg})});inp.value='';
+    const j=await api('/api/runs/'+SV.id);renderChat((j&&j.chat)||[]);}
+  catch(e){}
+  finally{btn.disabled=false;inp.disabled=false;inp.focus();}
+}
+
+/* ---------- Welcome / intro ---------- */
+const FICONS={
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg>',
+  doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>'
+};
+function feature(ic,t,d){return `<div class="feature"><div class="ic">${FICONS[ic]}</div><h3>${esc(t)}</h3><p>${esc(d)}</p></div>`;}
+function viewWelcome(){
+  crumb('Welcome');
+  $('#view').innerHTML=`
+    <section class="hero">
+      <div class="glow g1"></div><div class="glow g2"></div>
+      <span class="badge-pill"><span style="width:7px;height:7px;border-radius:50%;background:#7fe0a1;display:inline-block"></span> Supervised QA engine &middot; v2</span>
+      <h1>Testing you can trust, with the proof to back it.</h1>
+      <p class="lead">QA Navigator drives real browsers through your web app, finds what breaks, and gives a verdict only when it has evidence. Never a green result it cannot prove.</p>
+      <div class="cta"><a class="btn pri lg" href="#/new">Start a test</a><a class="btn lg ghost-w" href="#/">Open the dashboard</a></div>
+    </section>
+    <div class="features">
+      ${feature('shield','Proof-first verdict','A result is green only with evidence. No proof, no pass.')}
+      ${feature('chat','Guide it live','Chat with the test while it runs. Add login steps and cautions.')}
+      ${feature('doc','Reports your way','Get the report as HTML, PDF, or TXT when the test ends.')}
+    </div>
+    <div class="panel pad" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div><h2 class="sec" style="margin:0 0 4px">Ready when you are</h2><div class="muted">Point it at a URL, add a test login, and watch it work.</div></div>
+      <div style="flex:1"></div><a class="btn pri" href="#/new">+ New test</a>
+    </div>`;
+}
+
+/* ---------- Settings ---------- */
+function viewSettings(){
+  crumb('Settings');
+  const masked=DEMO?'(not set — demo mode)':(T.slice(0,4)+'…'+T.slice(-4));
+  $('#view').innerHTML=`
+    <div class="page-head"><div><h1>Settings</h1><p>Server and access.</p></div></div>
+    <div class="panel pad" style="max-width:640px">
+      <div class="field"><label>API token</label><input type="text" readonly value="${esc(masked)}"><div class="hint">The page gets this from the <b>?token=</b> in the address. Keep it private.</div></div>
+      <div class="field" style="margin-top:16px"><label>Engine</label><input type="text" readonly value="QA Agent v2 — crawler, planner, task board, testers, judge, reporter"></div>
+      <div class="field" style="margin-top:16px"><label>Verdict rule</label><input type="text" readonly value="A result is green only with proof. No proof is not green."></div>
+      <div style="margin-top:18px"><a class="btn" href="#/new">+ New test</a></div>
+    </div>`;
+}
+
+/* ---------- shared actions ---------- */
+async function stopRun(id,back){
+  if(!confirm('Stop this session? The report so far is kept.'))return;
+  try{await api('/api/runs/'+id+'/stop',{method:'POST'});}catch(e){alert('Could not stop: '+e);return;}
+  if(back)route();
+}
+function err(e){return `<div style="color:var(--fail);padding:10px 2px">Could not load: ${esc(String(e).slice(0,200))}</div>`;}
+
+document.addEventListener('click',e=>{const m=$('#dlmenu');if(m&&!m.contains(e.target))m.classList.remove('open');});
+</script>
+</body>
+</html>

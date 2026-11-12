@@ -1,0 +1,124 @@
+# ShopLite benchmark score
+
+- Planted bugs: 22
+- Caught: 13 (59%); T0 catch rate 20%
+- False passes: 4 (of them on success-trap bugs: 1)
+- Missed on a tested route: 5; route never reached: 0
+- Verdicts: 154 {'BLOCKED': 6, 'FAIL': 13, 'PASS': 133, 'UNCERTAIN': 2}
+- Routes reached: /, /about, /account, /admin, /cart, /contact, /login, /orders, /product/1, /product/2, /product/3, /product/4, /register
+- FAIL verdicts not linked to a planted bug: 1
+- Clean build: 3 FAIL of 164 verdicts (false-fail rate 2%)
+
+Linking is by keyword and is approximate. Confirm each linked line.
+
+| Bug | Tier | Trap | Route | Result | Summary |
+|---|---|---|---|---|---|
+| B01 | T0 | yes | /cart | **missed** | Place order shows 'Order placed!' but the API returns 500 and no order is saved |
+| B02 | T0 |  | /cart | **false_pass** | Cart total ignores quantity (2 x $20 shows $20) |
+| B03 | T0 |  | /admin | **missed** | A regular user can open /admin and see every user's email |
+| B04 | T0 |  | /orders | **false_pass** | Cancel in the 'Delete this order?' dialog deletes the order anyway |
+| B05 | T0 | yes | /account | **caught** | Log out goes to the login page but the server session stays valid |
+| B06 | T1 |  | / | **caught** | Search returns every product for any query |
+| B07 | T1 | yes | /register | **caught** | Register accepts an invalid email ('abc') and shows success |
+| B08 | T1 | yes | /account | **caught** | Profile Save shows 'Saved' but the name reverts after reload |
+| B09 | T1 |  | / | **caught** | Page 2 of the product list shows the same items as page 1 |
+| B10 | T1 |  | / | **caught** | Sort by price sorts as text ($100.00 comes before $12.00) |
+| B11 | T1 |  | /product | **caught** | Double-clicking Post review creates two identical reviews |
+| B12 | T1 |  | /product | **caught** | The Reviews tab does nothing when clicked |
+| B13 | T1 |  | /cart | **caught** | 'Continue shopping' links to /shop, which is a 404 |
+| B14 | T1 | yes | /cart | **false_pass** | Coupon SAVE10 shows 'Coupon applied' but the total does not change |
+| B15 | T2 |  | / | **caught** | Desk Lamp product image is broken (404) |
+| B16 | T2 |  | / | **false_pass** | Newsletter email input has no label |
+| B17 | T2 |  | /orders | **missed** | Orders page scrolls horizontally (a 1600px wide element) |
+| B18 | T2 |  | /about | **missed** | About page skips heading levels (h1 then h4) |
+| B19 | T2 |  | /contact | **caught** | Contact page has an empty <title> |
+| B20 | T2 |  | / | **caught** | Shop page throws an uncaught JavaScript error on load |
+| B21 | T2 |  | / | **caught** | Footer 'Help' link has an empty href |
+| B22 | T1 |  | /product | **missed** | /product/999 shows a stack trace and a database URL (500) instead of a 404 page |
+
+## Linked verdicts
+
+**B02 (false_pass)**
+- `function-018` PASS on /cart: Add to cart adds item and shows result: PASS - Clicked 'Add to cart'; message 'Added to cart' shown, POST /api/cart/add -> 200. Cart page shows Canvas Tote quantity 2 and total $20.; Another copy of button adds a differe
+- `function-026` PASS on /cart: Add to cart adds item: PASS - Clicked 'Add to cart' for Canvas Tote; POST /api/cart/add -> 200, message 'Added to cart', and /cart shows Canvas Tote $20.00 Total $20.00.; Cart persists after reload: PASS - Reopened /cart
+
+**B03 (missed)**
+- `basic-load` PASS on /admin: /admin loads (HTTP 200).
+- `basic-errors` PASS on /admin: /admin: no JavaScript error on load.
+- `basic-resources` PASS on /admin: /admin: all images, scripts and styles load.
+
+**B04 (false_pass)**
+- `function-029` PASS on /orders: Delete button removes the order: PASS - Clicked Delete on order #1000; confirmation dialog shown; confirmed Delete; server returned DELETE /api/orders/1000 -> 200 and GET /orders -> 200. Page now shows 'You have no order
+
+**B05 (caught)**
+- `function-010` FAIL on /account: Valid input (Alice Smith) is saved: FAIL - POST /api/profile -> 200 with 'Saved' message, but after goto /account the field reverts to 'Bob Tester'. The change is not persisted.; Empty input is refused: PASS - POST /api/
+
+**B06 (caught)**
+- `function-001` FAIL on /: Search for 'desk' filters products: FAIL - URL became ?q=desk&sort= but page still shows all 6 products (Canvas Tote, Steel Bottle, Desk Lamp, Notebook Set). Search term is not applied to filtering.; Search for 'notebook
+- `function-019` FAIL on /: Subscribe with valid email: PASS - Filled test@example.com, clicked Subscribe -> message 'Thanks for subscribing' shown, no error.; Subscribe with empty email: FAIL - Clicked Subscribe with empty field -> still showed 'T
+- `function-009` FAIL on /: valid search query filters results: FAIL - Search 'tote' on /?q=tote&sort= returned all 6 products incl. Steel Bottle, Desk Lamp, Notebook Set (not matching). Search 'lamp' returned Steel Bottle/Wool Socks/Coffee Mug/Can
+
+**B07 (caught)**
+- `function-004` FAIL on /register: valid input accepted and saved: PASS - POST /register -> 200 with 'Your account was created'; account test@example.com then logged in via /login successfully.; empty/blank submission refused: PASS - POST /register -> 200
+
+**B08 (caught)**
+- `function-010` FAIL on /account: Valid input (Alice Smith) is saved: FAIL - POST /api/profile -> 200 with 'Saved' message, but after goto /account the field reverts to 'Bob Tester'. The change is not persisted.; Empty input is refused: PASS - POST /api/
+
+**B09 (caught)**
+- `function-001` FAIL on /: Search for 'desk' filters products: FAIL - URL became ?q=desk&sort= but page still shows all 6 products (Canvas Tote, Steel Bottle, Desk Lamp, Notebook Set). Search term is not applied to filtering.; Search for 'notebook
+- `function-019` FAIL on /: Subscribe with valid email: PASS - Filled test@example.com, clicked Subscribe -> message 'Thanks for subscribing' shown, no error.; Subscribe with empty email: FAIL - Clicked Subscribe with empty field -> still showed 'T
+- `function-025` UNCERTAIN on /: Log out redirects to login and clears visible user: PASS - Clicked 'Log out' -> server GET /login -> 200, page showed 'Log in Register' login screen with email/password fields and no 'Hi, Test User'.; Logout state persis
+
+**B10 (caught)**
+- `function-001` FAIL on /: Search for 'desk' filters products: FAIL - URL became ?q=desk&sort= but page still shows all 6 products (Canvas Tote, Steel Bottle, Desk Lamp, Notebook Set). Search term is not applied to filtering.; Search for 'notebook
+- `function-009` FAIL on /: valid search query filters results: FAIL - Search 'tote' on /?q=tote&sort= returned all 6 products incl. Steel Bottle, Desk Lamp, Notebook Set (not matching). Search 'lamp' returned Steel Bottle/Wool Socks/Coffee Mug/Can
+
+**B11 (caught)**
+- `function-022` FAIL on /product/1: Clicking 'Reviews (0)' shows the reviews section: FAIL - Clicked el-2a36a1e0ab ('Reviews (0)') and the tab el-18eafbdd8e; page stayed at /product/1, no server response, and PAGE TEXT was unchanged (still showing 'A well 
+- `function-024` UNCERTAIN on /product/1: Click Reviews (0) tab shows the reviews view: BLOCKED - Click on el-18eafbdd8e accepted with no error; no server response; observe tool repeatedly rejected with 'not on site map' empty-id error so I could not confirm the
+- `function-033` FAIL on /product/1: Click Reviews (0) tab: FAIL - Clicked tab 'Reviews (0)' on /product/1. No server request sent, no content change: page still shows the description text 'A well made canvas tote for everyday use.' and no reviews section o
+
+**B12 (caught)**
+- `function-022` FAIL on /product/1: Clicking 'Reviews (0)' shows the reviews section: FAIL - Clicked el-2a36a1e0ab ('Reviews (0)') and the tab el-18eafbdd8e; page stayed at /product/1, no server response, and PAGE TEXT was unchanged (still showing 'A well 
+- `function-024` UNCERTAIN on /product/1: Click Reviews (0) tab shows the reviews view: BLOCKED - Click on el-18eafbdd8e accepted with no error; no server response; observe tool repeatedly rejected with 'not on site map' empty-id error so I could not confirm the
+- `function-033` FAIL on /product/1: Click Reviews (0) tab: FAIL - Clicked tab 'Reviews (0)' on /product/1. No server request sent, no content change: page still shows the description text 'A well made canvas tote for everyday use.' and no reviews section o
+
+**B13 (caught)**
+- `basic-link` FAIL on /cart: Link 'Continue shopping' on /cart goes to /shop, which returns 404 Not Found.
+
+**B14 (false_pass)**
+- `function-018` PASS on /cart: Add to cart adds item and shows result: PASS - Clicked 'Add to cart'; message 'Added to cart' shown, POST /api/cart/add -> 200. Cart page shows Canvas Tote quantity 2 and total $20.; Another copy of button adds a differe
+- `function-026` PASS on /cart: Add to cart adds item: PASS - Clicked 'Add to cart' for Canvas Tote; POST /api/cart/add -> 200, message 'Added to cart', and /cart shows Canvas Tote $20.00 Total $20.00.; Cart persists after reload: PASS - Reopened /cart
+
+**B15 (caught)**
+- `basic-resources` FAIL on /: /: 1 file(s) failed to load: broken image /static/img/lamp-large.png (404)
+- `function-001` FAIL on /: Search for 'desk' filters products: FAIL - URL became ?q=desk&sort= but page still shows all 6 products (Canvas Tote, Steel Bottle, Desk Lamp, Notebook Set). Search term is not applied to filtering.; Search for 'notebook
+- `function-009` FAIL on /: valid search query filters results: FAIL - Search 'tote' on /?q=tote&sort= returned all 6 products incl. Steel Bottle, Desk Lamp, Notebook Set (not matching). Search 'lamp' returned Steel Bottle/Wool Socks/Coffee Mug/Can
+
+**B16 (false_pass)**
+- `function-020` PASS on /: input 'nl' in newsletter subscribe shows result: PASS - Entering 'nl' into the newsletter email input and clicking Subscribe showed 'Thanks for subscribing' on screen with no error. [code rules only: the AI judge comes i
+
+**B19 (caught)**
+- `basic-title` FAIL on /contact: /contact has an empty <title>, so the browser tab shows no page name.
+
+**B20 (caught)**
+- `basic-errors` FAIL on /: /: 1 JavaScript error(s) on load: uncaught JavaScript error: Cannot read properties of undefined (reading 'currency')
+- `function-019` FAIL on /: Subscribe with valid email: PASS - Filled test@example.com, clicked Subscribe -> message 'Thanks for subscribing' shown, no error.; Subscribe with empty email: FAIL - Clicked Subscribe with empty field -> still showed 'T
+- `function-025` UNCERTAIN on /: Log out redirects to login and clears visible user: PASS - Clicked 'Log out' -> server GET /login -> 200, page showed 'Log in Register' login screen with email/password fields and no 'Hi, Test User'.; Logout state persis
+
+**B21 (caught)**
+- `basic-link` FAIL on /: Link 'Help' on / has an empty href, so it goes nowhere.
+- `function-001` FAIL on /: Search for 'desk' filters products: FAIL - URL became ?q=desk&sort= but page still shows all 6 products (Canvas Tote, Steel Bottle, Desk Lamp, Notebook Set). Search term is not applied to filtering.; Search for 'notebook
+- `function-019` FAIL on /: Subscribe with valid email: PASS - Filled test@example.com, clicked Subscribe -> message 'Thanks for subscribing' shown, no error.; Subscribe with empty email: FAIL - Clicked Subscribe with empty field -> still showed 'T
+
+## FAIL verdicts not linked to a planted bug
+
+Either a real extra defect, a linking miss, or a false fail. A human decides.
+
+- `function-011` on /admin: valid submission accepted and saved: PASS - Filled test@example.com + message, clicked Send -> POST /contact 200, 'Thanks, we will reply within 2 days.' Then reopened /contact (GET 200).; empty form refused with clear me
+
+## FAIL verdicts on the clean build
+
+- `function-022` on /login: Add to cart adds item and shows result: FAIL - Clicking 'Add to cart' (el-e6770dfdfe) sent POST /api/cart/add -> 401 and redirected to /login; no item added, console error '401 (Unauthorized)'. Same for second copy el-ab
+- `function-005` on /login: valid review is accepted/saved: FAIL - Filled review textarea with 'Great tote bag!' and clicked Post review. Server responded POST /api/reviews -> 401, message 'Could not save review'. Valid input was refused (login req
+- `function-006` on /login: Valid review is accepted and saved: FAIL - Posted a valid review 'Great bottle, worth the price.' -> POST /api/reviews returned 401; message 'Could not save review'; no review saved (Reviews still 0).; Empty review is re

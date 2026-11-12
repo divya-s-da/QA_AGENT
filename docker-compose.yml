@@ -1,0 +1,27 @@
+services:
+  qa-agent:
+    build: .
+    image: qa-agent:latest
+    container_name: qa-agent
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      # Uncomment to debug the browser over CDP:
+      # - "9222:9222"
+    environment:
+      AIROUTER_API_KEY: ${AIROUTER_API_KEY:-}
+      OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY:-}
+      SITE_EMAIL: ${SITE_EMAIL:-}
+      SITE_PASSWORD: ${SITE_PASSWORD:-}
+      SITE_PASSWORD_FALLBACK: ${SITE_PASSWORD_FALLBACK:-}
+      TEST_FILE_PATH: ${TEST_FILE_PATH:-}
+      ALLOW_ORIGINS: ${ALLOW_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
+    volumes:
+      # Evidence (screenshots + DOCX reports) survive container rebuilds/restarts
+      - qa-evidence:/root/.react_qa_screenshots
+      # Pipeline/run state
+      - qa-state:/app/react_qa_agent/state
+
+volumes:
+  qa-evidence:
+  qa-state:

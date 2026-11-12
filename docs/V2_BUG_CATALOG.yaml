@@ -1,0 +1,4237 @@
+# Black-box web QA bug catalog
+# Severity: T0 blocks money/data/security/main flow; T1 major function broken; T2 visible but minor
+# check: code = generic script/HTTP can decide; task = needs an LLM-driven browser tester
+site_types:
+- id: shop
+  name: Online shop / e-commerce
+  signals:
+  - cart
+  - checkout
+  - add to cart
+  - basket
+  - sku
+  - price
+  - shipping
+  - /product
+  - /cart
+  - promo code
+  critical_flows:
+  - browse
+  - search
+  - product page
+  - add to cart
+  - edit cart
+  - coupon
+  - checkout
+  - pay (test mode)
+  - order confirmation
+  - order history
+  - returns
+  sources:
+  - https://baymard.com/research/checkout-usability
+  - https://baymard.com/blog/current-state-of-checkout-ux
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/10-Test-Payment-Functionality
+- id: marketplace
+  name: Multi-vendor marketplace
+  signals:
+  - sell
+  - seller
+  - vendor
+  - become a seller
+  - listing
+  - storefront
+  - payout
+  - commission
+  - /seller
+  - /vendor
+  critical_flows:
+  - seller onboarding
+  - create listing
+  - buyer search
+  - buy
+  - buyer-seller messages
+  - reviews
+  - seller orders
+  - payouts
+  sources:
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/README
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/10-Test-Payment-Functionality
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+- id: bank
+  name: Bank / fintech / wallet / payments
+  signals:
+  - balance
+  - transfer
+  - beneficiary
+  - payee
+  - iban
+  - statement
+  - wallet
+  - top up
+  - withdraw
+  - account number
+  - transactions
+  critical_flows:
+  - login with 2FA
+  - view balance
+  - transaction history
+  - transfer
+  - add beneficiary
+  - statements download
+  - card controls
+  - limits
+  sources:
+  - https://www.browserstack.com/guide/how-to-test-banking-domain-applications
+  - https://testrigor.com/blog/test-cases-for-a-banking-web-application/
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/10-Test-Payment-Functionality
+  - https://owasp.org/www-project-application-security-verification-standard/
+- id: insurance
+  name: Insurance (quote, policy, claims)
+  signals:
+  - quote
+  - premium
+  - policy
+  - coverage
+  - deductible
+  - claim
+  - insured
+  - renewal
+  critical_flows:
+  - get quote
+  - compare plans
+  - bind/buy policy
+  - view policy documents
+  - file claim
+  - claim status
+  - renew
+  sources:
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/README
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+- id: admin
+  name: Internal admin tool / back office
+  signals:
+  - admin
+  - dashboard
+  - users
+  - roles
+  - permissions
+  - audit log
+  - impersonate
+  - bulk
+  - /admin
+  - /backoffice
+  critical_flows:
+  - login
+  - user management
+  - role changes
+  - search tables
+  - bulk actions
+  - import/export
+  - audit log
+  sources:
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+  - https://owasp.org/www-project-application-security-verification-standard/
+  - https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html
+- id: crm
+  name: CRM
+  signals:
+  - contacts
+  - leads
+  - deals
+  - pipeline
+  - accounts
+  - opportunities
+  - activities
+  - /crm
+  critical_flows:
+  - create contact
+  - import contacts
+  - move deal through pipeline
+  - log activity
+  - reports
+  - sharing/ownership
+  sources:
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+  - https://www.hackerone.com/top-10-vulnerabilities
+- id: hr
+  name: Employee tracker / HR / time tracking / payroll
+  signals:
+  - timesheet
+  - clock in
+  - clock out
+  - punch
+  - leave
+  - pto
+  - payslip
+  - payroll
+  - shift
+  - attendance
+  - overtime
+  critical_flows:
+  - clock in/out
+  - timesheet entry
+  - submit/approve timesheet
+  - leave request/approval
+  - payslip view
+  - manager reports
+  sources:
+  - https://www.opentimeclock.com/blog2025/handle-daylight-saving-time-payroll-errors.html
+  - https://qaskills.sh/blog/timezone-dst-testing-guide
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+- id: pm
+  name: Project management / ticketing / issue tracker
+  signals:
+  - project
+  - board
+  - sprint
+  - backlog
+  - issue
+  - ticket
+  - kanban
+  - assignee
+  - epic
+  - /issues
+  critical_flows:
+  - create ticket
+  - assign
+  - move status
+  - comment/mention
+  - search/filter
+  - project membership
+  - attachments
+  sources:
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+  - https://www.hackerone.com/top-10-vulnerabilities
+- id: search
+  name: Search engine / site search
+  signals:
+  - search
+  - results
+  - query
+  - q=
+  - filter
+  - facet
+  - sort by
+  - no results
+  critical_flows:
+  - type query
+  - autocomplete
+  - results
+  - filters/facets
+  - sort
+  - pagination
+  - open result
+  sources:
+  - https://baymard.com/research/ecommerce-search
+  - https://www.nngroup.com/articles/search-no-results-serp/
+- id: llm
+  name: RAG / AI chatbot / LLM assistant
+  signals:
+  - chat
+  - assistant
+  - ask
+  - ai
+  - copilot
+  - prompt
+  - new chat
+  - sources
+  - upload document
+  - regenerate
+  critical_flows:
+  - ask question
+  - read answer with citations
+  - upload document
+  - follow-up
+  - conversation history
+  - tool actions
+  - feedback
+  sources:
+  - https://genai.owasp.org/llm-top-10/
+  - https://owasp.org/www-project-top-10-for-large-language-model-applications/
+- id: portfolio
+  name: Portfolio / personal site
+  signals:
+  - portfolio
+  - about me
+  - my work
+  - projects
+  - resume
+  - cv
+  - contact me
+  - hire me
+  critical_flows:
+  - view projects
+  - open project links
+  - download resume
+  - contact form
+  sources:
+  - https://www.w3.org/WAI/WCAG22/quickref/
+  - https://web.dev/articles/vitals
+- id: landing
+  name: Marketing / landing page
+  signals:
+  - get started
+  - sign up free
+  - book a demo
+  - pricing
+  - testimonials
+  - features
+  - request demo
+  - utm_
+  critical_flows:
+  - hero CTA
+  - lead form
+  - pricing view
+  - demo booking
+  - newsletter signup
+  sources:
+  - https://web.dev/articles/vitals
+  - https://developers.google.com/search/docs/fundamentals/seo-starter-guide
+  - https://www.w3.org/WAI/WCAG22/quickref/
+- id: blog
+  name: Blog / CMS / news / media
+  signals:
+  - blog
+  - article
+  - post
+  - author
+  - category
+  - tag
+  - rss
+  - subscribe
+  - read more
+  - /news
+  critical_flows:
+  - home feed
+  - article page
+  - category/tag
+  - search
+  - comments
+  - newsletter
+  - paywall
+  - editor publish
+  sources:
+  - https://developers.google.com/search/docs/fundamentals/seo-starter-guide
+  - https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview
+- id: saas
+  name: SaaS dashboard / analytics / subscription app
+  signals:
+  - dashboard
+  - workspace
+  - team
+  - invite
+  - plan
+  - billing
+  - usage
+  - analytics
+  - api key
+  - settings
+  critical_flows:
+  - sign up
+  - onboarding
+  - dashboard KPIs
+  - date range
+  - reports/export
+  - invite member
+  - roles
+  - billing/plan change
+  - API keys
+  sources:
+  - https://owasp.org/www-project-application-security-verification-standard/
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+  - https://cheatsheetseries.owasp.org/cheatsheets/Multi_Tenant_Security_Cheat_Sheet.html
+- id: booking
+  name: Booking / reservation (travel, hotel, appointments)
+  signals:
+  - book
+  - reserve
+  - availability
+  - check-in
+  - check-out
+  - guests
+  - slot
+  - appointment
+  - nights
+  - reservation
+  critical_flows:
+  - search availability
+  - pick dates/slot
+  - price breakdown
+  - book
+  - confirmation
+  - modify
+  - cancel
+  - my bookings
+  sources:
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/README
+  - https://baymard.com/research/checkout-usability
+- id: delivery
+  name: Food delivery / ride hailing
+  signals:
+  - delivery
+  - restaurant
+  - menu
+  - order now
+  - rider
+  - driver
+  - track order
+  - eta
+  - pickup
+  - tip
+  critical_flows:
+  - set address
+  - browse menu
+  - customize item
+  - cart
+  - checkout
+  - track order
+  - reorder
+  - rate
+  sources:
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/README
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/10-Test-Payment-Functionality
+- id: social
+  name: Social network / community / forum / chat
+  signals:
+  - feed
+  - follow
+  - like
+  - comment
+  - post
+  - profile
+  - friends
+  - messages
+  - dm
+  - forum
+  - thread
+  - reply
+  critical_flows:
+  - post
+  - comment
+  - like/follow
+  - direct messages
+  - privacy settings
+  - block/report
+  - groups
+  - notifications
+  sources:
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+  - https://www.hackerone.com/top-10-vulnerabilities
+  - https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
+- id: lms
+  name: Learning platform / LMS / exams
+  signals:
+  - course
+  - lesson
+  - module
+  - quiz
+  - exam
+  - enroll
+  - grade
+  - assignment
+  - certificate
+  - progress
+  critical_flows:
+  - enroll
+  - watch lesson
+  - quiz/exam
+  - submit assignment
+  - grades
+  - progress
+  - certificate
+  sources:
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+  - https://www.w3.org/WAI/WCAG22/quickref/
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/README
+- id: health
+  name: Healthcare / patient portal
+  signals:
+  - patient
+  - appointment
+  - doctor
+  - provider
+  - prescription
+  - lab results
+  - medical records
+  - mychart
+  - telehealth
+  - insurance id
+  critical_flows:
+  - login
+  - appointments
+  - test results
+  - medications
+  - messages to provider
+  - records download
+  - proxy access
+  sources:
+  - https://www.hhs.gov/hipaa/for-professionals/privacy/guidance/hipaa-online-tracking/index.html
+  - https://www.hhs.gov/hipaa/for-professionals/security/index.html
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+- id: gov
+  name: Government / public forms
+  signals:
+  - apply
+  - application
+  - eligibility
+  - citizen
+  - permit
+  - license
+  - benefit
+  - reference number
+  - .gov
+  - gov.
+  critical_flows:
+  - eligibility check
+  - multi-step form
+  - document upload
+  - check your answers
+  - pay fee
+  - submit
+  - track status
+  sources:
+  - https://design-system.service.gov.uk/patterns/check-answers/
+  - https://designsystem.digital.gov/
+  - https://www.w3.org/WAI/WCAG22/quickref/
+- id: realestate
+  name: Real estate listings
+  signals:
+  - for sale
+  - for rent
+  - listing
+  - bedrooms
+  - sqft
+  - agent
+  - mortgage
+  - open house
+  - property
+  critical_flows:
+  - search by area
+  - map view
+  - filters
+  - listing detail
+  - save/favorite
+  - contact agent
+  - mortgage calculator
+  sources:
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/README
+  - https://baymard.com/research/ecommerce-search
+- id: jobs
+  name: Job board / recruiting / ATS
+  signals:
+  - jobs
+  - careers
+  - apply
+  - resume
+  - cv
+  - candidate
+  - employer
+  - job alert
+  - salary
+  - recruiter
+  critical_flows:
+  - search jobs
+  - job detail
+  - apply with resume
+  - my applications
+  - employer posts job
+  - review applicants
+  sources:
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+  - https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html
+- id: events
+  name: Ticketing / events
+  signals:
+  - tickets
+  - event
+  - venue
+  - seat
+  - sold out
+  - admission
+  - register
+  - rsvp
+  - lineup
+  critical_flows:
+  - browse events
+  - select tickets/seats
+  - checkout
+  - ticket delivery (QR/PDF)
+  - transfer
+  - refund
+  sources:
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/10-Test-Payment-Functionality
+  - https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/README
+- id: streaming
+  name: Streaming / media player
+  signals:
+  - watch
+  - play
+  - episode
+  - season
+  - playlist
+  - subscribe
+  - video
+  - podcast
+  - listen
+  - continue watching
+  critical_flows:
+  - browse catalog
+  - play
+  - seek/quality
+  - captions
+  - continue watching
+  - my list
+  - subscription gating
+  sources:
+  - https://www.w3.org/WAI/media/av/
+  - https://www.w3.org/WAI/WCAG22/quickref/
+- id: files
+  name: File storage / document sharing
+  signals:
+  - upload
+  - files
+  - folder
+  - share
+  - shared with me
+  - download
+  - storage
+  - drive
+  - trash
+  critical_flows:
+  - upload
+  - download
+  - share link
+  - permissions
+  - move/rename
+  - trash/restore
+  - versions
+  sources:
+  - https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+- id: iot
+  name: IoT / device dashboard
+  signals:
+  - device
+  - sensor
+  - telemetry
+  - firmware
+  - online
+  - offline
+  - gateway
+  - readings
+  - thermostat
+  - fleet
+  critical_flows:
+  - device list
+  - live status
+  - send command
+  - charts
+  - alerts
+  - sharing
+  - firmware
+  sources:
+  - https://owasp.org/www-project-internet-of-things/
+  - https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+- id: docs
+  name: Developer docs / API portal
+  signals:
+  - docs
+  - api reference
+  - sdk
+  - endpoint
+  - quickstart
+  - try it
+  - changelog
+  - /docs
+  - /api
+  critical_flows:
+  - read guide
+  - search docs
+  - API reference
+  - try it console
+  - version switch
+  - copy code
+  sources:
+  - https://developers.google.com/search/docs/fundamentals/seo-starter-guide
+  - https://owasp.org/www-project-application-security-verification-standard/
+bugs:
+- id: GEN-AUTH-001
+  applies: &id001
+  - all
+  severity: T0
+  area: session
+  title: Old session still valid after logout
+  symptom: After clicking log out, reusing the previous session cookie/token still returns authenticated
+    pages/data.
+  check: task
+  how: Log in, capture a session cookie or request to an authenticated endpoint, log out through the UI,
+    then replay the same cookie/request.
+  expected: After logout the old session is rejected (401/redirect to login); server-side session is invalidated.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-AUTH-002
+  applies: *id001
+  severity: T0
+  area: auth
+  title: Login accepts wrong password / no credential check
+  symptom: Submitting a known-good username with any wrong password still logs in, or empty password is
+    accepted.
+  check: task
+  how: Attempt login with the test account's email and a deliberately wrong password once (no brute force).
+  expected: Wrong password is rejected with an auth error; only correct credentials grant access.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-AUTH-003
+  applies: *id001
+  severity: T1
+  area: auth
+  title: Login error reveals whether an account exists (user enumeration)
+  symptom: Unknown email returns 'no such user' while wrong password returns 'wrong password', letting
+    anyone enumerate accounts.
+  check: task
+  how: Submit login with a clearly non-existent email and with a real email + wrong password; compare
+    error text and response timing/shape.
+  expected: Both cases return the same generic 'invalid email or password' message.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-AUTH-004
+  applies: *id001
+  severity: T1
+  area: auth
+  title: Password reset link does not expire or is reusable
+  symptom: A password reset link still works long after use or after a new one is issued.
+  check: task
+  how: Request a reset, use the link, then try the same link again; also request a second reset and try
+    the first link.
+  expected: A reset link is single-use and invalidated when used or when a newer one is issued.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-AUTH-005
+  applies: *id001
+  severity: T0
+  area: auth
+  title: Password change / reset does not invalidate other sessions
+  symptom: After changing the password, previously established sessions on other devices still work.
+  check: task
+  how: Log in in session A, change password in session B, then continue using session A.
+  expected: Changing or resetting a password terminates other active sessions (or at least the attacker-style
+    one).
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-AUTH-006
+  applies: *id001
+  severity: T1
+  area: auth
+  title: 2FA / OTP step can be skipped
+  symptom: After password step the app lands on an authenticated page without completing the OTP/2FA challenge,
+    or the 2FA page URL can be bypassed by navigating directly.
+  check: task
+  how: Start a login that requires 2FA, then try navigating directly to a post-login URL or replaying
+    the pre-2FA session.
+  expected: No authenticated resource is reachable until 2FA completes.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-AUTH-007
+  applies: *id001
+  severity: T2
+  area: auth
+  title: No confirmation/verification on new account email
+  symptom: Accounts become fully active with an unverified email, or verification link is missing.
+  check: task
+  how: Register (if allowed) with an address you control and check whether privileged actions work before
+    verifying.
+  expected: 'Per product rules: email ownership is verified before sensitive actions.'
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-AUTH-008
+  applies: *id001
+  severity: T1
+  area: session
+  title: 'Session fixation: session id not rotated on login'
+  symptom: The session identifier is the same before and after authenticating.
+  check: task
+  how: Capture the session cookie value before login, log in, and compare the cookie value after.
+  expected: A new session id is issued at login (the pre-auth id is discarded).
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-AUTH-009
+  applies: *id001
+  severity: T2
+  area: session
+  title: Session never times out
+  symptom: A session left idle for a long time still works with no re-auth for sensitive areas.
+  check: task
+  how: Note cookie/token expiry attributes and, where feasible, confirm an old idle session still authenticates.
+  expected: 'Per product rules: idle/absolute session timeouts exist, especially for sensitive apps.'
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-ACCESS-001
+  applies: *id001
+  severity: T0
+  area: access
+  title: Authenticated-only page reachable while logged out
+  symptom: Pasting a known logged-in URL (dashboard, account, orders) while unauthenticated returns the
+    content instead of redirecting to login.
+  check: code
+  how: Collect URLs seen while logged in, clear cookies, GET each; flag any that return 200 with real
+    content instead of a login redirect/401.
+  expected: Protected pages redirect to login or return 401/403 when unauthenticated.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-ACCESS-002
+  applies: *id001
+  severity: T0
+  area: access
+  title: 'IDOR: another user''s record via id in URL/API'
+  symptom: Changing an id in a URL or API call (order, invoice, profile, document) returns another user's
+    data.
+  check: task
+  how: With account A, note an object id in a URL/API response; from account B (or by editing the id),
+    request the neighbouring/other id.
+  expected: Requests for objects the current user does not own return 403/404, not the data.
+  needs_write: false
+  needs_two_accounts: true
+- id: GEN-ACCESS-003
+  applies: *id001
+  severity: T0
+  area: access
+  title: Privilege escalation via client-side role control
+  symptom: A normal user can reach admin/privileged functions by navigating to admin URLs or because UI
+    only hides them client-side.
+  check: task
+  how: As a low-privilege account, request admin/privileged URLs and endpoints discovered in JS.
+  expected: Authorization is enforced server-side; privileged endpoints return 403 for normal users.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-ACCESS-004
+  applies: *id001
+  severity: T0
+  area: access
+  title: Function-level action not authorized (forced action)
+  symptom: A write action (delete, approve, change role) succeeds when called directly even though the
+    UI hides it for this user.
+  check: task
+  how: Capture a privileged write request as an allowed user; replay the same request from a lower-privilege
+    account.
+  expected: The server rejects actions the current user is not permitted to perform.
+  needs_write: true
+  needs_two_accounts: true
+- id: GEN-ACCESS-005
+  applies: *id001
+  severity: T0
+  area: access
+  title: Multi-tenant data leak across organizations
+  symptom: A user in tenant/org A can read or act on tenant B data by changing a tenant/org id or object
+    id.
+  check: task
+  how: With accounts in two tenants, swap tenant/object identifiers in requests.
+  expected: Each tenant sees only its own data; cross-tenant access is denied.
+  needs_write: false
+  needs_two_accounts: true
+- id: GEN-ACCESS-006
+  applies: *id001
+  severity: T1
+  area: access
+  title: Direct object access bypasses UI workflow state
+  symptom: An object in a not-yet-eligible state can be advanced/accessed by calling the later-step endpoint
+    directly.
+  check: task
+  how: Identify a multi-step flow; call a later step's endpoint before completing earlier required steps.
+  expected: Server enforces the required order/state transitions.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-ACCESS-007
+  applies: *id001
+  severity: T1
+  area: access
+  title: Deactivated/removed user still has access
+  symptom: After a user is removed from an org or deactivated, their existing session/token still works.
+  check: task
+  how: Remove/deactivate account B (or have it done), then continue using B's existing session.
+  expected: Access is revoked promptly after deactivation/removal.
+  needs_write: true
+  needs_two_accounts: true
+- id: GEN-MONEY-001
+  applies:
+  - shop
+  - marketplace
+  - bank
+  - booking
+  - delivery
+  - events
+  - saas
+  - insurance
+  - lms
+  severity: T0
+  area: money
+  title: Negative or zero quantity/amount accepted
+  symptom: Setting quantity, amount, or price to a negative or zero value is accepted and changes the
+    total (e.g. negative qty credits the user).
+  check: task
+  how: In cart/transfer/booking, set a quantity or amount field to 0 or a negative number via the UI or
+    request body.
+  expected: Negative/zero values are rejected; totals never go below legitimate minimums.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-MONEY-002
+  applies:
+  - shop
+  - marketplace
+  - booking
+  - delivery
+  - events
+  - saas
+  - insurance
+  severity: T0
+  area: money
+  title: Client-side price/total is trusted by the server
+  symptom: Editing the price/total/amount in the request before submit results in the user being charged
+    the tampered amount.
+  check: task
+  how: Intercept the add-to-cart/checkout/order request, change a price or total field to a lower value,
+    submit (test mode only).
+  expected: Server recomputes prices from authoritative data and ignores client-supplied prices.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-MONEY-002b
+  applies:
+  - shop
+  - marketplace
+  - booking
+  - delivery
+  - events
+  severity: T0
+  area: money
+  title: Coupon/discount stacking or reuse beyond limit
+  symptom: A single-use or non-stackable coupon can be applied multiple times or combined to drive the
+    total unfairly low.
+  check: task
+  how: Apply the same coupon repeatedly, or two exclusive coupons, and re-apply after removing.
+  expected: 'Per product rules: coupon reuse/stacking limits are enforced server-side.'
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-MONEY-003
+  applies:
+  - shop
+  - marketplace
+  - bank
+  - booking
+  - delivery
+  - events
+  - saas
+  severity: T0
+  area: money
+  title: Double submission charges/acts twice
+  symptom: Clicking pay/submit twice (or replaying the request) creates two orders/charges/transfers.
+  check: task
+  how: Submit a payment/transfer, then resubmit the same request or double-click the final button.
+  expected: Idempotency prevents duplicate orders/charges for one intent.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-MONEY-004
+  applies:
+  - shop
+  - marketplace
+  - booking
+  - events
+  - delivery
+  severity: T1
+  area: money
+  title: Out-of-stock / unavailable item can still be purchased
+  symptom: An item shown as sold out / unavailable can still be added and checked out.
+  check: task
+  how: Find an out-of-stock item or exhaust availability, then try to add to cart and check out.
+  expected: The server refuses to sell unavailable inventory.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-MONEY-005
+  applies:
+  - shop
+  - bank
+  - saas
+  - booking
+  severity: T1
+  area: money
+  title: Currency/rounding inconsistency in totals
+  symptom: Line items, tax, and grand total do not add up, or rounding differs between pages.
+  check: code
+  how: On the order/cart/summary page, sum displayed line items + tax + fees and compare to the shown
+    total.
+  expected: Displayed totals equal the sum of their parts with consistent rounding.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-FORM-001
+  applies: *id001
+  severity: T0
+  area: forms
+  title: Success message shown but nothing saved on server (success trap)
+  symptom: UI shows 'Saved'/'Submitted successfully' but reloading shows the old data, i.e. the write
+    did not persist.
+  check: task
+  how: Submit a form/change, see the success state, then hard-reload or reopen the record to confirm the
+    change persisted.
+  expected: A success message appears only after the server actually persisted the change.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-FORM-002
+  applies: *id001
+  severity: T1
+  area: forms
+  title: Required/validated field accepts invalid data
+  symptom: Required fields can be left blank or clearly invalid values (bad email, letters in phone) are
+    accepted and saved.
+  check: task
+  how: Submit forms with empty required fields and malformed values.
+  expected: Server-side validation rejects invalid/missing required data with clear errors.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-FORM-003
+  applies: *id001
+  severity: T1
+  area: forms
+  title: Form loses data / resets on validation error
+  symptom: When one field fails validation the whole form clears, forcing re-entry.
+  check: task
+  how: Submit a long form with one invalid field; observe whether other fields retain their values.
+  expected: Valid entered values are preserved when correcting a single error.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-FORM-004
+  applies: *id001
+  severity: T2
+  area: forms
+  title: No protection against double-submit on slow forms
+  symptom: Submit button stays active and re-clickable while the request is in flight, with no spinner/disable.
+  check: task
+  how: Submit a form on a throttled connection and observe button state.
+  expected: Submit is disabled/deduplicated while processing.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-FORM-005
+  applies: *id001
+  severity: T1
+  area: forms
+  title: Reflected input marker rendered without escaping (possible XSS)
+  symptom: A harmless unique marker typed into a field/search/URL param is reflected into the page in
+    a way that could execute.
+  check: task
+  how: Enter a benign unique string containing angle-bracket markers in search/params/form; check whether
+    it is reflected unescaped in HTML source.
+  expected: User input is HTML-escaped wherever reflected; markers appear as inert text.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-FORM-006
+  applies: *id001
+  severity: T2
+  area: forms
+  title: No max-length / huge input breaks the page
+  symptom: Pasting a very large (but reasonable, e.g. a few KB) value into a text field errors out or
+    corrupts the layout.
+  check: task
+  how: Paste a few KB of text into free-text fields and submit.
+  expected: Inputs have sane length limits and handle long values gracefully.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-DATA-001
+  applies: *id001
+  severity: T1
+  area: data
+  title: Placeholder text leaked to users (undefined/NaN/null/Lorem)
+  symptom: Pages show literal 'undefined', 'NaN', 'null', '[object Object]', or 'Lorem ipsum'.
+  check: code
+  how: 'Crawl rendered pages and scan visible text for tokens: undefined, NaN, null, [object Object],
+    Lorem ipsum, {{, %s.'
+  expected: No placeholder/debug tokens appear in user-facing text.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-DATA-002
+  applies: *id001
+  severity: T1
+  area: data
+  title: Broken images / missing assets
+  symptom: Images, icons, or media fail to load (404) leaving broken placeholders.
+  check: code
+  how: Load each page, collect img/src and media URLs, fetch them, flag non-2xx or zero-byte responses.
+  expected: All referenced media load successfully.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-DATA-003
+  applies: *id001
+  severity: T1
+  area: navigation
+  title: Broken internal links (404/500)
+  symptom: Clicking internal links lands on 404/500 or dead pages.
+  check: code
+  how: Crawl same-origin links from each page and flag any returning 4xx/5xx.
+  expected: Internal links resolve to working pages.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-DATA-004
+  applies: *id001
+  severity: T1
+  area: data
+  title: Dates/times/numbers display wrong or inconsistent
+  symptom: Timestamps show in the wrong timezone, as epoch numbers, 'Invalid Date', or inconsistent formats
+    across pages.
+  check: task
+  how: Compare a timestamp you created (e.g. an order/comment) against expected local time and across
+    list vs detail views.
+  expected: Dates/times render in a consistent, correct, localized format.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-DATA-005
+  applies: *id001
+  severity: T2
+  area: data
+  title: Empty state missing or broken
+  symptom: A list/section with no data shows an error, infinite spinner, or raw blank instead of a proper
+    empty state.
+  check: task
+  how: Reach a list with no items (new account, filtered to nothing) and observe.
+  expected: Empty states render clear messaging, not errors/spinners.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-DATA-006
+  applies: *id001
+  severity: T2
+  area: data
+  title: Stale data after an action (no refresh)
+  symptom: After creating/deleting/editing, the list or counter still shows the old state until a manual
+    full reload.
+  check: task
+  how: Perform a create/delete and observe whether the relevant list/count updates without a hard reload.
+  expected: UI reflects the new server state after the action.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-ERR-001
+  applies: *id001
+  severity: T0
+  area: errors
+  title: Server error (5xx) on a normal flow
+  symptom: A normal user action returns HTTP 500/502/503 or a crash page.
+  check: code
+  how: Exercise core flows and flag any 5xx responses or error pages.
+  expected: Normal flows never return 5xx.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-ERR-002
+  applies: *id001
+  severity: T1
+  area: errors
+  title: Stack trace / framework debug page exposed
+  symptom: An error reveals a stack trace, file paths, SQL, or framework debug output.
+  check: code
+  how: Trigger error paths (bad id, malformed input) and scan responses for stack-trace/debug signatures
+    (Traceback, at com., Exception, SQL syntax).
+  expected: Errors show a friendly message with no internal details.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-ERR-003
+  applies: *id001
+  severity: T1
+  area: errors
+  title: Unhandled JS exceptions / console errors on load
+  symptom: The browser console shows uncaught errors that break functionality.
+  check: code
+  how: Load each page with console capture; flag uncaught exceptions and failed XHR/fetch tied to features.
+  expected: No uncaught JS errors on normal pages.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-ERR-004
+  applies: *id001
+  severity: T2
+  area: errors
+  title: Generic 404 instead of helpful not-found page
+  symptom: Unknown URLs return a bare/ugly 404 with no navigation back.
+  check: code
+  how: Request a random non-existent path and inspect the response.
+  expected: A branded, helpful 404 with navigation is returned (status 404).
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-ERR-005
+  applies: *id001
+  severity: T1
+  area: errors
+  title: Action fails silently (no error shown)
+  symptom: An action that fails server-side shows no error and no success, leaving the user unsure.
+  check: task
+  how: Trigger a failing action (e.g. invalid input that passes client checks) and observe feedback.
+  expected: Failures surface a clear error message.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-SEC-001
+  applies: *id001
+  severity: T1
+  area: security
+  title: Session cookie missing Secure/HttpOnly/SameSite flags
+  symptom: The authentication/session cookie lacks Secure, HttpOnly, or a SameSite attribute.
+  check: code
+  how: Inspect Set-Cookie headers / stored cookies for the session cookie and check Secure, HttpOnly,
+    SameSite.
+  expected: Session cookies are Secure, HttpOnly, and SameSite=Lax/Strict.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-002
+  applies: *id001
+  severity: T2
+  area: security
+  title: Missing key security headers
+  symptom: Responses lack HSTS, X-Content-Type-Options, X-Frame-Options/frame-ancestors, or a Content-Security-Policy.
+  check: code
+  how: Fetch top pages and check for Strict-Transport-Security, X-Content-Type-Options:nosniff, frame
+    protection, and CSP.
+  expected: Baseline security headers are present on HTML responses.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-003
+  applies: *id001
+  severity: T0
+  area: security
+  title: Secrets / API keys exposed in page or JS
+  symptom: Hardcoded API keys, tokens, private keys, or credentials appear in HTML or JS bundles.
+  check: code
+  how: Download HTML + JS and regex for key patterns (AKIA, sk_live, AIza, xox, -----BEGIN, Bearer long
+    tokens, basic auth in URLs).
+  expected: No live secrets are shipped to the browser.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-004
+  applies: *id001
+  severity: T0
+  area: security
+  title: Sensitive dotfiles/VCS exposed via single GET
+  symptom: /.env, /.git/HEAD, /config.json, /backup.zip, /.DS_Store etc. are downloadable.
+  check: code
+  how: GET a short list of common exposed paths (/.env, /.git/HEAD, /.git/config, /config.php.bak, /wp-config.php.bak)
+    and flag 200 with real content.
+  expected: These paths return 404/403, not file contents.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-005
+  applies: *id001
+  severity: T1
+  area: security
+  title: Mixed content on HTTPS page
+  symptom: An HTTPS page loads scripts/images/iframes over plain HTTP.
+  check: code
+  how: On HTTPS pages, scan loaded resources for http:// URLs (active content especially).
+  expected: All subresources load over HTTPS.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-006
+  applies: *id001
+  severity: T1
+  area: security
+  title: HTTP not redirected to HTTPS
+  symptom: The site serves content over plain HTTP without redirecting to HTTPS.
+  check: code
+  how: Request the http:// origin and check for a 301/308 redirect to https://.
+  expected: HTTP requests redirect to HTTPS.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-007
+  applies: *id001
+  severity: T1
+  area: security
+  title: Directory listing enabled
+  symptom: A directory (e.g. /assets/, /uploads/) returns an index listing of files.
+  check: code
+  how: GET common directory paths and detect autoindex listings.
+  expected: Directories do not list contents.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-008
+  applies: *id001
+  severity: T1
+  area: privacy
+  title: PII/sensitive data in URL query string
+  symptom: Tokens, passwords, emails, or record ids that are sensitive appear in URLs (and thus logs/history).
+  check: code
+  how: Inspect URLs across the flow for sensitive params (token=, password=, ssn=, email= on GET).
+  expected: Sensitive data is sent in bodies/headers, not URLs.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-009
+  applies: *id001
+  severity: T2
+  area: security
+  title: Autocomplete not disabled on sensitive fields / password visible
+  symptom: Sensitive fields render as plain text or cache in a way the product should prevent.
+  check: code
+  how: Inspect password/sensitive inputs for type=password and appropriate autocomplete attributes.
+  expected: 'Per product rules: sensitive fields are masked/handled appropriately.'
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEC-010
+  applies: *id001
+  severity: T1
+  area: security
+  title: No CSRF protection on state-changing requests
+  symptom: State-changing POSTs rely only on cookies with no anti-CSRF token and SameSite=None.
+  check: task
+  how: Inspect a state-changing request for an anti-CSRF token and the cookie's SameSite; note absence.
+  expected: State-changing requests require an anti-CSRF token or are SameSite-protected.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-PRIV-001
+  applies: *id001
+  severity: T1
+  area: privacy
+  title: Another user's PII shown after switching accounts (caching)
+  symptom: After logging out and into another account, the previous user's name/data briefly or persistently
+    appears.
+  check: task
+  how: Log in as A, log out, log in as B, and watch for A's data (cached pages, prefilled fields, greeting).
+  expected: No data from a prior user is shown to a new user.
+  needs_write: false
+  needs_two_accounts: true
+- id: GEN-PRIV-002
+  applies: *id001
+  severity: T2
+  area: privacy
+  title: Back button after logout shows cached private page
+  symptom: Pressing Back after logout displays the previously authenticated page from cache.
+  check: task
+  how: Log in, visit a private page, log out, press browser Back.
+  expected: 'Private pages are not served from cache after logout (Cache-Control: no-store).'
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-PRIV-003
+  applies: *id001
+  severity: T2
+  area: privacy
+  title: Analytics/trackers load before consent (where required)
+  symptom: Third-party trackers fire before any consent is given.
+  check: code
+  how: On first visit, list third-party requests fired before any consent interaction.
+  expected: 'Per product/region rules: non-essential trackers wait for consent.'
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEARCH-001
+  applies:
+  - shop
+  - marketplace
+  - search
+  - blog
+  - saas
+  - social
+  - jobs
+  - realestate
+  - lms
+  - files
+  - docs
+  - events
+  - streaming
+  severity: T1
+  area: search
+  title: Valid search returns nothing or errors
+  symptom: Searching for a term that clearly exists (e.g. an item visible on the site) returns no results
+    or an error.
+  check: task
+  how: Search for a string you can see on a listing/detail page and confirm it appears in results.
+  expected: Known-present terms return the matching results.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEARCH-002
+  applies:
+  - shop
+  - marketplace
+  - search
+  - blog
+  - saas
+  - social
+  - jobs
+  - realestate
+  - lms
+  - files
+  - docs
+  severity: T2
+  area: search
+  title: No results state missing/broken
+  symptom: A query with no matches shows a spinner, error, or blank instead of a 'no results' state.
+  check: task
+  how: Search for a random nonsense string and observe the response.
+  expected: A clear no-results message (and suggestions) is shown.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-SEARCH-003
+  applies:
+  - shop
+  - marketplace
+  - search
+  - saas
+  - jobs
+  - realestate
+  - lms
+  severity: T1
+  area: search
+  title: Filters/sort do not actually apply
+  symptom: Applying a filter or sort does not change the result set, or the URL changes but results don't.
+  check: task
+  how: Apply a filter/sort and verify the result set changes accordingly and counts match.
+  expected: Filters and sorting change results as described.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-NAV-001
+  applies: *id001
+  severity: T1
+  area: navigation
+  title: Page requires login but redirect loops or dead-ends
+  symptom: Accessing a protected page while logged out causes a redirect loop or lands nowhere.
+  check: code
+  how: Request protected URLs logged out and follow redirects, flagging loops or non-login destinations.
+  expected: A single clean redirect to login, returning to the page after auth.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-NAV-002
+  applies: *id001
+  severity: T2
+  area: navigation
+  title: Deep link / refresh on SPA route 404s
+  symptom: Reloading or deep-linking a client-side route returns a 404 from the server.
+  check: code
+  how: Directly GET several in-app routes (not via nav) and check for 404 vs app shell.
+  expected: SPA routes resolve on direct load.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-PERF-001
+  applies: *id001
+  severity: T2
+  area: performance
+  title: Page extremely slow / never finishes loading
+  symptom: A key page takes excessively long or shows a perpetual loading state.
+  check: code
+  how: Measure load/first-contentful times and flag pages exceeding a generous threshold or never settling.
+  expected: Pages load within a reasonable time and settle.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-PERF-002
+  applies: *id001
+  severity: T2
+  area: performance
+  title: Layout shift / content jumps breaks interaction
+  symptom: Content jumps around during load, causing mis-clicks.
+  check: code
+  how: Measure cumulative layout shift on key pages.
+  expected: Layout is stable during load.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-I18N-001
+  applies: *id001
+  severity: T2
+  area: i18n
+  title: Garbled encoding / mojibake in text
+  symptom: Accented or non-Latin characters show as ?, boxes, or mojibake (Ã©, â€™).
+  check: code
+  how: Scan rendered text for mojibake patterns and replacement characters; verify charset=utf-8.
+  expected: Text renders correctly in UTF-8.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-I18N-002
+  applies: *id001
+  severity: T2
+  area: i18n
+  title: Untranslated strings / mixed languages
+  symptom: Parts of the UI show raw i18n keys (e.g. home.title) or a different language than selected.
+  check: code
+  how: After selecting a locale, scan for dotted key-like tokens and known other-language strings.
+  expected: All visible strings are translated to the selected locale.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-A11Y-001
+  applies: *id001
+  severity: T2
+  area: content
+  title: Images missing alt text / form inputs missing labels
+  symptom: Content images have no alt attributes; inputs have no associated labels.
+  check: code
+  how: Scan DOM for img without alt and inputs without label/aria-label.
+  expected: Meaningful images have alt text and inputs have labels (WCAG).
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-A11Y-002
+  applies: *id001
+  severity: T2
+  area: content
+  title: Insufficient color contrast on text
+  symptom: Body text or key controls fail minimum contrast ratios.
+  check: code
+  how: Compute contrast ratios for text vs background and flag below WCAG AA.
+  expected: Text meets WCAG AA contrast.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-A11Y-003
+  applies: *id001
+  severity: T2
+  area: content
+  title: Keyboard focus trap / unreachable controls
+  symptom: Keyboard users cannot reach or escape a control/modal.
+  check: task
+  how: Tab through a page/modal and confirm all interactive elements are reachable and the modal can be
+    closed via keyboard.
+  expected: All controls are keyboard-operable with visible focus.
+  needs_write: false
+  needs_two_accounts: false
+- id: GEN-NOTE-001
+  applies: *id001
+  severity: T1
+  area: notifications
+  title: Confirmation email/notification not sent
+  symptom: An action that should trigger an email/notification (signup, order, reset) sends nothing.
+  check: task
+  how: Perform an action that should notify, using an address/channel you control, and confirm receipt.
+  expected: The expected notification is delivered.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-NOTE-002
+  applies: *id001
+  severity: T2
+  area: notifications
+  title: Notification links broken or point to wrong environment
+  symptom: Links in emails/notifications 404, expire instantly, or point at a staging/localhost host.
+  check: task
+  how: Open links from a received notification and check destination host and validity.
+  expected: Links resolve to the correct production resource.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-TIME-001
+  applies:
+  - hr
+  - bank
+  - booking
+  - events
+  - saas
+  - lms
+  - health
+  - delivery
+  severity: T2
+  area: time
+  title: Timezone mismatch between creation and display
+  symptom: A timestamp created at a known local time displays shifted by hours or inconsistently between
+    users.
+  check: task
+  how: Create a timestamped item at a known time and compare the displayed value in list and detail.
+  expected: Times are stored/displayed consistently in a defined timezone.
+  needs_write: true
+  needs_two_accounts: false
+- id: GEN-FILE-001
+  applies:
+  - files
+  - social
+  - pm
+  - crm
+  - saas
+  - health
+  - jobs
+  - admin
+  - lms
+  - delivery
+  - marketplace
+  severity: T0
+  area: files
+  title: Uploaded private file accessible without auth / by other users
+  symptom: A file uploaded privately is reachable by its direct URL without login or by another user.
+  check: task
+  how: Upload a file, copy its URL, and fetch it logged out and as a different user.
+  expected: Private files require authorization to fetch.
+  needs_write: true
+  needs_two_accounts: true
+- id: GEN-FILE-002
+  applies:
+  - files
+  - social
+  - pm
+  - crm
+  - saas
+  - jobs
+  - admin
+  - lms
+  - marketplace
+  severity: T1
+  area: files
+  title: No validation on uploaded file type/size
+  symptom: Clearly disallowed types or oversized files are accepted without error.
+  check: task
+  how: Attempt to upload an unexpected extension (e.g. .html/.svg) and a large file where limits should
+    apply.
+  expected: 'Per product rules: type/size restrictions are enforced server-side.'
+  needs_write: true
+  needs_two_accounts: false
+- id: SHOP-MONEY-001
+  applies:
+  - shop
+  severity: T0
+  area: money
+  title: Cart total ignores shipping/tax until after payment
+  symptom: Final charged amount differs from the total shown at the pay button.
+  check: task
+  how: Add items, proceed to pay, and compare the amount at the final confirm step with earlier totals.
+  expected: The amount shown before confirming equals the amount charged.
+  needs_write: true
+  needs_two_accounts: false
+- id: SHOP-MONEY-002
+  applies:
+  - shop
+  severity: T0
+  area: money
+  title: Stock not decremented / oversell
+  symptom: Buying the last unit still lets another purchase of the same unit succeed.
+  check: task
+  how: Buy an item near zero stock; attempt a second purchase of the same unit.
+  expected: Inventory is decremented and oversell is prevented.
+  needs_write: true
+  needs_two_accounts: true
+- id: SHOP-MONEY-003
+  applies:
+  - shop
+  severity: T1
+  area: money
+  title: Expired or invalid coupon still accepted
+  symptom: An expired/invalid promo code still reduces the total.
+  check: task
+  how: Apply a clearly expired or random coupon code at checkout.
+  expected: Invalid/expired coupons are rejected.
+  needs_write: true
+  needs_two_accounts: false
+- id: SHOP-FORM-001
+  applies:
+  - shop
+  severity: T2
+  area: forms
+  title: Card number field lacks formatting/validation
+  symptom: Card, expiry, CVV fields accept wrong lengths or no spacing, with no inline validation.
+  check: task
+  how: Enter malformed card data in test mode and observe validation.
+  expected: Card fields validate length/format and auto-format (Baymard).
+  needs_write: true
+  needs_two_accounts: false
+- id: SHOP-FLOW-001
+  applies:
+  - shop
+  severity: T0
+  area: forms
+  title: Checkout forces account creation with no guest option
+  symptom: No way to check out without registering, a top abandonment driver.
+  check: task
+  how: Attempt to reach payment without creating an account.
+  expected: 'Per product rules: a guest checkout path exists (Baymard).'
+  needs_write: false
+  needs_two_accounts: false
+- id: SHOP-FLOW-002
+  applies:
+  - shop
+  severity: T1
+  area: data
+  title: Cart empties or loses items on login/refresh
+  symptom: Items added as guest disappear after logging in or reloading.
+  check: task
+  how: Add items as guest, then log in / reload and check the cart.
+  expected: Cart persists across login and refresh.
+  needs_write: true
+  needs_two_accounts: false
+- id: SHOP-DATA-001
+  applies:
+  - shop
+  severity: T1
+  area: money
+  title: Price differs between listing, product page, and cart
+  symptom: The same item shows different prices across pages.
+  check: task
+  how: Compare an item's price on the listing, detail, and cart.
+  expected: Price is consistent for the same item/variant.
+  needs_write: true
+  needs_two_accounts: false
+- id: SHOP-FLOW-003
+  applies:
+  - shop
+  severity: T1
+  area: data
+  title: Order confirmation/history missing after purchase
+  symptom: A completed order does not appear in order history or no confirmation is shown.
+  check: task
+  how: Complete a test order and check confirmation page and order history.
+  expected: Completed orders appear with correct details.
+  needs_write: true
+  needs_two_accounts: false
+- id: SHOP-ACCESS-001
+  applies:
+  - shop
+  severity: T0
+  area: access
+  title: Another customer's order visible via order id
+  symptom: Changing the order id in the URL shows someone else's order/invoice.
+  check: task
+  how: With two accounts, view an order id belonging to the other.
+  expected: Orders are visible only to their owner.
+  needs_write: false
+  needs_two_accounts: true
+- id: SHOP-FLOW-004
+  applies:
+  - shop
+  severity: T2
+  area: money
+  title: Removing last item / editing qty doesn't recalc total
+  symptom: Changing quantity or removing an item leaves the old total.
+  check: task
+  how: Edit quantity and remove items; verify totals update.
+  expected: Totals recalculate immediately on cart changes.
+  needs_write: true
+  needs_two_accounts: false
+- id: MKT-ACCESS-001
+  applies:
+  - marketplace
+  severity: T0
+  area: access
+  title: Seller can view/edit another seller's listings or orders
+  symptom: A seller account can access another seller's dashboard data by id.
+  check: task
+  how: With two seller accounts, swap listing/order ids in requests.
+  expected: Sellers access only their own listings/orders.
+  needs_write: false
+  needs_two_accounts: true
+- id: MKT-MONEY-001
+  applies:
+  - marketplace
+  severity: T0
+  area: money
+  title: Payout/commission amount manipulable by client
+  symptom: Commission or payout values can be altered in requests.
+  check: task
+  how: Inspect and tamper (test mode) with payout/commission fields in a seller request.
+  expected: Payout/commission computed server-side only.
+  needs_write: true
+  needs_two_accounts: false
+- id: MKT-ACCESS-002
+  applies:
+  - marketplace
+  severity: T1
+  area: access
+  title: Buyer can act as seller via role confusion
+  symptom: A buyer-only account reaches seller endpoints (create listing, view payouts).
+  check: task
+  how: As a buyer account, request seller-only endpoints found in JS.
+  expected: Seller functions require seller role.
+  needs_write: false
+  needs_two_accounts: false
+- id: MKT-FLOW-001
+  applies:
+  - marketplace
+  severity: T1
+  area: access
+  title: Listing visible/purchasable before approval
+  symptom: A newly created, not-yet-approved listing is already buyable.
+  check: task
+  how: Create a listing and check whether it's publicly purchasable before moderation.
+  expected: 'Per product rules: unapproved listings aren''t live.'
+  needs_write: true
+  needs_two_accounts: false
+- id: MKT-PRIV-001
+  applies:
+  - marketplace
+  severity: T1
+  area: privacy
+  title: Buyer-seller messaging leaks contact info / other threads
+  symptom: Message threads show other users' conversations or expose private contact data.
+  check: task
+  how: With two accounts, check if a thread id reveals others' messages.
+  expected: Each party sees only their own threads.
+  needs_write: false
+  needs_two_accounts: true
+- id: MKT-SEARCH-001
+  applies:
+  - marketplace
+  severity: T2
+  area: search
+  title: Seller ranking/search shows deleted or banned listings
+  symptom: Removed listings still appear in search/category pages.
+  check: task
+  how: Remove a listing and verify it disappears from search/category.
+  expected: Deleted listings leave search promptly.
+  needs_write: true
+  needs_two_accounts: false
+- id: MKT-FLOW-002
+  applies:
+  - marketplace
+  severity: T1
+  area: money
+  title: Review can be left without a purchase
+  symptom: Reviews can be posted for items the account never bought (if product requires purchase).
+  check: task
+  how: Attempt to post a review for an item not purchased by the account.
+  expected: 'Per product rules: review eligibility is enforced.'
+  needs_write: true
+  needs_two_accounts: false
+- id: MKT-DATA-001
+  applies:
+  - marketplace
+  severity: T2
+  area: data
+  title: Seller ratings/aggregate counts inconsistent
+  symptom: Displayed average rating doesn't match the reviews shown.
+  check: code
+  how: Compare displayed average/count with the visible reviews.
+  expected: Aggregate matches underlying reviews.
+  needs_write: false
+  needs_two_accounts: false
+- id: BANK-MONEY-001
+  applies:
+  - bank
+  severity: T0
+  area: money
+  title: Transfer succeeds but balance not updated (or vice versa)
+  symptom: A transfer shows success yet balances/history don't reflect it, or balance drops with no record.
+  check: task
+  how: Make a small internal transfer; verify both balances and transaction history afterward.
+  expected: Balance and history both reflect the transfer atomically.
+  needs_write: true
+  needs_two_accounts: false
+- id: BANK-MONEY-002
+  applies:
+  - bank
+  severity: T0
+  area: money
+  title: Transfer amount exceeding balance accepted
+  symptom: A transfer larger than available balance (or beyond limits) is accepted.
+  check: task
+  how: Attempt a transfer above balance / above a stated limit.
+  expected: Over-balance/over-limit transfers are rejected.
+  needs_write: true
+  needs_two_accounts: false
+- id: BANK-MONEY-003
+  applies:
+  - bank
+  severity: T0
+  area: money
+  title: Negative amount transfer reverses money flow
+  symptom: Submitting a negative transfer amount credits the sender.
+  check: task
+  how: Set the transfer amount to a negative value in the request.
+  expected: Negative amounts are rejected.
+  needs_write: true
+  needs_two_accounts: false
+- id: BANK-ACCESS-001
+  applies:
+  - bank
+  severity: T0
+  area: access
+  title: Another customer's account/statement via id (IDOR)
+  symptom: Changing an account id or statement id exposes another customer's data.
+  check: task
+  how: With two accounts, request the other's account/statement id.
+  expected: Customers see only their own accounts.
+  needs_write: false
+  needs_two_accounts: true
+- id: BANK-AUTH-001
+  applies:
+  - bank
+  severity: T0
+  area: auth
+  title: Sensitive action without step-up auth
+  symptom: Adding a payee or large transfer completes without re-authentication/OTP.
+  check: task
+  how: Add a beneficiary / do a transfer and observe whether step-up auth is required.
+  expected: 'Per product rules: sensitive actions require step-up auth.'
+  needs_write: true
+  needs_two_accounts: false
+- id: BANK-MONEY-004
+  applies:
+  - bank
+  severity: T0
+  area: money
+  title: Double-submit / replay creates duplicate transfer
+  symptom: Resubmitting the transfer request moves money twice.
+  check: task
+  how: Submit a transfer, then replay the identical request.
+  expected: Transfers are idempotent per request/reference.
+  needs_write: true
+  needs_two_accounts: false
+- id: BANK-FLOW-001
+  applies:
+  - bank
+  severity: T1
+  area: access
+  title: Inactive/invalid beneficiary selectable for transfer
+  symptom: A disabled beneficiary can still be chosen and used.
+  check: task
+  how: Disable or use an invalid beneficiary and attempt a transfer.
+  expected: Only valid active beneficiaries are usable.
+  needs_write: true
+  needs_two_accounts: false
+- id: BANK-PRIV-001
+  applies:
+  - bank
+  severity: T1
+  area: privacy
+  title: Full account/card numbers shown unmasked
+  symptom: Full PAN or full account numbers are displayed where they should be masked.
+  check: code
+  how: Scan account/card displays for full unmasked numbers.
+  expected: Sensitive numbers are masked except where justified.
+  needs_write: false
+  needs_two_accounts: false
+- id: BANK-DATA-001
+  applies:
+  - bank
+  severity: T1
+  area: money
+  title: Statement/transaction totals don't reconcile
+  symptom: Sum of transactions doesn't match displayed running balance.
+  check: task
+  how: Add up transactions and compare to the shown balance progression.
+  expected: Running balance reconciles with transactions.
+  needs_write: true
+  needs_two_accounts: false
+- id: BANK-SEC-001
+  applies:
+  - bank
+  severity: T1
+  area: session
+  title: No auto-logout on a banking session
+  symptom: The banking session stays open indefinitely while idle.
+  check: task
+  how: Check session/cookie expiry and whether an idle session re-prompts.
+  expected: Banking sessions enforce a short idle timeout.
+  needs_write: false
+  needs_two_accounts: false
+- id: INS-MONEY-001
+  applies:
+  - insurance
+  severity: T0
+  area: money
+  title: Premium/quote recalculated incorrectly or tamperable
+  symptom: Changing inputs doesn't change premium, or premium is client-controlled.
+  check: task
+  how: Alter quote inputs and confirm premium changes; try tampering premium in the request.
+  expected: Premium is server-computed and reflects inputs.
+  needs_write: true
+  needs_two_accounts: false
+- id: INS-ACCESS-001
+  applies:
+  - insurance
+  severity: T0
+  area: access
+  title: Another policyholder's policy/claim via id
+  symptom: Policy or claim ids expose other customers' documents.
+  check: task
+  how: With two accounts, request the other's policy/claim id.
+  expected: Policies/claims visible only to their owner.
+  needs_write: false
+  needs_two_accounts: true
+- id: INS-FLOW-001
+  applies:
+  - insurance
+  severity: T1
+  area: forms
+  title: Quote proceeds with invalid/contradictory inputs
+  symptom: Impossible values (future DOB, negative value) are accepted in a quote.
+  check: task
+  how: Enter contradictory/invalid values in the quote wizard.
+  expected: Invalid inputs are rejected.
+  needs_write: true
+  needs_two_accounts: false
+- id: INS-FLOW-002
+  applies:
+  - insurance
+  severity: T0
+  area: money
+  title: Policy issued before payment confirmed
+  symptom: Policy shows active though payment never completed.
+  check: task
+  how: Abandon payment and check policy status.
+  expected: Policy activates only after payment.
+  needs_write: true
+  needs_two_accounts: false
+- id: INS-FILE-001
+  applies:
+  - insurance
+  severity: T1
+  area: files
+  title: Uploaded claim documents accessible to others
+  symptom: Claim evidence files reachable by direct URL/other accounts.
+  check: task
+  how: Upload a claim doc and fetch its URL logged out / as another user.
+  expected: Claim files require authorization.
+  needs_write: true
+  needs_two_accounts: true
+- id: INS-DATA-001
+  applies:
+  - insurance
+  severity: T2
+  area: data
+  title: Coverage/benefit figures inconsistent across pages
+  symptom: Coverage limits differ between quote, summary, and policy docs.
+  check: task
+  how: Compare coverage figures across the quote and final documents.
+  expected: Figures are consistent end to end.
+  needs_write: true
+  needs_two_accounts: false
+- id: INS-FLOW-003
+  applies:
+  - insurance
+  severity: T1
+  area: time
+  title: Renewal/effective dates computed wrong
+  symptom: Policy start/end or renewal dates are off by a day or ignore timezone.
+  check: task
+  how: Check effective/expiry dates against the selected term.
+  expected: Dates match the selected coverage term.
+  needs_write: true
+  needs_two_accounts: false
+- id: INS-FLOW-004
+  applies:
+  - insurance
+  severity: T1
+  area: forms
+  title: Claim can be filed against ineligible/expired policy
+  symptom: A claim is accepted on a lapsed/out-of-coverage policy.
+  check: task
+  how: Attempt to file a claim on an expired/ineligible policy.
+  expected: 'Per product rules: ineligible claims are blocked.'
+  needs_write: true
+  needs_two_accounts: false
+- id: ADMIN-ACCESS-001
+  applies:
+  - admin
+  severity: T0
+  area: access
+  title: Low-privilege admin user reaches super-admin functions
+  symptom: A limited back-office user can access user management / destructive actions.
+  check: task
+  how: As a limited admin, request higher-privilege endpoints/URLs.
+  expected: Each admin role is limited to its permitted functions.
+  needs_write: false
+  needs_two_accounts: true
+- id: ADMIN-ACCESS-002
+  applies:
+  - admin
+  severity: T0
+  area: access
+  title: Bulk/destructive action lacks authorization or confirmation
+  symptom: Mass delete/export runs without proper role check or confirmation.
+  check: task
+  how: Attempt a bulk/destructive action from a lower role; replay its request.
+  expected: Destructive actions are role-gated and confirmed.
+  needs_write: true
+  needs_two_accounts: true
+- id: ADMIN-DATA-001
+  applies:
+  - admin
+  severity: T1
+  area: data
+  title: Export returns more data than the user may see
+  symptom: CSV/export includes records/fields outside the user's scope.
+  check: task
+  how: Trigger an export and inspect scope vs the user's permissions.
+  expected: Exports honor the same access scope as the UI.
+  needs_write: true
+  needs_two_accounts: false
+- id: ADMIN-SEC-001
+  applies:
+  - admin
+  severity: T0
+  area: access
+  title: Admin panel reachable without authentication
+  symptom: The admin path returns the panel/data without login.
+  check: code
+  how: GET the admin path(s) unauthenticated and check for content vs redirect.
+  expected: Admin requires authentication.
+  needs_write: false
+  needs_two_accounts: false
+- id: ADMIN-AUDIT-001
+  applies:
+  - admin
+  severity: T2
+  area: data
+  title: Audit log missing or not recording actions
+  symptom: Privileged changes don't appear in any audit trail.
+  check: task
+  how: Make a privileged change and check whether an audit entry appears.
+  expected: 'Per product rules: privileged actions are logged.'
+  needs_write: true
+  needs_two_accounts: false
+- id: ADMIN-FORM-001
+  applies:
+  - admin
+  severity: T1
+  area: forms
+  title: Impersonation / 'login as user' leaves no trace or doesn't exit
+  symptom: Admin can impersonate but cannot cleanly return, or no banner indicates impersonation.
+  check: task
+  how: Use impersonation (if present) and verify indicator and clean exit.
+  expected: Impersonation is clearly indicated and reversible.
+  needs_write: true
+  needs_two_accounts: false
+- id: ADMIN-SEARCH-001
+  applies:
+  - admin
+  severity: T1
+  area: search
+  title: Admin search/filter returns soft-deleted or other-tenant records
+  symptom: Search surfaces records that should be hidden/deleted or outside scope.
+  check: task
+  how: Search broadly and check for deleted/out-of-scope records.
+  expected: Search respects deletion and scope.
+  needs_write: true
+  needs_two_accounts: false
+- id: ADMIN-ERR-001
+  applies:
+  - admin
+  severity: T1
+  area: errors
+  title: Admin tables crash on large/edge data
+  symptom: Sorting/paginating large tables errors or hangs.
+  check: task
+  how: Sort/paginate large tables and watch for errors.
+  expected: Tables handle large data without errors.
+  needs_write: false
+  needs_two_accounts: false
+- id: CRM-ACCESS-001
+  applies:
+  - crm
+  severity: T0
+  area: access
+  title: User sees contacts/deals they don't own or share
+  symptom: Record ids expose other users'/teams' private records.
+  check: task
+  how: With two accounts, request a record id owned by the other.
+  expected: Sharing/ownership rules are enforced server-side.
+  needs_write: false
+  needs_two_accounts: true
+- id: CRM-DATA-001
+  applies:
+  - crm
+  severity: T1
+  area: data
+  title: Duplicate records created silently
+  symptom: Creating a contact that already exists makes a duplicate with no warning.
+  check: task
+  how: Create a contact matching an existing one.
+  expected: 'Per product rules: duplicates are prevented or flagged.'
+  needs_write: true
+  needs_two_accounts: false
+- id: CRM-FLOW-001
+  applies:
+  - crm
+  severity: T1
+  area: forms
+  title: Pipeline stage change not persisted (success trap)
+  symptom: Dragging a deal to a new stage reverts on reload.
+  check: task
+  how: Move a deal stage, reload, and confirm persistence.
+  expected: Stage changes persist server-side.
+  needs_write: true
+  needs_two_accounts: false
+- id: CRM-IMPORT-001
+  applies:
+  - crm
+  severity: T1
+  area: data
+  title: CSV import silently drops/mangles rows
+  symptom: Importing contacts loses rows or mismaps columns with no error report.
+  check: task
+  how: Import a small known CSV and reconcile counts/fields.
+  expected: Imports report row-level success/failure and map correctly.
+  needs_write: true
+  needs_two_accounts: false
+- id: CRM-FORM-001
+  applies:
+  - crm
+  severity: T2
+  area: forms
+  title: Email/phone fields accept invalid formats
+  symptom: Clearly invalid emails/phones are saved.
+  check: task
+  how: Save a contact with malformed email/phone.
+  expected: Contact fields validate format.
+  needs_write: true
+  needs_two_accounts: false
+- id: CRM-ACCESS-002
+  applies:
+  - crm
+  severity: T1
+  area: access
+  title: Deleting/reassigning a record isn't permission-checked
+  symptom: A user can delete/reassign records they shouldn't.
+  check: task
+  how: Attempt delete/reassign on a record owned by another user.
+  expected: Delete/reassign respects permissions.
+  needs_write: true
+  needs_two_accounts: true
+- id: CRM-DATA-002
+  applies:
+  - crm
+  severity: T2
+  area: data
+  title: Report totals don't match underlying records
+  symptom: Dashboard counts differ from list counts.
+  check: task
+  how: Compare a report metric with the filtered list it represents.
+  expected: Reports match underlying data.
+  needs_write: false
+  needs_two_accounts: false
+- id: CRM-NOTE-001
+  applies:
+  - crm
+  severity: T2
+  area: notifications
+  title: '@mention/assignment notification not delivered'
+  symptom: Mentioning/assigning a user sends no notification.
+  check: task
+  how: Assign/mention a user you control and check for notification.
+  expected: Assignments/mentions notify the user.
+  needs_write: true
+  needs_two_accounts: true
+- id: HR-TIME-001
+  applies:
+  - hr
+  severity: T0
+  area: time
+  title: Hours miscalculated across DST / overnight shifts
+  symptom: A shift crossing midnight or a DST change computes wrong total hours.
+  check: task
+  how: Enter/clock a shift crossing midnight (and, if possible, a DST date) and check computed hours.
+  expected: Worked hours are correct across midnight and DST.
+  needs_write: true
+  needs_two_accounts: false
+- id: HR-ACCESS-001
+  applies:
+  - hr
+  severity: T0
+  area: access
+  title: Employee can view others' payslips/timesheets
+  symptom: Changing an employee id exposes another worker's pay/time data.
+  check: task
+  how: With two accounts, request the other's payslip/timesheet id.
+  expected: Pay/time data is visible only to the owner and authorized managers.
+  needs_write: false
+  needs_two_accounts: true
+- id: HR-MONEY-001
+  applies:
+  - hr
+  severity: T1
+  area: money
+  title: Overtime / pay totals computed incorrectly
+  symptom: Overtime thresholds or pay totals don't match entered hours/rate.
+  check: task
+  how: Enter hours that should trigger overtime and verify computed pay.
+  expected: 'Per product rules: overtime/pay math is correct.'
+  needs_write: true
+  needs_two_accounts: false
+- id: HR-FLOW-001
+  applies:
+  - hr
+  severity: T0
+  area: forms
+  title: Timesheet submit shows success but isn't recorded (success trap)
+  symptom: Submitting a timesheet shows confirmation but it's not in the approval queue.
+  check: task
+  how: Submit a timesheet, then check the manager/approval view.
+  expected: Submitted timesheets appear for approval.
+  needs_write: true
+  needs_two_accounts: true
+- id: HR-FLOW-002
+  applies:
+  - hr
+  severity: T1
+  area: access
+  title: Employee can approve own timesheet / leave
+  symptom: Self-approval is possible where it shouldn't be.
+  check: task
+  how: Attempt to approve your own submitted timesheet/leave.
+  expected: 'Per product rules: self-approval is blocked.'
+  needs_write: true
+  needs_two_accounts: false
+- id: HR-FLOW-003
+  applies:
+  - hr
+  severity: T1
+  area: forms
+  title: Clock-out before clock-in / overlapping entries accepted
+  symptom: Impossible or overlapping time entries are accepted.
+  check: task
+  how: Create an entry with clock-out before clock-in or overlapping an existing one.
+  expected: Invalid/overlapping entries are rejected.
+  needs_write: true
+  needs_two_accounts: false
+- id: HR-FLOW-004
+  applies:
+  - hr
+  severity: T1
+  area: money
+  title: Leave balance goes negative / not decremented
+  symptom: Requesting more leave than available is allowed, or balance doesn't drop.
+  check: task
+  how: Request leave exceeding balance and check the balance after approval.
+  expected: Leave balances are enforced and decremented.
+  needs_write: true
+  needs_two_accounts: false
+- id: HR-DATA-001
+  applies:
+  - hr
+  severity: T2
+  area: data
+  title: Timesheet edits after approval not locked/tracked
+  symptom: Approved entries can be silently edited.
+  check: task
+  how: Edit an approved entry and check for locking/history.
+  expected: 'Per product rules: approved records are locked or changes tracked.'
+  needs_write: true
+  needs_two_accounts: false
+- id: PM-ACCESS-001
+  applies:
+  - pm
+  severity: T0
+  area: access
+  title: Private project/issue visible to non-member
+  symptom: A non-member can open a private project or issue by id.
+  check: task
+  how: With a non-member account, request a private project/issue id.
+  expected: Project membership gates access.
+  needs_write: false
+  needs_two_accounts: true
+- id: PM-FLOW-001
+  applies:
+  - pm
+  severity: T1
+  area: forms
+  title: Status/assignee change silently lost
+  symptom: Changing status or assignee reverts on reload.
+  check: task
+  how: Change status/assignee, reload, confirm persistence.
+  expected: Changes persist.
+  needs_write: true
+  needs_two_accounts: false
+- id: PM-FORM-001
+  applies:
+  - pm
+  severity: T1
+  area: forms
+  title: Comment/@mention not posted or mention doesn't resolve
+  symptom: Comment appears locally but isn't saved, or mention doesn't notify.
+  check: task
+  how: Post a comment with a mention, reload, and check persistence/notification.
+  expected: Comments persist and mentions notify.
+  needs_write: true
+  needs_two_accounts: true
+- id: PM-FILE-001
+  applies:
+  - pm
+  severity: T1
+  area: files
+  title: Attachment accessible outside the project
+  symptom: Attachment URLs work for non-members.
+  check: task
+  how: Upload an attachment and fetch its URL as a non-member.
+  expected: Attachments require project access.
+  needs_write: true
+  needs_two_accounts: true
+- id: PM-SEARCH-001
+  applies:
+  - pm
+  severity: T1
+  area: search
+  title: Search returns issues from projects user can't access
+  symptom: Global search leaks titles/content of restricted issues.
+  check: task
+  how: Search for terms only in a restricted project from a non-member account.
+  expected: Search respects project access.
+  needs_write: false
+  needs_two_accounts: true
+- id: PM-DATA-001
+  applies:
+  - pm
+  severity: T2
+  area: data
+  title: Counts/badges (open issues, sprint totals) wrong
+  symptom: Board counters don't match the visible issues.
+  check: task
+  how: Compare a counter with the items it summarizes.
+  expected: Counters match the data.
+  needs_write: false
+  needs_two_accounts: false
+- id: PM-FLOW-002
+  applies:
+  - pm
+  severity: T1
+  area: access
+  title: Closed/locked ticket still editable via API
+  symptom: A locked ticket accepts edits through direct requests.
+  check: task
+  how: Attempt to edit a closed/locked ticket via its request.
+  expected: Locked tickets reject edits.
+  needs_write: true
+  needs_two_accounts: false
+- id: PM-FLOW-003
+  applies:
+  - pm
+  severity: T2
+  area: data
+  title: Drag-drop ordering not persisted across users
+  symptom: Reordering isn't saved or differs per user unexpectedly.
+  check: task
+  how: Reorder items, reload, and check the order.
+  expected: Ordering persists as designed.
+  needs_write: true
+  needs_two_accounts: false
+- id: SRCH-REL-001
+  applies:
+  - search
+  severity: T1
+  area: search
+  title: Results ignore the query (irrelevant results)
+  symptom: Results have no relation to the query term.
+  check: task
+  how: Search specific known terms and judge top-result relevance.
+  expected: Top results relate to the query.
+  needs_write: false
+  needs_two_accounts: false
+- id: SRCH-FORM-001
+  applies:
+  - search
+  severity: T2
+  area: forms
+  title: Special characters in query break search
+  symptom: Queries with quotes/symbols error or return nothing.
+  check: task
+  how: Search queries containing quotes, &, and symbols.
+  expected: Special characters are handled gracefully.
+  needs_write: false
+  needs_two_accounts: false
+- id: SRCH-REL-002
+  applies:
+  - search
+  severity: T2
+  area: search
+  title: Autocomplete suggests dead/404 results
+  symptom: Suggestions lead to missing pages.
+  check: task
+  how: Pick autocomplete suggestions and verify destinations.
+  expected: Suggestions lead to valid results.
+  needs_write: false
+  needs_two_accounts: false
+- id: SRCH-FLOW-001
+  applies:
+  - search
+  severity: T2
+  area: navigation
+  title: Pagination broken or duplicates results
+  symptom: Next page repeats or skips results, or last page errors.
+  check: task
+  how: Page through results and check for dupes/gaps/errors.
+  expected: Pagination is consistent.
+  needs_write: false
+  needs_two_accounts: false
+- id: SRCH-FLOW-002
+  applies:
+  - search
+  severity: T2
+  area: search
+  title: Result count doesn't match returned results
+  symptom: '''N results'' header disagrees with what''s shown.'
+  check: code
+  how: Compare the stated count with the number of results across pages.
+  expected: Counts match results.
+  needs_write: false
+  needs_two_accounts: false
+- id: SRCH-SEC-001
+  applies:
+  - search
+  severity: T1
+  area: forms
+  title: Query reflected unescaped on results page
+  symptom: The search term is echoed into the page without escaping.
+  check: task
+  how: Search a benign angle-bracket marker and inspect HTML source for unescaped reflection.
+  expected: Query is escaped where echoed.
+  needs_write: false
+  needs_two_accounts: false
+- id: SRCH-REL-003
+  applies:
+  - search
+  severity: T2
+  area: search
+  title: Typos/near-matches return nothing
+  symptom: A one-letter typo of a known term returns zero results.
+  check: task
+  how: Search a slightly misspelled known term.
+  expected: 'Per product rules: tolerant matching or suggestions exist.'
+  needs_write: false
+  needs_two_accounts: false
+- id: SRCH-PRIV-001
+  applies:
+  - search
+  severity: T1
+  area: privacy
+  title: Search indexes private/unauthorized content
+  symptom: Search returns snippets of content the user shouldn't see.
+  check: task
+  how: Search for terms unique to restricted content from an unauthorized account.
+  expected: Search excludes unauthorized content.
+  needs_write: false
+  needs_two_accounts: true
+- id: LLM-AI-001
+  applies:
+  - llm
+  severity: T0
+  area: ai
+  title: Prompt injection via user input overrides instructions
+  symptom: Pasting text that says to ignore prior instructions changes the assistant's behavior (reveals
+    system prompt, breaks guardrails).
+  check: task
+  how: Send a benign instruction-override message (e.g. asking it to repeat its hidden instructions) and
+    observe compliance.
+  expected: The assistant resists injected instructions and does not leak its system prompt.
+  needs_write: false
+  needs_two_accounts: false
+- id: LLM-AI-002
+  applies:
+  - llm
+  severity: T0
+  area: ai
+  title: Indirect injection via uploaded/retrieved content
+  symptom: Content in an uploaded doc or retrieved source changes the assistant's behavior.
+  check: task
+  how: Upload a document containing a benign embedded instruction and ask a normal question.
+  expected: Retrieved/document content is treated as data, not instructions.
+  needs_write: true
+  needs_two_accounts: false
+- id: LLM-AI-003
+  applies:
+  - llm
+  severity: T0
+  area: privacy
+  title: Assistant leaks other users' or out-of-scope data
+  symptom: The assistant returns data belonging to another user/tenant or outside the user's permissions.
+  check: task
+  how: Ask for data about another user/record you shouldn't access.
+  expected: The assistant only returns data the current user is authorized to see.
+  needs_write: false
+  needs_two_accounts: true
+- id: LLM-AI-004
+  applies:
+  - llm
+  severity: T1
+  area: ai
+  title: Citations/sources fabricated or don't support the answer
+  symptom: Cited sources are made up or don't contain the claimed info.
+  check: task
+  how: Ask a factual question and open the cited sources to verify support.
+  expected: Citations are real and support the answer.
+  needs_write: false
+  needs_two_accounts: false
+- id: LLM-AI-005
+  applies:
+  - llm
+  severity: T1
+  area: ai
+  title: RAG answers from stale/wrong knowledge base
+  symptom: Answers contradict the current content the product indexes.
+  check: task
+  how: Ask about content you can see is current and compare.
+  expected: Answers reflect current indexed content.
+  needs_write: false
+  needs_two_accounts: false
+- id: LLM-AI-006
+  applies:
+  - llm
+  severity: T0
+  area: ai
+  title: Tool/action executed without confirmation or beyond scope
+  symptom: The assistant performs a state-changing action (send, delete, purchase) from a mere suggestion.
+  check: task
+  how: Ask in a way that could trigger an action and observe whether it acts without confirmation.
+  expected: 'Per product rules: consequential actions require explicit confirmation/authorization.'
+  needs_write: true
+  needs_two_accounts: false
+- id: LLM-AI-007
+  applies:
+  - llm
+  severity: T2
+  area: ai
+  title: No handling of empty/overlong input; UI hangs
+  symptom: Empty prompt or a very long prompt hangs or errors the chat.
+  check: task
+  how: Send an empty message and a very long (few KB) message.
+  expected: Inputs are handled gracefully.
+  needs_write: false
+  needs_two_accounts: false
+- id: LLM-AI-008
+  applies:
+  - llm
+  severity: T1
+  area: privacy
+  title: Conversation history leaks between sessions/users
+  symptom: A new session or another user sees a prior conversation.
+  check: task
+  how: Start a new session / switch accounts and check history isolation.
+  expected: History is scoped to the user/session.
+  needs_write: false
+  needs_two_accounts: true
+- id: LLM-AI-009
+  applies:
+  - llm
+  severity: T2
+  area: ai
+  title: No safe refusal; outputs raw errors or internal prompts on failure
+  symptom: On failure the chat shows a stack trace or internal prompt text.
+  check: task
+  how: Trigger a failure (e.g. unsupported request) and inspect output.
+  expected: Failures yield a safe user message.
+  needs_write: false
+  needs_two_accounts: false
+- id: LLM-AI-010
+  applies:
+  - llm
+  severity: T1
+  area: ai
+  title: Markdown/HTML in answer renders injected links/scripts
+  symptom: Model output containing HTML/links renders actively rather than as text.
+  check: task
+  how: Prompt output that includes a benign HTML/link marker and inspect rendering.
+  expected: Model output is rendered safely (sanitized).
+  needs_write: false
+  needs_two_accounts: false
+- id: PORT-NAV-001
+  applies:
+  - portfolio
+  severity: T1
+  area: navigation
+  title: Project/external links broken or dead
+  symptom: Links to projects, GitHub, demos 404 or are dead.
+  check: code
+  how: Crawl all links and flag non-2xx.
+  expected: All links resolve.
+  needs_write: false
+  needs_two_accounts: false
+- id: PORT-FORM-001
+  applies:
+  - portfolio
+  severity: T1
+  area: forms
+  title: Contact form doesn't actually send (success trap)
+  symptom: Contact form shows success but no message is delivered.
+  check: task
+  how: Submit the contact form to an address you control and check receipt.
+  expected: Submissions are delivered.
+  needs_write: true
+  needs_two_accounts: false
+- id: PORT-DATA-001
+  applies:
+  - portfolio
+  severity: T2
+  area: data
+  title: Resume/CV download link broken or wrong file
+  symptom: The resume link 404s or serves the wrong/old file.
+  check: code
+  how: Fetch the resume link and verify it returns a valid document.
+  expected: Resume downloads correctly.
+  needs_write: false
+  needs_two_accounts: false
+- id: PORT-PERF-001
+  applies:
+  - portfolio
+  severity: T2
+  area: performance
+  title: Huge unoptimized images slow the page
+  symptom: Multi-MB images make the page load slowly.
+  check: code
+  how: Measure image sizes and page load.
+  expected: Images are reasonably optimized.
+  needs_write: false
+  needs_two_accounts: false
+- id: PORT-A11Y-001
+  applies:
+  - portfolio
+  severity: T2
+  area: content
+  title: Images/gallery missing alt text
+  symptom: Portfolio images have no alt text.
+  check: code
+  how: Scan img elements for missing alt.
+  expected: Images have alt text.
+  needs_write: false
+  needs_two_accounts: false
+- id: PORT-SEO-001
+  applies:
+  - portfolio
+  severity: T2
+  area: content
+  title: Missing title/meta description / broken social preview
+  symptom: Pages lack title/meta or OG tags so sharing looks broken.
+  check: code
+  how: Check for title, meta description, and OG/Twitter tags.
+  expected: Pages have proper metadata.
+  needs_write: false
+  needs_two_accounts: false
+- id: PORT-NAV-002
+  applies:
+  - portfolio
+  severity: T2
+  area: navigation
+  title: Mobile layout broken / content off-screen
+  symptom: Content overflows or is unusable on mobile widths.
+  check: code
+  how: Render at a mobile viewport and check for horizontal overflow.
+  expected: Layout is responsive.
+  needs_write: false
+  needs_two_accounts: false
+- id: PORT-ERR-001
+  applies:
+  - portfolio
+  severity: T2
+  area: errors
+  title: Embedded media/iframe fails to load
+  symptom: Embedded video/demo iframes are broken.
+  check: code
+  how: Check embedded iframes/media for load failures.
+  expected: Embeds load.
+  needs_write: false
+  needs_two_accounts: false
+- id: LND-FORM-001
+  applies:
+  - landing
+  severity: T0
+  area: forms
+  title: Lead/demo form submits nothing (success trap)
+  symptom: The main CTA form shows success but no lead is captured.
+  check: task
+  how: Submit the lead form with data you control and confirm capture (email/confirmation).
+  expected: Leads are captured/acknowledged.
+  needs_write: true
+  needs_two_accounts: false
+- id: LND-NAV-001
+  applies:
+  - landing
+  severity: T1
+  area: navigation
+  title: CTA buttons link nowhere / to 404
+  symptom: Primary CTAs are dead or point to 404.
+  check: code
+  how: Crawl CTA links and flag non-2xx/empty hrefs.
+  expected: CTAs lead to working destinations.
+  needs_write: false
+  needs_two_accounts: false
+- id: LND-DATA-001
+  applies:
+  - landing
+  severity: T1
+  area: money
+  title: Pricing shown inconsistently or placeholder
+  symptom: Prices differ between sections or show placeholders.
+  check: code
+  how: Scan pricing for inconsistencies/placeholders.
+  expected: Pricing is consistent and real.
+  needs_write: false
+  needs_two_accounts: false
+- id: LND-SEO-001
+  applies:
+  - landing
+  severity: T2
+  area: content
+  title: Missing/duplicate meta and broken OG preview
+  symptom: No meta description or OG tags; social preview broken.
+  check: code
+  how: Check meta/OG tags presence.
+  expected: Metadata present and correct.
+  needs_write: false
+  needs_two_accounts: false
+- id: LND-FORM-002
+  applies:
+  - landing
+  severity: T2
+  area: forms
+  title: Newsletter signup accepts invalid email / no confirmation
+  symptom: Invalid emails accepted with no feedback.
+  check: task
+  how: Submit an invalid then valid email and observe.
+  expected: Email validated and confirmed.
+  needs_write: true
+  needs_two_accounts: false
+- id: LND-PERF-001
+  applies:
+  - landing
+  severity: T2
+  area: performance
+  title: Hero video/animation blocks render or autoplay broken
+  symptom: Heavy hero media delays or breaks the page.
+  check: code
+  how: Measure render blocking from hero media.
+  expected: Hero loads without blocking.
+  needs_write: false
+  needs_two_accounts: false
+- id: LND-PRIV-001
+  applies:
+  - landing
+  severity: T2
+  area: privacy
+  title: Form posts lead data to third party / insecurely
+  symptom: Lead data sent to an unexpected third-party or over HTTP.
+  check: code
+  how: Inspect where the form POSTs and over what protocol.
+  expected: Lead data goes to the intended endpoint over HTTPS.
+  needs_write: false
+  needs_two_accounts: false
+- id: LND-NAV-002
+  applies:
+  - landing
+  severity: T2
+  area: navigation
+  title: Anchor links / smooth-scroll nav broken
+  symptom: In-page nav anchors don't jump to sections.
+  check: task
+  how: Click each nav anchor and verify it scrolls to the right section.
+  expected: Anchors work.
+  needs_write: false
+  needs_two_accounts: false
+- id: BLOG-FLOW-001
+  applies:
+  - blog
+  severity: T1
+  area: content
+  title: Published article 404s or shows draft/placeholder
+  symptom: A linked article returns 404 or unfinished content.
+  check: code
+  how: Crawl article links and flag 404/placeholder bodies.
+  expected: Published articles render fully.
+  needs_write: false
+  needs_two_accounts: false
+- id: BLOG-ACCESS-001
+  applies:
+  - blog
+  severity: T1
+  area: access
+  title: Draft/unpublished posts accessible by URL
+  symptom: Guessable draft URLs or preview links expose unpublished content.
+  check: task
+  how: Try accessing a draft/preview URL without the author session.
+  expected: Drafts require authorization.
+  needs_write: false
+  needs_two_accounts: false
+- id: BLOG-FORM-001
+  applies:
+  - blog
+  severity: T1
+  area: forms
+  title: Comment submission lost or not moderated
+  symptom: Comments vanish or bypass moderation entirely.
+  check: task
+  how: Post a comment and check persistence/moderation.
+  expected: 'Per product rules: comments persist/moderate correctly.'
+  needs_write: true
+  needs_two_accounts: false
+- id: BLOG-SEC-001
+  applies:
+  - blog
+  severity: T0
+  area: security
+  title: Comment/content field allows stored script (XSS)
+  symptom: A benign script-like marker in a comment renders actively on reload.
+  check: task
+  how: Post a comment with a benign HTML marker and check how it renders for viewers.
+  expected: User content is sanitized/escaped.
+  needs_write: true
+  needs_two_accounts: false
+- id: BLOG-SEO-001
+  applies:
+  - blog
+  severity: T2
+  area: content
+  title: Broken RSS feed / sitemap
+  symptom: RSS or sitemap is malformed or 404.
+  check: code
+  how: Fetch /rss, /feed, /sitemap.xml and validate.
+  expected: Feeds/sitemaps are valid.
+  needs_write: false
+  needs_two_accounts: false
+- id: BLOG-FLOW-002
+  applies:
+  - blog
+  severity: T2
+  area: money
+  title: Paywall bypassable by view source / print
+  symptom: Gated content is present in the HTML and visible via view-source/reader.
+  check: task
+  how: On a paywalled article, check if full text is in the HTML source.
+  expected: 'Per product rules: gated text isn''t fully delivered client-side.'
+  needs_write: false
+  needs_two_accounts: false
+- id: BLOG-DATA-001
+  applies:
+  - blog
+  severity: T2
+  area: data
+  title: Pagination/archive pages duplicate or miss posts
+  symptom: Archive pagination repeats or skips posts.
+  check: task
+  how: Page through archives and check for dupes/gaps.
+  expected: Archives paginate cleanly.
+  needs_write: false
+  needs_two_accounts: false
+- id: BLOG-NAV-001
+  applies:
+  - blog
+  severity: T2
+  area: navigation
+  title: Category/tag pages empty or 404
+  symptom: Clicking a tag/category leads to an empty or missing page.
+  check: code
+  how: Crawl category/tag links and flag empties/404.
+  expected: Taxonomy pages list their posts.
+  needs_write: false
+  needs_two_accounts: false
+- id: SAAS-ACCESS-001
+  applies:
+  - saas
+  severity: T0
+  area: access
+  title: Cross-workspace/tenant data leak
+  symptom: Switching a workspace/tenant id in a request returns another org's data.
+  check: task
+  how: With two workspaces, swap ids in API requests.
+  expected: Workspace isolation is enforced.
+  needs_write: false
+  needs_two_accounts: true
+- id: SAAS-ACCESS-002
+  applies:
+  - saas
+  severity: T0
+  area: access
+  title: Removed team member retains access
+  symptom: A user removed from a workspace still accesses it via existing session.
+  check: task
+  how: Remove member B, then use B's session.
+  expected: Access revoked on removal.
+  needs_write: true
+  needs_two_accounts: true
+- id: SAAS-MONEY-001
+  applies:
+  - saas
+  severity: T1
+  area: money
+  title: Plan limits/feature gating bypassable
+  symptom: Paid-only features work on a free plan via direct request/URL.
+  check: task
+  how: On a free plan, invoke a paid feature endpoint directly.
+  expected: Server enforces plan entitlements.
+  needs_write: true
+  needs_two_accounts: false
+- id: SAAS-FLOW-001
+  applies:
+  - saas
+  severity: T0
+  area: money
+  title: Subscription/billing change not applied (success trap)
+  symptom: Upgrading/downgrading shows success but plan/charge unchanged.
+  check: task
+  how: Change plan (test mode) and verify entitlements/billing updated.
+  expected: Billing changes apply correctly.
+  needs_write: true
+  needs_two_accounts: false
+- id: SAAS-SEC-001
+  applies:
+  - saas
+  severity: T0
+  area: security
+  title: API key/token exposed or not scoped
+  symptom: API keys appear in client code or lack scoping.
+  check: code
+  how: Scan JS/network for API keys/tokens and check scope hints.
+  expected: Keys aren't exposed client-side.
+  needs_write: false
+  needs_two_accounts: false
+- id: SAAS-DATA-001
+  applies:
+  - saas
+  severity: T1
+  area: data
+  title: Dashboard metrics wrong / don't match export
+  symptom: KPIs on the dashboard differ from the exported/raw data.
+  check: task
+  how: Compare a dashboard metric to the matching export/detail.
+  expected: Metrics reconcile with source data.
+  needs_write: true
+  needs_two_accounts: false
+- id: SAAS-FLOW-002
+  applies:
+  - saas
+  severity: T1
+  area: access
+  title: Invite link reusable / grants wrong role
+  symptom: An invite link works multiple times or grants more than intended.
+  check: task
+  how: Use an invite link twice and check granted role.
+  expected: Invites are single-use and grant the specified role.
+  needs_write: true
+  needs_two_accounts: true
+- id: SAAS-DATA-002
+  applies:
+  - saas
+  severity: T2
+  area: time
+  title: Date-range filter off-by-one / timezone wrong
+  symptom: Selecting a date range returns data shifted by a day/timezone.
+  check: task
+  how: Set a specific range around a known event and verify inclusion.
+  expected: Ranges are inclusive/correct for the user's timezone.
+  needs_write: true
+  needs_two_accounts: false
+- id: SAAS-FORM-001
+  applies:
+  - saas
+  severity: T2
+  area: forms
+  title: Settings save shows success but reverts
+  symptom: Settings change reverts after reload.
+  check: task
+  how: Change a setting, reload, confirm persistence.
+  expected: Settings persist.
+  needs_write: true
+  needs_two_accounts: false
+- id: BOOK-FLOW-001
+  applies:
+  - booking
+  severity: T0
+  area: money
+  title: 'Double-booking: same slot/room booked twice'
+  symptom: Two bookings for the same slot/seat/room both succeed.
+  check: task
+  how: Book a slot, then attempt the same slot again (two accounts if needed).
+  expected: A booked slot can't be double-booked.
+  needs_write: true
+  needs_two_accounts: true
+- id: BOOK-FLOW-002
+  applies:
+  - booking
+  severity: T1
+  area: data
+  title: Availability shown differs from bookable reality
+  symptom: A slot shown available fails at booking, or vice versa.
+  check: task
+  how: Attempt to book an 'available' slot and a greyed one.
+  expected: Displayed availability matches what's bookable.
+  needs_write: true
+  needs_two_accounts: false
+- id: BOOK-MONEY-001
+  applies:
+  - booking
+  severity: T0
+  area: money
+  title: Price changes between search and confirmation
+  symptom: Quoted price differs from the charged amount.
+  check: task
+  how: Compare price at search vs at final confirm.
+  expected: Price is held/consistent through booking.
+  needs_write: true
+  needs_two_accounts: false
+- id: BOOK-TIME-001
+  applies:
+  - booking
+  severity: T1
+  area: time
+  title: Dates/times off by timezone or DST
+  symptom: Check-in/out or appointment time shifts by hours across timezones.
+  check: task
+  how: Book a specific date/time and verify the confirmation time.
+  expected: Times are correct for the relevant timezone.
+  needs_write: true
+  needs_two_accounts: false
+- id: BOOK-ACCESS-001
+  applies:
+  - booking
+  severity: T0
+  area: access
+  title: Another guest's booking via reference id
+  symptom: A booking reference exposes someone else's reservation/PII.
+  check: task
+  how: With two accounts, request the other's booking reference.
+  expected: Bookings are owner-only.
+  needs_write: false
+  needs_two_accounts: true
+- id: BOOK-FLOW-003
+  applies:
+  - booking
+  severity: T0
+  area: money
+  title: Booking held/confirmed without payment
+  symptom: Reservation confirms though payment failed/was skipped.
+  check: task
+  how: Abandon or fail payment and check booking status.
+  expected: Booking confirms only on successful payment.
+  needs_write: true
+  needs_two_accounts: false
+- id: BOOK-FLOW-004
+  applies:
+  - booking
+  severity: T1
+  area: forms
+  title: Cannot modify/cancel; or cancel doesn't release slot
+  symptom: Cancel shows success but slot stays blocked, or modify fails.
+  check: task
+  how: Cancel a booking and check the slot becomes available again.
+  expected: Cancellation releases the slot.
+  needs_write: true
+  needs_two_accounts: false
+- id: BOOK-FLOW-005
+  applies:
+  - booking
+  severity: T1
+  area: forms
+  title: Booking past dates / zero guests accepted
+  symptom: A booking in the past or with 0 guests/nights is accepted.
+  check: task
+  how: Attempt a past-date or zero-quantity booking.
+  expected: Invalid dates/quantities are rejected.
+  needs_write: true
+  needs_two_accounts: false
+- id: DEL-MONEY-001
+  applies:
+  - delivery
+  severity: T0
+  area: money
+  title: Cart total omits fees/surge until charge
+  symptom: Delivery/service/surge fees appear only after payment.
+  check: task
+  how: Compare pre-pay total with final charge.
+  expected: All fees shown before confirming.
+  needs_write: true
+  needs_two_accounts: false
+- id: DEL-FLOW-001
+  applies:
+  - delivery
+  severity: T1
+  area: data
+  title: Order placeable from closed/unavailable vendor
+  symptom: Ordering from a closed restaurant/unavailable item succeeds.
+  check: task
+  how: Attempt to order from a closed vendor / sold-out item.
+  expected: Closed vendors/items can't be ordered.
+  needs_write: true
+  needs_two_accounts: false
+- id: DEL-ACCESS-001
+  applies:
+  - delivery
+  severity: T0
+  area: access
+  title: Another user's order/tracking via id
+  symptom: Order/tracking ids expose others' orders and addresses.
+  check: task
+  how: With two accounts, request the other's order/tracking id.
+  expected: Orders/tracking are owner-only.
+  needs_write: false
+  needs_two_accounts: true
+- id: DEL-FLOW-002
+  applies:
+  - delivery
+  severity: T1
+  area: data
+  title: Order status/tracking stuck or wrong
+  symptom: Tracking never updates or shows wrong state vs reality.
+  check: task
+  how: Place an order and observe whether status transitions sensibly.
+  expected: Tracking reflects real status.
+  needs_write: true
+  needs_two_accounts: false
+- id: DEL-MONEY-002
+  applies:
+  - delivery
+  severity: T1
+  area: money
+  title: Tip/amount tamperable or applied wrong
+  symptom: Tip or item price alterable in request, or tip math wrong.
+  check: task
+  how: Alter tip/price in the request (test mode) and check total.
+  expected: Amounts computed server-side.
+  needs_write: true
+  needs_two_accounts: false
+- id: DEL-FORM-001
+  applies:
+  - delivery
+  severity: T1
+  area: forms
+  title: Delivery address not validated / ignored
+  symptom: Invalid or out-of-zone address accepted.
+  check: task
+  how: Enter an out-of-zone/invalid address and attempt to order.
+  expected: Address is validated against serviceable area.
+  needs_write: true
+  needs_two_accounts: false
+- id: DEL-FLOW-003
+  applies:
+  - delivery
+  severity: T2
+  area: data
+  title: Menu/price differs from vendor page vs checkout
+  symptom: Item price changes between menu and cart.
+  check: task
+  how: Compare item price on menu vs cart.
+  expected: Prices consistent.
+  needs_write: true
+  needs_two_accounts: false
+- id: DEL-FLOW-004
+  applies:
+  - delivery
+  severity: T1
+  area: money
+  title: Cancel/refund not processed after charge
+  symptom: Cancelling a charged order doesn't refund or show status.
+  check: task
+  how: Cancel an order (test) and check refund/status.
+  expected: 'Per product rules: cancellation handles refund correctly.'
+  needs_write: true
+  needs_two_accounts: false
+- id: SOC-SEC-001
+  applies:
+  - social
+  severity: T0
+  area: security
+  title: Stored XSS via post/comment/profile
+  symptom: A benign script-like marker in a post/bio renders actively for viewers.
+  check: task
+  how: Post a benign HTML marker in a field and view as another user.
+  expected: User content is sanitized.
+  needs_write: true
+  needs_two_accounts: true
+- id: SOC-PRIV-001
+  applies:
+  - social
+  severity: T0
+  area: privacy
+  title: Private posts/DMs visible to unauthorized users
+  symptom: Private content reachable by id or to non-followers.
+  check: task
+  how: With two accounts, request a private post/DM id.
+  expected: Privacy settings are enforced server-side.
+  needs_write: false
+  needs_two_accounts: true
+- id: SOC-ACCESS-001
+  applies:
+  - social
+  severity: T1
+  area: access
+  title: Can edit/delete others' posts/comments
+  symptom: A user can modify/delete content they don't own.
+  check: task
+  how: Attempt to edit/delete another user's content via request.
+  expected: Only owners/mods can modify content.
+  needs_write: true
+  needs_two_accounts: true
+- id: SOC-FLOW-001
+  applies:
+  - social
+  severity: T1
+  area: forms
+  title: Block/mute not enforced
+  symptom: A blocked user can still DM/interact.
+  check: task
+  how: Block account B; from B attempt to message/interact with A.
+  expected: Blocks prevent interaction.
+  needs_write: true
+  needs_two_accounts: true
+- id: SOC-DATA-001
+  applies:
+  - social
+  severity: T2
+  area: data
+  title: Like/follow counts wrong or revertible
+  symptom: Counts jump incorrectly or revert on reload.
+  check: task
+  how: Like/follow, reload, and verify counts persist.
+  expected: Counts are accurate and persistent.
+  needs_write: true
+  needs_two_accounts: false
+- id: SOC-PRIV-002
+  applies:
+  - social
+  severity: T1
+  area: privacy
+  title: Deleted content still retrievable
+  symptom: A deleted post/message still loads by direct URL/API.
+  check: task
+  how: Delete content and fetch its URL/id again.
+  expected: Deleted content returns 404.
+  needs_write: true
+  needs_two_accounts: false
+- id: SOC-FLOW-002
+  applies:
+  - social
+  severity: T2
+  area: notifications
+  title: Notifications/mentions not delivered or wrong target
+  symptom: Mentions don't notify or notify the wrong user.
+  check: task
+  how: Mention an account you control and check delivery.
+  expected: Mentions notify the correct user.
+  needs_write: true
+  needs_two_accounts: true
+- id: SOC-FLOW-003
+  applies:
+  - social
+  severity: T1
+  area: forms
+  title: Report/flag does nothing (no record)
+  symptom: Reporting content has no effect or confirmation.
+  check: task
+  how: Report content and check for acknowledgment/record.
+  expected: Reports are recorded/acknowledged.
+  needs_write: true
+  needs_two_accounts: false
+- id: LMS-ACCESS-001
+  applies:
+  - lms
+  severity: T0
+  area: access
+  title: Access to paid/unenrolled course content
+  symptom: Course/lesson content loads without enrollment/payment.
+  check: task
+  how: Request lesson/content URLs for a course not enrolled in.
+  expected: Content requires enrollment.
+  needs_write: false
+  needs_two_accounts: false
+- id: LMS-FLOW-001
+  applies:
+  - lms
+  severity: T0
+  area: data
+  title: Quiz/exam score computed or saved wrong (success trap)
+  symptom: Submitting an exam shows a score that doesn't match answers or isn't saved.
+  check: task
+  how: Take a quiz with known correct/incorrect answers and verify the score and that it persists.
+  expected: Scores are correct and saved.
+  needs_write: true
+  needs_two_accounts: false
+- id: LMS-SEC-001
+  applies:
+  - lms
+  severity: T1
+  area: access
+  title: Exam answers/correct keys exposed in client
+  symptom: Correct answers are present in the page/JS before submission.
+  check: code
+  how: Inspect quiz HTML/JS for embedded answer keys.
+  expected: Answers aren't delivered to the client.
+  needs_write: false
+  needs_two_accounts: false
+- id: LMS-FLOW-002
+  applies:
+  - lms
+  severity: T1
+  area: access
+  title: Exam timer bypassable / retake limit ignored
+  symptom: The timer can be bypassed or retakes exceed the limit.
+  check: task
+  how: Let a timer expire or retake beyond the limit and check enforcement.
+  expected: Timer/retake limits enforced server-side.
+  needs_write: true
+  needs_two_accounts: false
+- id: LMS-DATA-001
+  applies:
+  - lms
+  severity: T1
+  area: data
+  title: Progress/completion not tracked correctly
+  symptom: Completing lessons doesn't update progress or reverts.
+  check: task
+  how: Complete a lesson and verify progress persists.
+  expected: Progress tracks accurately.
+  needs_write: true
+  needs_two_accounts: false
+- id: LMS-ACCESS-002
+  applies:
+  - lms
+  severity: T0
+  area: access
+  title: Student can view others' grades/submissions
+  symptom: Grade/submission ids expose other students' data.
+  check: task
+  how: With two accounts, request the other's grade/submission id.
+  expected: Grades/submissions are owner/instructor-only.
+  needs_write: false
+  needs_two_accounts: true
+- id: LMS-FILE-001
+  applies:
+  - lms
+  severity: T1
+  area: files
+  title: Assignment upload not saved / wrong file association
+  symptom: Submitted assignment isn't stored or attaches to wrong student.
+  check: task
+  how: Submit an assignment and verify it appears under the right student.
+  expected: Submissions save to the correct student.
+  needs_write: true
+  needs_two_accounts: false
+- id: LMS-FLOW-003
+  applies:
+  - lms
+  severity: T2
+  area: content
+  title: Certificate generated with wrong name/data or when not earned
+  symptom: Certificate shows wrong details or issues without completion.
+  check: task
+  how: Check certificate contents/eligibility after (in)complete course.
+  expected: Certificates reflect real completion/data.
+  needs_write: true
+  needs_two_accounts: false
+- id: HLTH-ACCESS-001
+  applies:
+  - health
+  severity: T0
+  area: access
+  title: Another patient's records/results via id (IDOR)
+  symptom: Patient/record/result ids expose others' medical data.
+  check: task
+  how: With two accounts, request the other's record/result id.
+  expected: Records are strictly owner/authorized-only.
+  needs_write: false
+  needs_two_accounts: true
+- id: HLTH-PRIV-001
+  applies:
+  - health
+  severity: T0
+  area: privacy
+  title: PHI in URLs, caches, or sent to third-party trackers
+  symptom: Medical data appears in URLs or is sent to analytics/ad trackers.
+  check: code
+  how: Inspect URLs and third-party requests for PHI/identifiers.
+  expected: PHI isn't leaked in URLs or to trackers (HIPAA).
+  needs_write: false
+  needs_two_accounts: false
+- id: HLTH-FLOW-001
+  applies:
+  - health
+  severity: T0
+  area: forms
+  title: Appointment booked but not recorded / double-booked
+  symptom: Booking shows success but no appointment, or slot double-booked.
+  check: task
+  how: Book an appointment and verify it appears and the slot is held.
+  expected: Appointments are recorded and slots protected.
+  needs_write: true
+  needs_two_accounts: false
+- id: HLTH-ACCESS-002
+  applies:
+  - health
+  severity: T1
+  area: access
+  title: Proxy/caregiver access not properly scoped
+  symptom: A proxy sees more than authorized, or revoked proxy retains access.
+  check: task
+  how: With a proxy relationship, check scope and revocation.
+  expected: Proxy access is scoped and revocable.
+  needs_write: true
+  needs_two_accounts: true
+- id: HLTH-DATA-001
+  applies:
+  - health
+  severity: T1
+  area: data
+  title: Lab result values/units displayed wrong
+  symptom: Values, units, or reference ranges render incorrectly.
+  check: task
+  how: Compare a known result's value/units in list vs detail/PDF.
+  expected: Clinical values display accurately.
+  needs_write: true
+  needs_two_accounts: false
+- id: HLTH-FILE-001
+  applies:
+  - health
+  severity: T1
+  area: files
+  title: Downloaded records accessible without auth
+  symptom: Record/document URLs work without login.
+  check: task
+  how: Fetch a record document URL logged out.
+  expected: Record downloads require auth.
+  needs_write: true
+  needs_two_accounts: false
+- id: HLTH-AUTH-001
+  applies:
+  - health
+  severity: T1
+  area: session
+  title: No session timeout on patient portal
+  symptom: Portal session stays active indefinitely.
+  check: task
+  how: Check session expiry/idle behavior.
+  expected: Sensitive portal enforces idle timeout.
+  needs_write: false
+  needs_two_accounts: false
+- id: HLTH-FLOW-002
+  applies:
+  - health
+  severity: T1
+  area: forms
+  title: Prescription refill request lost or duplicated
+  symptom: Refill request shows success but isn't recorded, or duplicates.
+  check: task
+  how: Request a refill and verify a single correct record.
+  expected: Refill requests record exactly once.
+  needs_write: true
+  needs_two_accounts: false
+- id: GOV-FLOW-001
+  applies:
+  - gov
+  severity: T0
+  area: forms
+  title: Multi-step form loses data / can't resume
+  symptom: Progress is lost on back/refresh or resume link fails.
+  check: task
+  how: Fill several steps, go back/refresh, and check retention.
+  expected: Entered data persists across steps/resume.
+  needs_write: true
+  needs_two_accounts: false
+- id: GOV-FLOW-002
+  applies:
+  - gov
+  severity: T0
+  area: forms
+  title: Submission shows reference number but isn't recorded (success trap)
+  symptom: A confirmation/reference is shown but the application isn't actually filed.
+  check: task
+  how: Submit and then check status/tracking for the reference.
+  expected: Submitted applications are retrievable by reference.
+  needs_write: true
+  needs_two_accounts: false
+- id: GOV-ACCESS-001
+  applies:
+  - gov
+  severity: T0
+  area: access
+  title: Another applicant's submission via reference id
+  symptom: Reference numbers expose others' applications/PII.
+  check: task
+  how: With two accounts, request the other's reference.
+  expected: Applications are owner-only.
+  needs_write: false
+  needs_two_accounts: true
+- id: GOV-FORM-001
+  applies:
+  - gov
+  severity: T1
+  area: forms
+  title: Eligibility logic lets ineligible users proceed
+  symptom: Answers that should stop the journey still allow submission.
+  check: task
+  how: Enter disqualifying answers and attempt to continue.
+  expected: Ineligible paths are blocked with guidance.
+  needs_write: true
+  needs_two_accounts: false
+- id: GOV-A11Y-001
+  applies:
+  - gov
+  severity: T0
+  area: content
+  title: Fails basic accessibility (labels/contrast/keyboard)
+  symptom: Forms lack labels, fail contrast, or aren't keyboard-usable.
+  check: code
+  how: Scan for missing labels, contrast failures, focus issues.
+  expected: Meets WCAG AA (statutory for most gov).
+  needs_write: false
+  needs_two_accounts: false
+- id: GOV-FILE-001
+  applies:
+  - gov
+  severity: T1
+  area: files
+  title: Uploaded documents accessible to others / not virus-checked
+  symptom: Uploaded evidence reachable by others via URL.
+  check: task
+  how: Upload a document and fetch its URL as another/anon user.
+  expected: Uploaded docs require authorization.
+  needs_write: true
+  needs_two_accounts: true
+- id: GOV-MONEY-001
+  applies:
+  - gov
+  severity: T1
+  area: money
+  title: Fee payment skippable or amount wrong
+  symptom: Application completes without the required fee, or fee is wrong.
+  check: task
+  how: Attempt to submit without paying / check fee amount.
+  expected: Fees are enforced and correct.
+  needs_write: true
+  needs_two_accounts: false
+- id: GOV-DATA-001
+  applies:
+  - gov
+  severity: T2
+  area: data
+  title: '''Check your answers'' summary doesn''t match entered data'
+  symptom: The review page shows different values than entered.
+  check: task
+  how: Compare the summary page against entered values.
+  expected: Summary matches entered data.
+  needs_write: true
+  needs_two_accounts: false
+- id: RE-SEARCH-001
+  applies:
+  - realestate
+  severity: T1
+  area: search
+  title: Map/area filter returns listings outside the area
+  symptom: Results include properties outside the drawn/selected area.
+  check: task
+  how: Filter by area and spot-check result locations.
+  expected: Results stay within the selected area.
+  needs_write: false
+  needs_two_accounts: false
+- id: RE-DATA-001
+  applies:
+  - realestate
+  severity: T1
+  area: data
+  title: Listing details inconsistent (price/beds/photos mismatch)
+  symptom: Card vs detail show different price/beds, or photos belong elsewhere.
+  check: task
+  how: Compare listing card to its detail page.
+  expected: Listing data is consistent.
+  needs_write: false
+  needs_two_accounts: false
+- id: RE-FORM-001
+  applies:
+  - realestate
+  severity: T1
+  area: forms
+  title: Contact-agent inquiry not delivered (success trap)
+  symptom: Inquiry shows sent but agent receives nothing.
+  check: task
+  how: Send an inquiry to an address you control and check delivery.
+  expected: Inquiries are delivered.
+  needs_write: true
+  needs_two_accounts: false
+- id: RE-FLOW-001
+  applies:
+  - realestate
+  severity: T2
+  area: data
+  title: Sold/rented listings still shown as available
+  symptom: Off-market listings still appear active.
+  check: task
+  how: Check whether known off-market listings show as available.
+  expected: Status reflects availability.
+  needs_write: false
+  needs_two_accounts: false
+- id: RE-DATA-002
+  applies:
+  - realestate
+  severity: T2
+  area: money
+  title: Mortgage/affordability calculator math wrong
+  symptom: Calculator outputs implausible figures.
+  check: task
+  how: Enter known inputs and sanity-check the calculator output.
+  expected: Calculator math is correct.
+  needs_write: false
+  needs_two_accounts: false
+- id: RE-ACCESS-001
+  applies:
+  - realestate
+  severity: T2
+  area: access
+  title: Saved searches/favorites visible to other users
+  symptom: Favorites/saved searches leak across accounts.
+  check: task
+  how: With two accounts, check isolation of saved items.
+  expected: Saved items are per-user.
+  needs_write: false
+  needs_two_accounts: true
+- id: RE-PRIV-001
+  applies:
+  - realestate
+  severity: T1
+  area: privacy
+  title: Agent/owner contact or exact address leaked prematurely
+  symptom: Private contact/exact location exposed before it should be.
+  check: task
+  how: Inspect responses for data the UI hides until contact.
+  expected: Hidden data isn't delivered client-side.
+  needs_write: false
+  needs_two_accounts: false
+- id: RE-NAV-001
+  applies:
+  - realestate
+  severity: T2
+  area: navigation
+  title: Photo gallery/virtual tour broken
+  symptom: Gallery or tour fails to load/navigate.
+  check: task
+  how: Open gallery/tour and navigate images.
+  expected: Media galleries work.
+  needs_write: false
+  needs_two_accounts: false
+- id: JOB-FLOW-001
+  applies:
+  - jobs
+  severity: T0
+  area: forms
+  title: Application submitted but not recorded (success trap)
+  symptom: Apply shows success but no application in 'my applications' or employer side.
+  check: task
+  how: Apply to a job and verify it appears for the applicant (and employer if possible).
+  expected: Applications are recorded.
+  needs_write: true
+  needs_two_accounts: false
+- id: JOB-FILE-001
+  applies:
+  - jobs
+  severity: T1
+  area: files
+  title: Resume upload fails silently or attaches wrong file
+  symptom: Resume doesn't attach or wrong file is submitted.
+  check: task
+  how: Upload a resume and verify the exact file attaches to the application.
+  expected: Correct resume attaches.
+  needs_write: true
+  needs_two_accounts: false
+- id: JOB-ACCESS-001
+  applies:
+  - jobs
+  severity: T0
+  area: access
+  title: Candidate can view others' applications / resumes (IDOR)
+  symptom: Application/resume ids expose other candidates' data.
+  check: task
+  how: With two accounts, request the other's application/resume id.
+  expected: Applications/resumes are owner/employer-only.
+  needs_write: false
+  needs_two_accounts: true
+- id: JOB-ACCESS-002
+  applies:
+  - jobs
+  severity: T0
+  area: access
+  title: Employer can see candidates for other employers' jobs
+  symptom: An employer account accesses another employer's applicant pool.
+  check: task
+  how: With two employer accounts, swap job/applicant ids.
+  expected: Employers see only their own postings' applicants.
+  needs_write: false
+  needs_two_accounts: true
+- id: JOB-SEARCH-001
+  applies:
+  - jobs
+  severity: T1
+  area: search
+  title: Expired/filled jobs still appear and accept applications
+  symptom: Closed listings remain applyable.
+  check: task
+  how: Apply to a closed/expired listing.
+  expected: Closed listings can't accept applications.
+  needs_write: true
+  needs_two_accounts: false
+- id: JOB-FLOW-002
+  applies:
+  - jobs
+  severity: T1
+  area: access
+  title: Draft/unpublished job postings publicly visible
+  symptom: Draft postings reachable by URL.
+  check: task
+  how: Request a draft posting URL without the employer session.
+  expected: Drafts require authorization.
+  needs_write: false
+  needs_two_accounts: false
+- id: JOB-NOTE-001
+  applies:
+  - jobs
+  severity: T2
+  area: notifications
+  title: Job alert emails not sent or irrelevant
+  symptom: Saved alerts send nothing or unrelated jobs.
+  check: task
+  how: Create a specific alert and check delivered matches.
+  expected: Alerts deliver relevant matches.
+  needs_write: true
+  needs_two_accounts: false
+- id: JOB-FLOW-003
+  applies:
+  - jobs
+  severity: T2
+  area: forms
+  title: Application status never updates
+  symptom: Status stuck at submitted regardless of employer action.
+  check: task
+  how: Observe whether status reflects employer-side changes.
+  expected: Status reflects real progress.
+  needs_write: true
+  needs_two_accounts: true
+- id: EVT-FLOW-001
+  applies:
+  - events
+  severity: T0
+  area: money
+  title: Same seat/ticket sold twice (no hold)
+  symptom: Two buyers can purchase the same seat.
+  check: task
+  how: Select a seat, and from another account try the same seat concurrently.
+  expected: Selected seats are held and can't be double-sold.
+  needs_write: true
+  needs_two_accounts: true
+- id: EVT-FLOW-002
+  applies:
+  - events
+  severity: T1
+  area: data
+  title: Sold-out event still allows purchase
+  symptom: A sold-out event accepts new orders.
+  check: task
+  how: Attempt to buy for a sold-out event.
+  expected: Sold-out events block purchase.
+  needs_write: true
+  needs_two_accounts: false
+- id: EVT-FILE-001
+  applies:
+  - events
+  severity: T1
+  area: files
+  title: Ticket QR/PDF accessible by others / guessable
+  symptom: Ticket files reachable by direct/guessable URL.
+  check: task
+  how: Get a ticket file URL and fetch it as another/anon user.
+  expected: Ticket files require authorization.
+  needs_write: true
+  needs_two_accounts: true
+- id: EVT-MONEY-001
+  applies:
+  - events
+  severity: T0
+  area: money
+  title: Fees/price change between selection and payment
+  symptom: Final charge differs from selected ticket price.
+  check: task
+  how: Compare price at selection vs final charge.
+  expected: Price consistent through checkout.
+  needs_write: true
+  needs_two_accounts: false
+- id: EVT-ACCESS-001
+  applies:
+  - events
+  severity: T0
+  area: access
+  title: Another buyer's order/tickets via id
+  symptom: Order ids expose others' tickets/PII.
+  check: task
+  how: With two accounts, request the other's order id.
+  expected: Orders are owner-only.
+  needs_write: false
+  needs_two_accounts: true
+- id: EVT-FLOW-003
+  applies:
+  - events
+  severity: T1
+  area: forms
+  title: Ticket transfer/refund breaks ownership or double-issues
+  symptom: Transfer leaves ticket valid for both, or refund doesn't void it.
+  check: task
+  how: Transfer/refund a ticket and check validity of old/new copies.
+  expected: Transfer/refund updates ownership/validity correctly.
+  needs_write: true
+  needs_two_accounts: true
+- id: EVT-TIME-001
+  applies:
+  - events
+  severity: T1
+  area: time
+  title: Event date/time shown in wrong timezone
+  symptom: Event time displays shifted for different users.
+  check: task
+  how: Check event time against the venue timezone.
+  expected: Times shown in the correct event timezone.
+  needs_write: false
+  needs_two_accounts: false
+- id: EVT-FLOW-004
+  applies:
+  - events
+  severity: T2
+  area: money
+  title: Ticket quantity limit per buyer not enforced
+  symptom: Buyer can exceed the stated per-person limit.
+  check: task
+  how: Attempt to buy more than the stated limit.
+  expected: Per-buyer limits enforced.
+  needs_write: true
+  needs_two_accounts: false
+- id: STRM-FLOW-001
+  applies:
+  - streaming
+  severity: T0
+  area: content
+  title: Content plays without required subscription/entitlement
+  symptom: Gated video/audio plays on an unentitled account or via direct stream URL.
+  check: task
+  how: Attempt to play gated content on a free/unentitled account or via the media URL.
+  expected: Playback requires entitlement.
+  needs_write: false
+  needs_two_accounts: false
+- id: STRM-FLOW-002
+  applies:
+  - streaming
+  severity: T1
+  area: content
+  title: Playback fails / buffers forever on common content
+  symptom: A normal title won't start or stalls indefinitely.
+  check: task
+  how: Play several titles and observe start/stall behavior.
+  expected: Content plays reliably.
+  needs_write: false
+  needs_two_accounts: false
+- id: STRM-DATA-001
+  applies:
+  - streaming
+  severity: T1
+  area: data
+  title: '''Continue watching''/resume position wrong or lost'
+  symptom: Resume jumps to start or wrong timestamp.
+  check: task
+  how: Watch partway, leave, return, and check resume point.
+  expected: Resume position is accurate.
+  needs_write: true
+  needs_two_accounts: false
+- id: STRM-A11Y-001
+  applies:
+  - streaming
+  severity: T1
+  area: content
+  title: Captions/subtitles missing or out of sync
+  symptom: Captions absent or badly desynced.
+  check: task
+  how: Enable captions and check presence/sync.
+  expected: Captions present and synced.
+  needs_write: false
+  needs_two_accounts: false
+- id: STRM-FLOW-003
+  applies:
+  - streaming
+  severity: T2
+  area: content
+  title: Quality/seek controls broken
+  symptom: Changing quality or seeking breaks playback.
+  check: task
+  how: Change quality and seek around the timeline.
+  expected: Controls work without breaking playback.
+  needs_write: false
+  needs_two_accounts: false
+- id: STRM-ACCESS-001
+  applies:
+  - streaming
+  severity: T2
+  area: access
+  title: Watch history/profile leaks across profiles/users
+  symptom: One profile sees another's history/recommendations.
+  check: task
+  how: With two profiles/accounts, check history isolation.
+  expected: History is per profile/user.
+  needs_write: false
+  needs_two_accounts: true
+- id: STRM-FLOW-004
+  applies:
+  - streaming
+  severity: T2
+  area: money
+  title: Concurrent-stream limit not enforced
+  symptom: More simultaneous streams than the plan allows.
+  check: task
+  how: Start playback on more sessions than allowed (own accounts).
+  expected: 'Per product rules: concurrency limits enforced.'
+  needs_write: false
+  needs_two_accounts: false
+- id: STRM-ERR-001
+  applies:
+  - streaming
+  severity: T2
+  area: errors
+  title: Player shows raw error codes to users
+  symptom: Playback errors surface cryptic codes/stack info.
+  check: task
+  how: Trigger a playback error and inspect messaging.
+  expected: User-friendly error messages shown.
+  needs_write: false
+  needs_two_accounts: false
+- id: FILE-ACCESS-001
+  applies:
+  - files
+  severity: T0
+  area: access
+  title: Shared/private file accessible without permission (IDOR)
+  symptom: File ids/links expose files not shared with the user.
+  check: task
+  how: With two accounts, request a file id not shared with you.
+  expected: Files require explicit permission.
+  needs_write: false
+  needs_two_accounts: true
+- id: FILE-FLOW-001
+  applies:
+  - files
+  severity: T0
+  area: access
+  title: '''Anyone with link'' or revoked link still works after revoke'
+  symptom: A share link keeps working after being revoked/expired.
+  check: task
+  how: Create a link, revoke it, then re-fetch.
+  expected: Revoked/expired links stop working.
+  needs_write: true
+  needs_two_accounts: false
+- id: FILE-FLOW-002
+  applies:
+  - files
+  severity: T1
+  area: files
+  title: Upload shows success but file not stored/corrupted
+  symptom: Uploaded file missing or corrupted on download.
+  check: task
+  how: Upload then download and compare the file.
+  expected: Uploaded files store and download intact.
+  needs_write: true
+  needs_two_accounts: false
+- id: FILE-ACCESS-002
+  applies:
+  - files
+  severity: T1
+  area: access
+  title: Share permission levels not enforced (view vs edit)
+  symptom: A view-only recipient can edit/delete.
+  check: task
+  how: Share view-only to B; from B attempt edit/delete.
+  expected: Permission levels are enforced.
+  needs_write: true
+  needs_two_accounts: true
+- id: FILE-FLOW-003
+  applies:
+  - files
+  severity: T1
+  area: data
+  title: Trash/delete doesn't remove access / restore fails
+  symptom: Deleted files still accessible, or restore doesn't work.
+  check: task
+  how: Delete a file then try its URL; restore and verify.
+  expected: Delete revokes access; restore works.
+  needs_write: true
+  needs_two_accounts: false
+- id: FILE-SEC-001
+  applies:
+  - files
+  severity: T1
+  area: files
+  title: Uploaded HTML/SVG served inline (stored XSS vector)
+  symptom: An uploaded HTML/SVG is served with a renderable content-type on the app origin.
+  check: task
+  how: Upload a benign .svg/.html and check the response content-type/disposition when fetched.
+  expected: User files are served as downloads / sandboxed, not inline on the app origin.
+  needs_write: true
+  needs_two_accounts: false
+- id: FILE-DATA-001
+  applies:
+  - files
+  severity: T2
+  area: data
+  title: Version history wrong or overwrites silently
+  symptom: New upload overwrites without version/warning or history is wrong.
+  check: task
+  how: Upload a new version and check history/overwrite behavior.
+  expected: Versions tracked per product rules.
+  needs_write: true
+  needs_two_accounts: false
+- id: FILE-FLOW-004
+  applies:
+  - files
+  severity: T2
+  area: files
+  title: Filename with special chars/spaces breaks download
+  symptom: Unicode/space/long filenames break download or display.
+  check: task
+  how: Upload files with unusual names and download them.
+  expected: Unusual filenames handled correctly.
+  needs_write: true
+  needs_two_accounts: false
+- id: IOT-ACCESS-001
+  applies:
+  - iot
+  severity: T0
+  area: access
+  title: Control another user's device via id (IDOR)
+  symptom: Device ids let one user read/command another's device.
+  check: task
+  how: With two accounts, request/command the other's device id.
+  expected: Devices are owner/authorized-only.
+  needs_write: false
+  needs_two_accounts: true
+- id: IOT-FLOW-001
+  applies:
+  - iot
+  severity: T0
+  area: data
+  title: Command shows success but device state unchanged (success trap)
+  symptom: UI reports a command applied though device state/telemetry didn't change.
+  check: task
+  how: Send a command and verify via telemetry/state that it took effect.
+  expected: Command success reflects real device state.
+  needs_write: true
+  needs_two_accounts: false
+- id: IOT-DATA-001
+  applies:
+  - iot
+  severity: T1
+  area: data
+  title: Telemetry/charts show stale or wrong values
+  symptom: Readings frozen, wrong units, or wrong device.
+  check: task
+  how: Compare live readings over time and against the device.
+  expected: Telemetry is live and correct.
+  needs_write: true
+  needs_two_accounts: false
+- id: IOT-FLOW-002
+  applies:
+  - iot
+  severity: T1
+  area: data
+  title: Online/offline status wrong
+  symptom: Device shown online when unreachable (or vice versa).
+  check: task
+  how: Compare shown status to actual reachability.
+  expected: Status reflects reality.
+  needs_write: false
+  needs_two_accounts: false
+- id: IOT-ACCESS-002
+  applies:
+  - iot
+  severity: T1
+  area: access
+  title: Device sharing not revocable / over-privileged
+  symptom: Shared user keeps control after revoke or gets more than granted.
+  check: task
+  how: Share a device to B, revoke, and test B's access/scope.
+  expected: Sharing is scoped and revocable.
+  needs_write: true
+  needs_two_accounts: true
+- id: IOT-SEC-001
+  applies:
+  - iot
+  severity: T1
+  area: security
+  title: Firmware/update or device secrets exposed in client
+  symptom: Device credentials/keys or firmware URLs exposed in JS/API.
+  check: code
+  how: Scan client/API for device secrets/keys.
+  expected: Device secrets aren't exposed client-side.
+  needs_write: false
+  needs_two_accounts: false
+- id: IOT-FLOW-003
+  applies:
+  - iot
+  severity: T2
+  area: notifications
+  title: Alerts/thresholds don't fire or misfire
+  symptom: Threshold alerts never trigger or trigger wrongly.
+  check: task
+  how: Set a threshold that should trigger and check alerting.
+  expected: Alerts fire per configured thresholds.
+  needs_write: true
+  needs_two_accounts: false
+- id: IOT-TIME-001
+  applies:
+  - iot
+  severity: T2
+  area: time
+  title: Timestamps on readings wrong timezone
+  symptom: Reading timestamps shifted by timezone.
+  check: task
+  how: Compare a reading's timestamp to a known event time.
+  expected: Timestamps correct for user timezone.
+  needs_write: true
+  needs_two_accounts: false
+- id: DOCS-DATA-001
+  applies:
+  - docs
+  severity: T1
+  area: content
+  title: Code samples broken / wrong for current API
+  symptom: Documented snippets don't match the current API or error.
+  check: task
+  how: Run/inspect a copyable sample against the documented endpoint.
+  expected: Samples match the current API.
+  needs_write: false
+  needs_two_accounts: false
+- id: DOCS-NAV-001
+  applies:
+  - docs
+  severity: T1
+  area: navigation
+  title: Broken anchors/links between doc pages
+  symptom: In-doc links and anchors 404 or jump nowhere.
+  check: code
+  how: Crawl doc links/anchors and flag broken ones.
+  expected: Doc links resolve.
+  needs_write: false
+  needs_two_accounts: false
+- id: DOCS-SEC-001
+  applies:
+  - docs
+  severity: T0
+  area: security
+  title: Live API key embedded in examples / 'try it' console
+  symptom: Real/live keys are visible in samples or network calls.
+  check: code
+  how: Scan doc pages and try-it requests for live key patterns.
+  expected: Examples use placeholder keys.
+  needs_write: false
+  needs_two_accounts: false
+- id: DOCS-FLOW-001
+  applies:
+  - docs
+  severity: T1
+  area: forms
+  title: '''Try it'' console calls fail / wrong base URL'
+  symptom: Interactive API calls fail or hit the wrong environment.
+  check: task
+  how: Execute a try-it call and check endpoint/response.
+  expected: Try-it calls hit the correct API and succeed.
+  needs_write: false
+  needs_two_accounts: false
+- id: DOCS-SEARCH-001
+  applies:
+  - docs
+  severity: T1
+  area: search
+  title: Docs search misses existing pages
+  symptom: Searching an existing doc term returns nothing.
+  check: task
+  how: Search a term present on a known doc page.
+  expected: Search finds existing pages.
+  needs_write: false
+  needs_two_accounts: false
+- id: DOCS-DATA-002
+  applies:
+  - docs
+  severity: T2
+  area: content
+  title: Version switch shows wrong/mixed version content
+  symptom: Changing version doesn't change content or mixes versions.
+  check: task
+  how: Switch versions and verify content changes consistently.
+  expected: Version switch is consistent.
+  needs_write: false
+  needs_two_accounts: false
+- id: DOCS-DATA-003
+  applies:
+  - docs
+  severity: T2
+  area: content
+  title: Copy-code button copies wrong/truncated snippet
+  symptom: The copy button yields truncated or altered code.
+  check: task
+  how: Use copy-code and compare clipboard to displayed code.
+  expected: Copied code matches displayed.
+  needs_write: false
+  needs_two_accounts: false
+- id: DOCS-SEO-001
+  applies:
+  - docs
+  severity: T2
+  area: content
+  title: Deep-link to a section 404s after restructure
+  symptom: Older deep links return 404 with no redirect.
+  check: code
+  how: Request a few plausible older deep links and check for redirects vs 404.
+  expected: Moved pages redirect.
+  needs_write: false
+  needs_two_accounts: false

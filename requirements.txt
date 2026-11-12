@@ -1,0 +1,12 @@
+# Pin: agent code + SSE keepalive patch are verified against 2.5.0 (McpToolset path and api_server.py layout changed in newer releases)
+google-adk==2.5.0
+httpx>=0.27.0
+pydantic>=2.0
+pyyaml>=6.0
+python-dotenv>=1.0
+playwright>=1.45.0
+litellm>=1.0.0
+# Pin mcp to 1.x: 2.0.0 removed SamplingCapability/SamplingFnT/ProgressFnT that
+# google-adk's mcp_toolset.py imports; the failure is silently swallowed and McpToolset vanishes.
+mcp==1.29.0
+python-docx>=1.0

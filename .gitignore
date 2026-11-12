@@ -1,0 +1,44 @@
+# Secrets — NEVER commit
+.env
+.env.save*
+.env.bak
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# ADK / MCP runtime state
+.adk/
+.playwright-mcp/
+state/
+
+# Logs
+*.log
+adk_error.log
+adk_output.log
+server.log
+server_error.log
+
+# Runtime artifacts: screenshots, reports, debug dumps
+*.png
+*.docx
+*.doc
+qa_report_*.txt
+~$*
+docx_preview.txt
+network_all.txt
+*.network.txt
+*_network.txt
+*snapshot.md
+overview-initial.yml
+
+qa_partial_report.txt
+qa_t*.txt
+
+# Nested agent envs (secrets)
+adk_agents/**/.env
+
+# Benchmark run logs are large; keep the JSON results and score reports
+benchmark/results/*.log
+benchmark/results/*_v2/

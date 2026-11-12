@@ -1,0 +1,188 @@
+# Planted bugs in ShopLite. Each one is switched by bug("Bxx") in app.py.
+#
+# tier:      T0 = money, auth, permissions, data deletion (must never be missed)
+#            T1 = core journeys, T2 = cosmetic / hygiene
+# trap:      true = the UI shows success while the real outcome is wrong.
+#            These are the bugs that produce silent false passes.
+# route:     where the bug shows. The scorer matches verdicts on this route.
+# keywords:  words a verdict about this feature is expected to contain. The
+#            scorer uses them to link a verdict to a bug; a human checks the
+#            linked lines in the score report.
+# oracle:    how a human (or a backend check) proves the bug is real.
+
+bugs:
+  - id: B01
+    tier: T0
+    trap: true
+    route: /cart
+    summary: "Place order shows 'Order placed!' but the API returns 500 and no order is saved"
+    keywords: [order, place, checkout]
+    oracle: "GET /api/orders has no new order after placing one"
+
+  - id: B02
+    tier: T0
+    trap: false
+    route: /cart
+    summary: "Cart total ignores quantity (2 x $20 shows $20)"
+    keywords: [total, quantity, qty, amount]
+    oracle: "Set qty 2 on a $20 item; total must be $40.00"
+
+  - id: B03
+    tier: T0
+    trap: false
+    route: /admin
+    summary: "A regular user can open /admin and see every user's email"
+    keywords: [admin, access, permission, users, denied, 403]
+    oracle: "As bob (role user), /admin must return 403 Access denied"
+
+  - id: B04
+    tier: T0
+    trap: false
+    route: /orders
+    summary: "Cancel in the 'Delete this order?' dialog deletes the order anyway"
+    keywords: [cancel, delete, order, dialog]
+    oracle: "Click Delete, then Cancel; the order must still be listed"
+
+  - id: B05
+    tier: T0
+    trap: true
+    route: /account
+    summary: "Log out goes to the login page but the server session stays valid"
+    keywords: [logout, log out, session, account]
+    oracle: "After log out, opening /account must redirect to /login"
+
+  - id: B06
+    tier: T1
+    trap: false
+    route: /
+    summary: "Search returns every product for any query"
+    keywords: [search, query, result]
+    oracle: "Search 'mug' must list only Coffee Mug"
+
+  - id: B07
+    tier: T1
+    trap: true
+    route: /register
+    summary: "Register accepts an invalid email ('abc') and shows success"
+    keywords: [email, invalid, validation, register]
+    oracle: "Registering with email 'abc' must show 'Enter a valid email address.'"
+
+  - id: B08
+    tier: T1
+    trap: true
+    route: /account
+    summary: "Profile Save shows 'Saved' but the name reverts after reload"
+    keywords: [name, save, profile, persist, reload]
+    oracle: "Change the name, Save, reload; the new name must be shown"
+
+  - id: B09
+    tier: T1
+    trap: false
+    route: /
+    summary: "Page 2 of the product list shows the same items as page 1"
+    keywords: [page 2, pagination, page]
+    oracle: "Page 2 must show Wool Socks and Coffee Mug"
+
+  - id: B10
+    tier: T1
+    trap: false
+    route: /
+    summary: "Sort by price sorts as text ($100.00 comes before $12.00)"
+    keywords: [sort, price, order]
+    oracle: "Price: low to high must start with Notebook Set ($9.50)"
+
+  - id: B11
+    tier: T1
+    trap: false
+    route: /product
+    summary: "Double-clicking Post review creates two identical reviews"
+    keywords: [review, double, duplicate, twice]
+    oracle: "Double-click Post review; the review count must increase by 1"
+
+  - id: B12
+    tier: T1
+    trap: false
+    route: /product
+    summary: "The Reviews tab does nothing when clicked"
+    keywords: [tab, reviews, aria-selected, panel]
+    oracle: "Click Reviews; aria-selected must move and the panel must show"
+
+  - id: B13
+    tier: T1
+    trap: false
+    route: /cart
+    summary: "'Continue shopping' links to /shop, which is a 404"
+    keywords: [continue shopping, link, 404, not found]
+    oracle: "Continue shopping must open the shop at /"
+
+  - id: B14
+    tier: T1
+    trap: true
+    route: /cart
+    summary: "Coupon SAVE10 shows 'Coupon applied' but the total does not change"
+    keywords: [coupon, save10, discount, total]
+    oracle: "Apply SAVE10 to a $20 cart; total must be $18.00"
+
+  - id: B15
+    tier: T2
+    trap: false
+    route: /
+    summary: "Desk Lamp product image is broken (404)"
+    keywords: [image, broken, img, lamp]
+    oracle: "Every product image loads"
+
+  - id: B16
+    tier: T2
+    trap: false
+    route: /
+    summary: "Newsletter email input has no label"
+    keywords: [label, newsletter, unlabeled, unlabelled]
+    oracle: "The newsletter input has an accessible name"
+
+  - id: B17
+    tier: T2
+    trap: false
+    route: /orders
+    summary: "Orders page scrolls horizontally (a 1600px wide element)"
+    keywords: [overflow, horizontal, scroll, width]
+    oracle: "No horizontal scroll at 1280px width"
+
+  - id: B18
+    tier: T2
+    trap: false
+    route: /about
+    summary: "About page skips heading levels (h1 then h4)"
+    keywords: [heading, h4, hierarchy, level]
+    oracle: "Headings go h1 > h2 with no skipped level"
+
+  - id: B19
+    tier: T2
+    trap: false
+    route: /contact
+    summary: "Contact page has an empty <title>"
+    keywords: [title]
+    oracle: "document.title is not empty"
+
+  - id: B20
+    tier: T2
+    trap: false
+    route: /
+    summary: "Shop page throws an uncaught JavaScript error on load"
+    keywords: [console, javascript, error, typeerror, uncaught, exception]
+    oracle: "No uncaught errors in the console"
+
+  - id: B21
+    tier: T2
+    trap: false
+    route: /
+    summary: "Footer 'Help' link has an empty href"
+    keywords: [help, href, footer, empty]
+    oracle: "Every link has a real target"
+
+  - id: B22
+    tier: T1
+    trap: false
+    route: /product
+    summary: "/product/999 shows a stack trace and a database URL (500) instead of a 404 page"
+    keywords: [stack, trace, traceback, 500, leak, keyerror, 999]
+    oracle: "/product/999 must show 'Page not found' with status 404"

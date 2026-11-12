@@ -1,0 +1,34 @@
+# Secrets — NEVER copy into the image build context
+.env
+
+# VCS / tooling
+.git
+.adk
+.playwright-mcp
+state/
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+adk_error.log
+adk_output.log
+server.log
+server_error.log
+
+# Runtime artifacts (regenerated at runtime; evidence lives in volumes)
+*.png
+*.docx
+*.doc
+*.pdf
+qa_report_*
+docx_preview.txt
+network_all.txt
+*.network.txt
+*_network.txt
+*snapshot.md
+overview-initial.yml
+qa_partial_report.txt
+qa_t*.txt
+~$*

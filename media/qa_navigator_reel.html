@@ -1,0 +1,245 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>QA Navigator — reel</title>
+<style>
+:root{
+  --ink:#0f1f17;--muted:#5d6f66;--line:#e4eae6;--panel:#fff;
+  --brand:#0f3d2c;--accent:#17a05a;--accent-d:#167a48;
+  --pass:#16a34a;--fail:#d4493f;--warn:#c7791a;--blocked:#64748b;--run:#2a7de1;
+  --font:'Inter',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#06100b;overflow:hidden}
+.stage{position:relative;width:1280px;height:720px;overflow:hidden;background:
+  radial-gradient(1200px 700px at 72% -10%,#13432f 0%,#0b2418 46%,#071009 100%);
+  font-family:var(--font);color:#eaf4ee;-webkit-font-smoothing:antialiased}
+/* ambient */
+.grain{position:absolute;inset:0;opacity:.5;pointer-events:none;
+  background:radial-gradient(60% 50% at 80% 0%,rgba(42,164,104,.22),transparent 70%),
+             radial-gradient(40% 40% at 10% 100%,rgba(10,107,63,.18),transparent 70%)}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:0 96px;opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease;pointer-events:none}
+.scene.on{opacity:1;transform:none}
+.kicker{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:#9fe3bd;
+  letter-spacing:.04em;text-transform:uppercase;margin-bottom:22px}
+.kicker .d{width:8px;height:8px;border-radius:50%;background:#7fe0a1;box-shadow:0 0 0 4px rgba(127,224,161,.18)}
+h1{font-size:62px;line-height:1.05;letter-spacing:-.03em;color:#fff;font-weight:700;max-width:19ch}
+h2{font-size:46px;line-height:1.1;letter-spacing:-.025em;color:#fff;font-weight:700;max-width:20ch}
+.lead{font-size:22px;line-height:1.5;color:#c6e4d4;max-width:42ch;margin-top:20px;font-weight:400}
+.em{color:#7fe0a1}
+.fade-seq>*{opacity:0;transform:translateY(10px);animation:rise .7s cubic-bezier(.22,.61,.36,1) forwards}
+.scene.on .fade-seq>*{opacity:1}
+@keyframes rise{to{opacity:1;transform:none}}
+/* logo */
+.brandrow{display:flex;align-items:center;gap:18px}
+.mark{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#25b06d,#0f3d2c);
+  display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 18px 50px rgba(0,0,0,.4)}
+.mark svg{width:40px;height:40px}
+.brandrow .name{font-size:44px;font-weight:700;letter-spacing:-.02em;color:#fff}
+.brandrow .name small{display:block;font-size:15px;font-weight:600;color:#8fc9a8;letter-spacing:.02em;margin-top:2px}
+/* product mock */
+.mock{position:absolute;right:70px;top:90px;width:560px;background:#f4f6f5;border-radius:16px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);color:var(--ink);overflow:hidden;border:1px solid rgba(0,0,0,.1)}
+.mock .bar{display:flex;align-items:center;gap:7px;padding:12px 14px;background:#fff;border-bottom:1px solid var(--line)}
+.mock .bar i{width:11px;height:11px;border-radius:50%;background:#e2e6e3;display:inline-block}
+.mock .bar .t{margin-left:8px;font-size:12px;color:var(--muted);font-weight:600}
+.mock .body{padding:16px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.tile .k{font-size:10px;color:var(--muted);font-weight:600}
+.tile .v{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
+.tile.p .v{color:var(--pass)}.tile.f .v{color:var(--fail)}.tile.u .v{color:var(--warn)}.tile.b .v{color:var(--blocked)}
+.logbox{background:#0c1a13;border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;
+  line-height:1.8;height:150px;overflow:hidden;color:#cfe6d8}
+.logbox .l{opacity:0;animation:logln .35s ease forwards}
+.logbox .l.ok{color:#7fe0a1}.logbox .l.err{color:#ff9d93}
+@keyframes logln{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+/* chat */
+.chatwrap{position:absolute;right:120px;top:140px;width:440px;display:flex;flex-direction:column;gap:14px}
+.cmsg{max-width:85%;padding:14px 16px;border-radius:16px;font-size:17px;line-height:1.45;opacity:0;transform:translateY(12px) scale(.98);
+  box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.cmsg.show{animation:pop .5s cubic-bezier(.22,.61,.36,1) forwards}
+.cmsg.u{align-self:flex-end;background:#17a05a;color:#fff;border-bottom-right-radius:5px}
+.cmsg.a{align-self:flex-start;background:#fff;color:var(--ink);border-bottom-left-radius:5px}
+@keyframes pop{to{opacity:1;transform:none}}
+/* verdict */
+.vcard{position:absolute;right:96px;top:170px;width:520px;background:#fff;color:var(--ink);border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);padding:34px;opacity:0;transform:scale(.94)}
+.scene.on .vcard{animation:pop .6s cubic-bezier(.22,.61,.36,1) .25s forwards}
+.vbadge{display:inline-flex;align-items:center;gap:9px;background:#fbe9e7;color:#8f2a22;border:1px solid #f0c7c2;
+  padding:8px 15px;border-radius:10px;font-weight:700;font-size:17px}
+.vcard h3{font-size:26px;letter-spacing:-.02em;margin:18px 0 6px;color:var(--ink)}
+.vrow{display:flex;gap:11px;padding:12px 0;border-top:1px solid var(--line);align-items:flex-start}
+.vrow .bar{width:3px;align-self:stretch;border-radius:3px;background:var(--fail)}
+.vrow .tt{font-weight:600;font-size:15px}.vrow .mt{color:var(--muted);font-size:13px}
+.proof{margin-left:auto;font-size:11px;font-weight:700;color:var(--pass);background:#e8f6ec;border:1px solid #cdebd6;padding:3px 8px;border-radius:999px;white-space:nowrap}
+/* report chips */
+.chips{display:flex;gap:14px;margin-top:26px}
+.chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#eaf4ee;
+  padding:14px 26px;border-radius:12px;font-size:20px;font-weight:600;display:flex;align-items:center;gap:10px}
+.chip b{color:#7fe0a1}
+/* stamp */
+.stamp{position:absolute;right:150px;top:210px;width:300px;height:300px;border-radius:50%;
+  border:7px solid #7fe0a1;display:grid;place-items:center;text-align:center;color:#7fe0a1;
+  transform:rotate(-12deg) scale(.4);opacity:0;box-shadow:0 0 60px rgba(127,224,161,.25) inset}
+.scene.on .stamp{animation:stampin .6s cubic-bezier(.3,1.4,.5,1) .3s forwards}
+.stamp .big{font-size:40px;font-weight:800;letter-spacing:.02em;line-height:1}
+.stamp .sm{font-size:16px;font-weight:700;margin-top:8px;letter-spacing:.14em}
+@keyframes stampin{to{opacity:1;transform:rotate(-12deg) scale(1)}}
+/* progress + wordmark */
+.prog{position:absolute;left:0;bottom:0;height:4px;background:linear-gradient(90deg,#17a05a,#7fe0a1);width:0}
+.wm{position:absolute;left:96px;bottom:26px;display:flex;align-items:center;gap:11px;opacity:.9}
+.wm .m{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#25b06d,#0f3d2c);display:grid;place-items:center}
+.wm .m svg{width:17px;height:17px}
+.wm span{font-weight:700;letter-spacing:-.01em;color:#dff3e7;font-size:17px}
+.counter{font-variant-numeric:tabular-nums}
+</style></head>
+<body>
+<div class="stage" id="stage">
+  <div class="grain"></div>
+
+  <!-- 1 intro -->
+  <section class="scene" id="s1">
+    <div class="fade-seq">
+      <div class="brandrow" style="animation-delay:.1s">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <div class="name">QA Navigator<small>SUPERVISED QA ENGINE</small></div>
+      </div>
+      <h1 style="margin-top:40px;animation-delay:.45s">Never a green result <span class="em">it cannot prove.</span></h1>
+    </div>
+  </section>
+
+  <!-- 2 promise -->
+  <section class="scene" id="s2">
+    <div class="fade-seq">
+      <span class="kicker" style="animation-delay:.1s"><span class="d"></span>The problem</span>
+      <h2 style="animation-delay:.3s">Most tools tell you it passed.<br>We show you the <span class="em">proof.</span></h2>
+      <p class="lead" style="animation-delay:.6s">Real browsers. Real clicks. A verdict backed by evidence — or no verdict at all.</p>
+    </div>
+    <div class="stamp"><div><div class="big">PROOF</div><div class="sm">REQUIRED</div></div></div>
+  </section>
+
+  <!-- 3 live testing -->
+  <section class="scene" id="s3">
+    <div class="fade-seq" style="max-width:500px">
+      <span class="kicker" style="animation-delay:.1s"><span class="d"></span>Live run</span>
+      <h2 style="font-size:40px;animation-delay:.25s">Four browsers.<br>Hundreds of checks.</h2>
+      <p class="lead" style="animation-delay:.5s">A crawler maps the app. Testing teams drive it. A judge from a different model approves only with evidence.</p>
+    </div>
+    <div class="mock">
+      <div class="bar"><i></i><i></i><i></i><span class="t">app.example.com — running</span></div>
+      <div class="body">
+        <div class="tiles">
+          <div class="tile p"><div class="k">PASSED</div><div class="v counter" data-to="96">0</div></div>
+          <div class="tile f"><div class="k">FAILED</div><div class="v counter" data-to="7">0</div></div>
+          <div class="tile u"><div class="k">UNCERTAIN</div><div class="v counter" data-to="2">0</div></div>
+          <div class="tile b"><div class="k">BLOCKED</div><div class="v counter" data-to="1">0</div></div>
+        </div>
+        <div class="logbox" id="log3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 chat -->
+  <section class="scene" id="s4">
+    <div class="fade-seq" style="max-width:520px">
+      <span class="kicker" style="animation-delay:.1s"><span class="d"></span>You stay in control</span>
+      <h2 style="animation-delay:.25s">Steer the test<br>while it runs.</h2>
+      <p class="lead" style="animation-delay:.5s">Add a login step. Mark what to avoid. The testers read your note and follow it on the next task.</p>
+    </div>
+    <div class="chatwrap" id="chat4">
+      <div class="cmsg u">After login, fill the Company field with <b>pod1</b>.</div>
+      <div class="cmsg a">Noted. The testers will follow this on the tasks that come next.</div>
+      <div class="cmsg u">And do not place real orders.</div>
+      <div class="cmsg a">Understood. I will stop before the final confirm step.</div>
+    </div>
+  </section>
+
+  <!-- 5 verdict -->
+  <section class="scene" id="s5">
+    <div class="fade-seq" style="max-width:470px">
+      <span class="kicker" style="animation-delay:.1s"><span class="d"></span>The verdict</span>
+      <h2 style="animation-delay:.25s">Honest by design.</h2>
+      <p class="lead" style="animation-delay:.5s">Every bug comes with the step to repeat it and the proof behind it. No false green.</p>
+    </div>
+    <div class="vcard">
+      <span class="vbadge">■ NOT SAFE TO DEMO</span>
+      <h3>18 real bugs, each with proof</h3>
+      <div class="vrow"><span class="bar"></span><div><div class="tt">Checkout button does nothing</div><div class="mt">/cart · journey</div></div><span class="proof">EVIDENCE ✓</span></div>
+      <div class="vrow"><span class="bar"></span><div><div class="tt">Save shows success, sends no request</div><div class="mt">/settings · function</div></div><span class="proof">EVIDENCE ✓</span></div>
+      <div class="vrow"><span class="bar" style="background:var(--warn)"></span><div><div class="tt">Promo code accepts any value</div><div class="mt">/checkout · function</div></div><span class="proof">EVIDENCE ✓</span></div>
+    </div>
+  </section>
+
+  <!-- 6 close -->
+  <section class="scene" id="s6">
+    <div class="fade-seq" style="align-items:flex-start">
+      <div class="brandrow" style="animation-delay:.1s">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <div class="name">QA Navigator</div>
+      </div>
+      <h2 style="margin-top:34px;animation-delay:.4s">Supervised QA,<br>with the <span class="em">proof.</span></h2>
+      <div class="chips" style="animation-delay:.75s;opacity:0" id="chips6">
+        <div class="chip"><b>HTML</b></div><div class="chip"><b>PDF</b></div><div class="chip"><b>TXT</b> reports</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wm"><span class="m"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></span><span>QA Navigator</span></div>
+  <div class="prog" id="prog"></div>
+</div>
+
+<script>
+const SCENES=[
+  {id:'s1',at:0},{id:'s2',at:5200},{id:'s3',at:10600},{id:'s4',at:17600},{id:'s5',at:24200},{id:'s6',at:30600}
+];
+const DURATION=36000;
+const LOG3=[
+  {t:'  crawler: mapped 34 pages, 1339 elements',c:''},
+  {t:'  [journey-1] claimed: add an item to the cart',c:''},
+  {t:'  [function-2] search returns results',c:'ok'},
+  {t:'  login: LOGGED IN on /login (guided)',c:'ok'},
+  {t:'  [uiux-1] FAIL: contrast too low on .text-muted',c:'err'},
+  {t:'  [judge] journey-014 PASS (evidence verified)',c:'ok'},
+  {t:'  [journey-3] FAIL: checkout button does nothing',c:'err'}
+];
+let started=0, logIdx=0, countersRun=false, chatRun=false;
+function activate(id){
+  SCENES.forEach(s=>document.getElementById(s.id).classList.toggle('on',s.id===id));
+  if(id==='s3'){ if(!countersRun){countersRun=true;runCounters();} if(!started3){started3=true;streamLog();} }
+  if(id==='s4'&&!chatRun){chatRun=true;runChat();}
+  if(id==='s6'){const c=document.getElementById('chips6');c.style.animation='rise .7s ease forwards';}
+}
+let started3=false;
+function runCounters(){
+  document.querySelectorAll('#s3 .counter').forEach(el=>{
+    const to=+el.dataset.to; const t0=performance.now(); const dur=1400;
+    function step(now){const k=Math.min(1,(now-t0)/dur);el.textContent=Math.round(to*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  });
+}
+function streamLog(){
+  const box=document.getElementById('log3');
+  function add(){ if(logIdx>=LOG3.length)return; const m=LOG3[logIdx++];
+    const d=document.createElement('div');d.className='l '+m.c;d.textContent=m.t;box.appendChild(d);
+    if(box.children.length>6)box.removeChild(box.firstChild);
+    setTimeout(add,620); }
+  add();
+}
+function runChat(){
+  const msgs=[...document.querySelectorAll('#chat4 .cmsg')];
+  msgs.forEach((m,i)=>setTimeout(()=>m.classList.add('show'), 350+i*1150));
+}
+function loop(now){
+  if(!started)started=now;
+  let t=now-started;
+  if(t>=DURATION){t=DURATION;}
+  let cur=SCENES[0].id;
+  for(const s of SCENES){ if(t>=s.at)cur=s.id; }
+  activate(cur);
+  document.getElementById('prog').style.width=(100*Math.min(1,t/DURATION))+'%';
+  if(t<DURATION)requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body></html>

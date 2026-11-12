@@ -1,0 +1,29 @@
+# Charter for the ShopLite benchmark. It is written the way a customer would
+# write one: product facts and journeys in plain words, no hints about the
+# planted bugs.
+product:
+  name: ShopLite
+  type: web-app (online shop)
+  environments: [local benchmark]
+
+# Local throwaway app with in-memory data: writes are safe here.
+destructive_actions_allowed: true
+write_allowlist: []
+
+personas:
+  - "Shopper (regular user account): browses, searches, buys, manages orders and profile"
+
+critical_user_journeys:
+  - "Log in with the test account and log out again"
+  - "Find a product with search, sorting and the page links"
+  - "Open a product, read its reviews, post a review"
+  - "Add products to the cart, change quantities, apply coupon SAVE10 (10% off), place the order"
+  - "See past orders and delete one (with a confirmation dialog)"
+  - "Change the display name on the account page"
+  - "Only admin accounts may open /admin"
+  - "Register a new account"
+  - "Send a message from the contact page"
+
+out_of_scope: []
+known_issues: []
+by_design: []

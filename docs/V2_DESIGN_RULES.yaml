@@ -1,0 +1,1139 @@
+# Design-rule benchmark for black-box web UI QA (draft)
+# Scope: rendered page only (Playwright DOM, computed style, geometry, screenshots). No source code.
+# Conventions used by measures:
+#   "visible" = getBoundingClientRect width>0 and height>0, computed display!=none, visibility!=hidden,
+#               opacity>0 on self and all ancestors, not aria-hidden=true, and intersects the document (not off-canvas at x<-1000).
+#   "text node" = non-whitespace Text node whose parent element is visible; measure on parent element's computed style.
+#   "interactive" = a, button, input:not([type=hidden]), select, textarea, summary, [role=button|link|checkbox|radio|switch|tab|menuitem|option], [tabindex>=0], [onclick] with cursor:pointer.
+#   Viewports: 375x812 (mobile), 768x1024 (tablet), 1280x800 (desktop); run each dom rule at all three unless stated.
+#   px = CSS px at devicePixelRatio 1 and zoom 100%.
+rules:
+
+  # ---------------------------------------------------------------- TEXT
+  - id: DS-TEXT-001
+    area: text
+    severity: T1
+    title: "Body text is at least 12 px"
+    why: "Text under 12 px is hard to read on any screen and Lighthouse flags it as illegible."
+    check: dom
+    measure: "For visible text nodes with >= 3 words, computed font-size < 12px -> flag element. Page-level: flag T0 if > 40% of visible text characters render below 12px (Lighthouse font-size audit: 60% must be >= 12px)."
+    false_positive_guard: "Skip legal/copyright footers inside <footer> or <small>, superscripts/subscripts, badges/counters with <= 2 words, chart axis labels inside <svg>/<canvas>, text with aria-hidden=true, screen-reader-only text (clip rect 1px)."
+    source: https://developer.chrome.com/docs/lighthouse/seo/font-size
+
+  - id: DS-TEXT-002
+    area: text
+    severity: T2
+    title: "Main body copy is at least 16 px on mobile"
+    why: "16 px is the common readable default for paragraph text and avoids iOS zoom-in on inputs."
+    check: dom
+    measure: "At 375 px, take <p>/<li>/<dd> visible elements with >= 15 words; if the median computed font-size < 14px flag T1, < 16px flag T2."
+    false_positive_guard: "Skip dense data tables, code blocks, captions (figcaption), and secondary meta text (dates, bylines)."
+    source: https://design-system.service.gov.uk/styles/type-scale/
+
+  - id: DS-TEXT-003
+    area: text
+    severity: T2
+    title: "Line length of paragraphs is 45-90 characters"
+    why: "Very long lines cause readers to lose their place; very short ones break rhythm."
+    check: dom
+    measure: "For visible <p>/<li> blocks with >= 30 words: chars_per_line = element content width / (0.5 * font-size) (or measure via Range.getClientRects() on one line). Flag if > 100 chars (T2) or < 25 chars on a viewport >= 768px (T2). WCAG 1.4.8 AAA caps at 80 chars."
+    false_positive_guard: "Skip multi-column text, pull quotes, table cells, navigation, cards narrower than 300px on mobile, and CJK text (chars are full-width)."
+    source: https://baymard.com/blog/line-length-readability
+
+  - id: DS-TEXT-004
+    area: text
+    severity: T2
+    title: "Body line-height is 1.3-1.8 times font size"
+    why: "Cramped or overly loose line spacing hurts reading speed and looks unpolished."
+    check: dom
+    measure: "For visible blocks with >= 2 rendered lines (getClientRects().length >= 2 on a Range) and >= 20 words: ratio = computed line-height px / font-size px ('normal' = 1.2). Flag ratio < 1.25 or > 2.0."
+    false_positive_guard: "Skip headings (h1-h6 or font-size >= 24px; 1.0-1.3 is fine there), buttons, single-line labels, icon fonts."
+    source: https://practicaltypography.com/line-spacing.html
+
+  - id: DS-TEXT-005
+    area: text
+    severity: T1
+    title: "Text survives WCAG text-spacing override without clipping"
+    why: "Users who increase letter/line spacing must not lose content (WCAG 1.4.12)."
+    check: dom
+    measure: "Inject CSS: * { line-height:1.5 !important; letter-spacing:0.12em !important; word-spacing:0.16em !important } p { margin-bottom:2em !important }. Re-run DS-TEXT-007 and DS-TEXT-008; any new clipped/overlapping text element = flag."
+    false_positive_guard: "Ignore text in images, canvas, video captions, and elements that were already clipped before injection (report those under DS-TEXT-007)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html
+
+  - id: DS-TEXT-006
+    area: text
+    severity: T1
+    title: "Page works at 200% text zoom"
+    why: "WCAG 1.4.4 requires text resizable to 200% without loss of content or function."
+    check: dom
+    measure: "Set document.documentElement.style.fontSize = 200% (or CDP Emulation.setPageScaleFactor / browser zoom 200% at 1280 px). Flag any text element that becomes clipped (DS-TEXT-007), overlaps other text (DS-OVER-001) or interactive element that becomes covered (DS-OVER-002)."
+    false_positive_guard: "Sites using fixed px root that ignore rem: use CDP zoom instead of root font-size. Ignore decorative hero text in images."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html
+
+  - id: DS-TEXT-007
+    area: text
+    severity: T1
+    title: "Text is not clipped by its container"
+    why: "Cut-off words or half-visible lines look broken and hide information."
+    check: dom
+    measure: "For visible elements containing direct text: if (scrollWidth > clientWidth + 1 or scrollHeight > clientHeight + 1) and computed overflow-x/overflow-y in (hidden, clip) and text-overflow != ellipsis -> clipped. Also walk ancestors: text Range bounding rect extends > 2px beyond the nearest ancestor with overflow hidden/clip. Severity T0 if element is a button/label/heading."
+    false_positive_guard: "Skip intentional line-clamp (-webkit-line-clamp set) with a 'more' affordance, marquee/tickers, carousels (ancestor with scroll-snap-type or role=region aria-roledescription=carousel), visually-hidden sr-only text (width/height 1px)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+
+  - id: DS-TEXT-008
+    area: text
+    severity: T2
+    title: "Truncated text exposes the full value"
+    why: "Ellipsis without a way to see the full value hides data users need."
+    check: dom
+    measure: "Element with computed text-overflow: ellipsis (or line-clamp) and scrollWidth > clientWidth (actually truncated) and no title attribute, no aria-label/aria-description containing the full text, and not inside a link to a detail view -> flag. T1 if the element is a form value, price, name in a table cell, or button label."
+    false_positive_guard: "Skip when the full text appears elsewhere in the same card/row, or element is a preview snippet (e.g. email preview, search result description)."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  - id: DS-TEXT-009
+    area: text
+    severity: T2
+    title: "No long words or URLs breaking out of their box"
+    why: "Unbroken strings (emails, URLs, IDs) overflow cards and cause horizontal scroll."
+    check: dom
+    measure: "Visible text element whose text Range rect right edge > parent content-box right + 2px while overflow is visible, and text contains a token >= 25 chars without spaces -> flag."
+    false_positive_guard: "Skip <pre>/<code> inside a horizontally scrollable container."
+    source: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap
+
+  - id: DS-TEXT-010
+    area: text
+    severity: T2
+    title: "Headings form a logical, visually descending hierarchy"
+    why: "Skipped levels and h2 smaller than h3 confuse both screen readers and scanning users."
+    check: dom
+    measure: "List visible h1-h6 in DOM order. Flag: no h1 or > 1 visible h1 (T2); a jump of > 1 level (h2 -> h4); a heading of level n whose computed font-size < font-size of any heading of level n+1 in the same page section (T2)."
+    false_positive_guard: "Ignore headings inside dialogs or widgets that restart hierarchy; ignore visually-hidden headings for size comparison."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html
+
+  - id: DS-TEXT-011
+    area: text
+    severity: T2
+    title: "No long runs of all-caps, centered or justified body text"
+    why: "Long uppercase, centered or justified paragraphs are measurably slower to read and create rivers."
+    check: dom
+    measure: "Visible <p>/<li> with >= 25 words and (text-transform: uppercase or text is uppercase in source) -> flag; text-align: center with >= 3 rendered lines and >= 40 words -> flag; text-align: justify with hyphens: none on viewport 375 -> flag."
+    false_positive_guard: "Skip hero/marketing taglines under 25 words, legal boilerplate, and RTL/CJK content."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html
+
+  # ---------------------------------------------------------------- CONTRAST / COLOR
+  - id: DS-CONTRAST-001
+    area: contrast
+    severity: T1
+    title: "Text contrast is at least 4.5:1 (3:1 for large text)"
+    why: "WCAG 1.4.3 minimum contrast for readable text."
+    check: both
+    measure: "For visible text nodes: fg = computed color blended with opacity; bg = first opaque background-color walking ancestors (blend semi-transparent layers). Contrast = (L1+0.05)/(L2+0.05). Flag < 4.5 for normal text; < 3.0 for large text (>= 24px, or >= 18.66px with font-weight >= 700). T0 if ratio < 2.0 or element is a primary button/label. If any ancestor has background-image, gradient, video, or backdrop-filter, sample the screenshot pixels under the text box (vision/both) instead."
+    false_positive_guard: "Exempt disabled controls (disabled attr / aria-disabled=true), logos and brand wordmarks, placeholder-only decorative text, hidden text, text inside images (handled by vision)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+
+  - id: DS-CONTRAST-002
+    area: contrast
+    severity: T1
+    title: "UI component boundaries and icons have 3:1 contrast"
+    why: "WCAG 1.4.11: users must see where inputs, checkboxes and icon buttons are."
+    check: dom
+    measure: "For input, select, textarea, checkbox/radio (or custom role equivalents) and icon-only buttons: take border color (if border-width >= 1px) or background-color when it differs from the parent; contrast vs adjacent parent background < 3.0 AND no other indicator (fill, underline) >= 3.0 -> flag. For icons (svg fill/stroke or icon font color) vs background < 3.0 -> flag."
+    false_positive_guard: "Exempt disabled components, inputs whose text placeholder/label alone identifies the field inside a bordered card, purely decorative icons with aria-hidden and an adjacent text label."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+
+  - id: DS-CONTRAST-003
+    area: contrast
+    severity: T1
+    title: "Focus indicator has 3:1 contrast and real size"
+    why: "A faint focus ring is effectively invisible to keyboard users (WCAG 1.4.11 / 2.4.13)."
+    check: both
+    measure: "Tab to each interactive element; diff computed style before/after focus (outline, box-shadow, border, background). Indicator color vs adjacent background contrast >= 3.0 and changed-pixel area >= perimeter of element x 2px (screenshot diff of element box +4px padding). Flag if contrast < 3.0 or area below threshold."
+    false_positive_guard: "Skip elements whose focus moves to a child, and elements focused programmatically only (tabindex=-1)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html
+
+  - id: DS-CONTRAST-004
+    area: contrast
+    severity: T0
+    title: "No dark text on dark background or light on light"
+    why: "Theme bugs (e.g. dark mode with hard-coded black text) make whole sections unreadable."
+    check: both
+    measure: "Per text node: luminance(fg) < 0.2 and luminance(bg) < 0.2, or both > 0.8, with ratio < 2.0 -> flag T0. Run also with emulateMedia({colorScheme:'dark'}) and compare: any text whose ratio drops below 3.0 only in dark scheme -> flag."
+    false_positive_guard: "Ignore intentionally hidden text (color == background used for honeypot fields, which are also aria-hidden or positioned off-screen)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+
+  - id: DS-COLOR-001
+    area: color
+    severity: T1
+    title: "Links in body text are distinguishable without color alone"
+    why: "WCAG 1.4.1: links distinguished only by hue fail for color-blind users."
+    check: dom
+    measure: "Inline <a> inside a paragraph with surrounding text: if text-decoration-line does not include underline AND no border-bottom/background difference AND font-weight equal to surrounding text, then require link-vs-text contrast >= 3.0; else flag."
+    false_positive_guard: "Skip nav menus, cards where the whole block is a link, buttons styled as links, and links that are the only content of a list item."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+
+  - id: DS-COLOR-002
+    area: color
+    severity: T2
+    title: "Palette is limited (distinct text and background colors)"
+    why: "A large set of near-duplicate colors signals an inconsistent design system."
+    check: dom
+    measure: "Collect computed color and background-color of all visible elements; cluster in CIELAB with deltaE < 3 as same. Flag if distinct text colors > 10 or distinct non-transparent background colors > 12, or if >= 3 near-duplicate clusters have deltaE between 3 and 8 (looks like the same color, but is not)."
+    false_positive_guard: "Exclude images, user-generated content areas, syntax-highlighted code, charts/data-viz, and brand logos."
+    source: https://www.refactoringui.com/
+
+  - id: DS-COLOR-003
+    area: color
+    severity: T1
+    title: "Errors and status are not conveyed by color only"
+    why: "WCAG 1.4.1: a red border alone does not tell color-blind users what is wrong."
+    check: dom
+    measure: "For fields with aria-invalid=true or with border color hue in red range (hue 345-15, saturation > 0.5) after a submit attempt: require an associated visible text message (aria-describedby / aria-errormessage target visible, or sibling text within 48px) or an icon with text. Flag otherwise."
+    false_positive_guard: "Ignore red brand accents, sale prices, and decorative elements not tied to a form field."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
+
+  # ---------------------------------------------------------------- TARGETS / BUTTONS
+  - id: DS-BTN-001
+    area: buttons
+    severity: T1
+    title: "Click/tap targets are at least 24x24 px or spaced"
+    why: "WCAG 2.5.8 minimum target size; small targets cause mis-taps."
+    check: dom
+    measure: "For visible interactive elements: rect width < 24 or height < 24 -> candidate. Pass if a 24 px diameter circle centred on its rect does not intersect another target's rect or its 24 px circle (spacing exception). Flag remaining. T0 if the target is the primary CTA or submit."
+    false_positive_guard: "Exempt inline links within sentences, targets whose size is set by the user agent (native unstyled checkbox), elements with an equivalent larger control on the same page, map pins/canvas."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+
+  - id: DS-BTN-002
+    area: buttons
+    severity: T2
+    title: "Touch targets on mobile are 44-48 px"
+    why: "Apple HIG (44 pt) and Material (48 dp) recommend larger touch targets than the WCAG floor."
+    check: dom
+    measure: "At 375 px viewport only: interactive elements (excluding inline text links) with rect height < 44 or width < 44 -> flag T2; adjacent targets with < 8px gap between rects -> flag T2."
+    false_positive_guard: "Skip inline links in paragraphs, dense data tables, and elements whose ::before/::after or padding extends the hit area (verify with elementFromPoint at rect edge +10px)."
+    source: https://developer.apple.com/design/human-interface-guidelines/accessibility
+
+  - id: DS-BTN-003
+    area: buttons
+    severity: T0
+    title: "Primary action is visible above the fold or clearly reachable"
+    why: "Users must find the main action; a missing or hidden CTA breaks the task."
+    check: both
+    measure: "Find candidate primary actions: button[type=submit], [class*=primary], or the interactive element with the highest-saturation filled background and largest area in main. Flag T0 if none is visible within the first viewport (rect.top < innerHeight) and none is reachable by a single scroll on 375 px for forms/checkout/landing pages; vision confirms there is one visually dominant CTA per view."
+    false_positive_guard: "Content/article pages with no primary action; long forms where submit is naturally at the end (then require it is not covered: DS-OVER-002)."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  - id: DS-BTN-004
+    area: buttons
+    severity: T2
+    title: "Only one primary-styled button per group"
+    why: "Several equally prominent buttons dilute the main action."
+    check: dom
+    measure: "Within each form, dialog, or toolbar container: count buttons with filled high-saturation background (chroma > 30 in LCH, not white/gray) and identical style; flag if >= 3 such buttons side by side, or 2 primary-styled buttons in a dialog footer."
+    false_positive_guard: "Product grids where each card has its own 'Add to cart'; segmented controls."
+    source: https://design-system.service.gov.uk/components/button/
+
+  - id: DS-BTN-005
+    area: buttons
+    severity: T1
+    title: "Disabled controls look disabled and enabled ones do not"
+    why: "A disabled-looking enabled button, or an active-looking disabled one, misleads users."
+    check: dom
+    measure: "Compare button groups: element with disabled/aria-disabled=true must differ from enabled sibling style (opacity <= 0.6, or desaturated bg, or cursor not-allowed). Flag if computed bg, color, opacity are identical to enabled siblings. Also flag enabled buttons with opacity <= 0.5 or color contrast < 3.0 vs background (look disabled)."
+    false_positive_guard: "Ghost/tertiary buttons are intentionally low-emphasis but must still meet 4.5:1 text contrast."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  - id: DS-BTN-006
+    area: buttons
+    severity: T2
+    title: "Buttons of the same role share one style"
+    why: "Inconsistent radius, height, padding or font across buttons looks unfinished."
+    check: dom
+    measure: "Group visible <button>/[role=button]/a styled as button (has background or border, padding > 4px) by (background-color, border) cluster. Within a cluster, flag if distinct values of border-radius > 2, height on the same row differs > 2px, font-size differs, or font-weight differs. Across the page flag if > 4 distinct button styles."
+    false_positive_guard: "Icon-only buttons vs text buttons are separate groups; size variants (sm/md/lg) count as one if consistent per row."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html
+
+  - id: DS-BTN-007
+    area: buttons
+    severity: T1
+    title: "Icon-only buttons have an accessible name"
+    why: "An icon with no label is announced as 'button' and is often ambiguous visually."
+    check: dom
+    measure: "Interactive element whose visible text is empty (innerText trim == '') and contains svg/img/i/span icon: computed accessible name (aria-label, aria-labelledby, title, img alt, svg <title>) empty -> flag T1. If name is generic ('button', 'icon', 'click', 'svg', file name) -> flag T2."
+    false_positive_guard: "Elements with role=presentation or aria-hidden that are not focusable."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html
+
+  - id: DS-BTN-008
+    area: buttons
+    severity: T2
+    title: "Uncommon icon-only actions also have a visible text label or tooltip"
+    why: "Only a few icons (search, close, menu, cart) are universally understood."
+    check: dom
+    measure: "Icon-only interactive elements whose accessible name is not in an allowlist (search, close, menu, cart, home, back, share, play, pause, settings, user/account, delete) and that show no tooltip on hover (no new visible element or title after hover 600ms) -> flag."
+    false_positive_guard: "Toolbars of a rich-text editor where tooltips exist; social media brand icons in footer."
+    source: https://www.nngroup.com/articles/icon-usability/
+
+  - id: DS-BTN-009
+    area: buttons
+    severity: T2
+    title: "Interactive elements show a pointer cursor and hover feedback"
+    why: "Clickable things that do not react look dead; non-clickable things with pointer cursor mislead."
+    check: dom
+    measure: "For visible buttons/links (not inputs): cursor != pointer -> flag; and hover (page.hover) produces no change in computed color, background-color, border-color, box-shadow, text-decoration, opacity, or transform -> flag. Also flag non-interactive elements (no handler, no role, not a/button) with cursor: pointer."
+    false_positive_guard: "Touch-only viewport (375 px) skips hover checks; disabled buttons legitimately have no hover."
+    source: https://www.nngroup.com/articles/clickable-elements/
+
+  # ---------------------------------------------------------------- OVERLAP / Z-INDEX
+  - id: DS-OVER-001
+    area: layout
+    severity: T0
+    title: "Text does not overlap other text"
+    why: "Overlapping text is unreadable and the clearest sign of a broken layout."
+    check: dom
+    measure: "Collect line boxes via Range.getClientRects() for every visible text node. For pairs from different elements that are not ancestor/descendant: intersection area > 20% of the smaller box and > 4px in both dimensions -> flag T0. Confirm the top one by document.elementsFromPoint at the intersection centre returning both."
+    false_positive_guard: "Skip intentional overlays: text over hero images is fine (different element types), badges on avatars, elements with mix-blend-mode, animated tickers mid-transition (wait for animations to finish via document.getAnimations())."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+
+  - id: DS-OVER-002
+    area: layout
+    severity: T0
+    title: "Nothing covers an interactive element"
+    why: "A button covered by another layer cannot be clicked."
+    check: dom
+    measure: "For each visible interactive element, sample 5 points (centre and 4 points inset 3px from corners): el = document.elementFromPoint(x,y); if el is not the target and not its descendant/ancestor (and not a label for it) at the centre point -> covered. T0 if centre covered, T1 if >= 3 of 5 points covered. Report the covering element selector and its z-index/position."
+    false_positive_guard: "Skip when a modal is intentionally open (covering element is inside [role=dialog][aria-modal=true] or <dialog open>); skip elements scrolled under a sticky header (handled by DS-OVER-003) unless the page is at scrollY=0; skip transparent pointer-events:none overlays (elementFromPoint already ignores them)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
+
+  - id: DS-OVER-003
+    area: layout
+    severity: T1
+    title: "Sticky/fixed headers and banners do not hide focused or anchored content"
+    why: "WCAG 2.4.11: focused elements must not be fully hidden by author-created content."
+    check: dom
+    measure: "Find elements with position fixed/sticky covering > 10% of viewport. Tab through interactive elements; after each focus, if the focused element rect is fully inside a fixed element rect (and it is not a descendant) -> flag T1 (2.4.11). Also navigate to in-page anchors (#id): target rect.top < bottom of sticky header -> flag T2."
+    false_positive_guard: "Skip when scroll-padding-top >= header height is set (anchor case already handled), and when the fixed element is a dismissible banner that the user has not dismissed yet only if it can be closed (then T2)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
+
+  - id: DS-OVER-004
+    area: layout
+    severity: T1
+    title: "Fixed elements do not take more than 40% of the mobile viewport"
+    why: "Stacked sticky header, cookie bar and chat widget leave no room for content."
+    check: dom
+    measure: "At 375x812 after load and after 1 scroll: sum area of visible position:fixed/sticky elements (union of rects) / viewport area > 0.40 -> flag T1; > 0.6 -> T0."
+    false_positive_guard: "Open modals, full-screen menus opened by the user, consent dialogs on first visit (report them separately as T2 if they lack a close/reject action)."
+    source: https://www.nngroup.com/articles/sticky-headers/
+
+  - id: DS-OVER-005
+    area: layout
+    severity: T1
+    title: "Sibling block elements do not overlap each other"
+    why: "Overlapping cards, sections or images indicate broken positioning or negative margins."
+    check: dom
+    measure: "For sibling elements in normal flow (position static/relative, not absolute/fixed) with area > 400px2: intersection area > 5% of smaller -> flag. For absolutely positioned elements whose rect overlaps a sibling's text line boxes -> flag."
+    false_positive_guard: "Skip intentional design overlap: negative-margin hero cards, avatar stacks, elements with transform during animation, carousels (only one slide visible)."
+    source: https://www.galenframework.com/docs/reference-galen-spec-language-guide/
+
+  - id: DS-OVER-006
+    area: layout
+    severity: T1
+    title: "Content does not bleed outside the viewport or its card"
+    why: "Elements spilling beyond their container look broken and may be unreachable."
+    check: dom
+    measure: "Visible element (not position fixed) whose rect.right > document.documentElement.clientWidth + 1 or rect.left < -1 -> flag (report deepest offender). For card-like containers (border or bg differs from parent, border-radius > 0) any child rect extending > 2px outside the card rect with overflow visible -> flag."
+    false_positive_guard: "Skip off-canvas menus with transform translateX and visibility hidden/aria-hidden, horizontal scrollers (overflow-x auto/scroll on an ancestor), decorative background blobs with pointer-events none and no text."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+
+  # ---------------------------------------------------------------- RESPONSIVE
+  - id: DS-RESP-001
+    area: responsive
+    severity: T1
+    title: "No horizontal scroll at 375, 768 or 1280 px"
+    why: "Sideways page scroll is a classic responsive bug and hides content."
+    check: dom
+    measure: "At each viewport: document.documentElement.scrollWidth > window.innerWidth + 1 (or body.scrollWidth) -> flag; identify culprits as elements with rect.right > innerWidth. T0 at 375 if the culprit is in main content."
+    false_positive_guard: "Ignore when overflow-x: hidden/clip on html/body truly prevents scroll (then report hidden content under DS-OVER-006 instead); ignore data tables inside their own horizontal scroll container."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+
+  - id: DS-RESP-002
+    area: responsive
+    severity: T1
+    title: "Content reflows at 320 CSS px width"
+    why: "WCAG 1.4.10: content must be usable at 320 px without two-dimensional scrolling."
+    check: dom
+    measure: "Viewport 320x256 (equivalent of 1280 at 400% zoom): scrollWidth > 321 -> flag; plus re-run DS-OVER-001/002 and DS-TEXT-007 at this width."
+    false_positive_guard: "Exempt content that requires 2D layout: maps, data tables, diagrams, toolbars in editors, games, video."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+
+  - id: DS-RESP-003
+    area: responsive
+    severity: T1
+    title: "Mobile has a working navigation menu"
+    why: "When nav collapses into a menu button, it must open, show all links, and close."
+    check: dom
+    measure: "At 375 px: if desktop nav links (1280 px) are no longer visible, there must be a visible button with aria-expanded or accessible name matching menu/navigation/hamburger. Click it: aria-expanded becomes true AND >= 80% of desktop nav link texts become visible within 1s; second click or Escape hides them. Flag any failing step (T0 if no way to reach nav)."
+    false_positive_guard: "Sites whose nav fits at 375 (all links visible, no overflow) pass without a menu button."
+    source: https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/
+
+  - id: DS-RESP-004
+    area: responsive
+    severity: T1
+    title: "Viewport meta allows zoom and sets device width"
+    why: "Missing width=device-width renders a tiny desktop page; maximum-scale=1 blocks zoom."
+    check: dom
+    measure: "meta[name=viewport] missing or content lacks width=device-width -> flag T1; content contains user-scalable=no or maximum-scale < 2 -> flag T1."
+    false_positive_guard: "None for public web pages; native-app webviews may be reported as T2."
+    source: https://dequeuniversity.com/rules/axe/4.10/meta-viewport
+
+  - id: DS-RESP-005
+    area: responsive
+    severity: T2
+    title: "Layout adapts between breakpoints (no desktop layout squeezed on mobile)"
+    why: "Multi-column layouts that just shrink produce tiny, unreadable columns."
+    check: dom
+    measure: "At 375 px: any row container (display flex row / grid) with >= 3 visible children each narrower than 100px containing text >= 5 words -> flag; any text column narrower than 120px with >= 20 words -> flag."
+    false_positive_guard: "Icon rows, tab bars, tag chips and thumbnails galleries are allowed to be narrow."
+    source: https://www.nngroup.com/articles/mobile-ux/
+
+  - id: DS-RESP-006
+    area: responsive
+    severity: T2
+    title: "Main content uses a sensible max width on wide screens"
+    why: "Full-bleed text at 1920 px gives 200-character lines and lost alignment."
+    check: dom
+    measure: "At 1920x1080: main text column (largest <main>/<article> block containing paragraphs) width > 1200px with paragraphs spanning the full width -> flag (overlaps DS-TEXT-003)."
+    false_positive_guard: "Dashboards, data grids, design tools and canvases."
+    source: https://design-system.service.gov.uk/styles/layout/
+
+  # ---------------------------------------------------------------- ALIGNMENT
+  - id: DS-ALIGN-001
+    area: alignment
+    severity: T2
+    title: "Items in a column share a left edge"
+    why: "Ragged left edges by a few pixels make a layout look careless."
+    check: dom
+    measure: "Group visible siblings stacked vertically (same parent, rect.top increasing, horizontal overlap > 50%). Compute left edge of each (use text start x for text elements). If the edges cluster within 1-6 px of each other but not equal (max-min between 1.5 and 6px) -> flag near-miss misalignment. Differences > 6px are treated as intentional indent."
+    false_positive_guard: "Skip list markers, bullet/number gutters, intentional indents (padding-left change >= 8px), optical alignment of large display type (font-size > 40px, allow 4px), and italic overhang."
+    source: https://www.refactoringui.com/
+
+  - id: DS-ALIGN-002
+    area: alignment
+    severity: T2
+    title: "Items in a row share top, centre or baseline"
+    why: "Buttons, inputs and labels in one row that are off by a few px look broken."
+    check: dom
+    measure: "Group visible siblings laid out horizontally (same parent, vertical overlap > 50%). For each of top, vertical centre, bottom and first-baseline (text Range rect bottom minus descent approx), compute spread; if minimum spread across the four is between 1.5px and 6px -> flag (they nearly align but don't). Report T1 if an input and its adjacent button differ in height by > 2px."
+    false_positive_guard: "Skip rows with intentionally different heights aligned to one consistent edge (spread < 1.5 on any measure passes), badges/superscript counters, wrapped flex rows (compare per visual line only)."
+    source: https://www.galenframework.com/docs/reference-galen-spec-language-guide/
+
+  - id: DS-ALIGN-003
+    area: alignment
+    severity: T2
+    title: "Cards in a row have equal heights and aligned footers"
+    why: "Uneven card heights and floating CTA buttons make grids look messy."
+    check: dom
+    measure: "Detect repeated siblings (>= 3, same tagName and >= 70% same class list or same child structure) on the same visual row. Flag if heights differ by > 4px (T2) or if their last interactive child (button/link) bottoms differ by > 4px while cards have equal heights."
+    false_positive_guard: "Masonry layouts (columns with staggered tops by design), feeds with variable content, mixed-size featured cards (one card 2x width)."
+    source: https://www.refactoringui.com/
+
+  - id: DS-ALIGN-004
+    area: alignment
+    severity: T2
+    title: "Grid items have consistent widths and gutters"
+    why: "Unequal columns or gaps in a repeated grid signal a CSS bug."
+    check: dom
+    measure: "For repeated siblings on one row: width spread > 2px (when the grid intends equal columns, i.e. >= 3 items and median width within 10% of each other) -> flag; horizontal gaps between consecutive items spread > 2px -> flag; last row items with a different width than above row in a grid container -> flag T2."
+    false_positive_guard: "Flex-wrap rows that grow the last item by design (flex-grow > 0), tag clouds, carousels."
+    source: https://www.galenframework.com/docs/reference-galen-spec-language-guide/
+
+  - id: DS-ALIGN-005
+    area: alignment
+    severity: T2
+    title: "Icons are vertically centred with their labels"
+    why: "Icons a couple of px high or low next to text are a common polish bug."
+    check: dom
+    measure: "For an svg/img/icon-font element adjacent to a text node inside the same inline/flex container: |icon centre y - text line box centre y| > max(2px, 0.15 x font-size) -> flag."
+    false_positive_guard: "Superscript icons (external link markers), icons intentionally aligned to first line of multi-line text (compare with first line box)."
+    source: https://www.refactoringui.com/
+
+  - id: DS-ALIGN-006
+    area: alignment
+    severity: T2
+    title: "Table columns align numbers right and text consistently"
+    why: "Misaligned numeric columns are hard to compare."
+    check: dom
+    measure: "In <table> or [role=grid]: for a column where >= 80% of cells match a number/currency pattern, flag if cells' computed text-align differs within the column or header alignment differs from cells; flag if numeric column uses text-align left with varying widths and no tabular-nums (font-variant-numeric)."
+    false_positive_guard: "IDs, phone numbers and zip codes are not quantities; single-row tables."
+    source: https://www.nngroup.com/articles/data-tables/
+
+  # ---------------------------------------------------------------- SPACING
+  - id: DS-SPACE-001
+    area: spacing
+    severity: T2
+    title: "Repeated items use identical spacing"
+    why: "Gaps that vary by a few px between identical list items look accidental."
+    check: dom
+    measure: "For >= 3 repeated siblings (same tag and class signature) compute consecutive gaps (vertical for stacks, horizontal for rows). Flag if max gap - min gap > 2px and > 10% of median gap."
+    false_positive_guard: "Ignore last-child margin collapse differences < 2px, group separators (an hr or heading between items), virtualised lists mid-render."
+    source: https://m3.material.io/foundations/layout/understanding-layout/spacing
+
+  - id: DS-SPACE-002
+    area: spacing
+    severity: T2
+    title: "Spacing values come from a small scale"
+    why: "A consistent spacing scale (e.g. multiples of 4 px) makes layouts feel orderly."
+    check: dom
+    measure: "Collect computed margin/padding/gap values > 0 of visible elements. Flag if > 60% of values are not multiples of 4 (+-0.5px), or if distinct values count > 15."
+    false_positive_guard: "Ignore values derived from em on text (padding scaling with font), 1px borders and hairlines, and third-party widgets (iframes, chat bubbles)."
+    source: https://m3.material.io/foundations/layout/understanding-layout/spacing
+
+  - id: DS-SPACE-003
+    area: spacing
+    severity: T1
+    title: "Text has padding inside its container"
+    why: "Text touching a card, button or input edge looks cramped and broken."
+    check: dom
+    measure: "For visible elements with own background or border (button, input, card, badge, alert) containing text: distance from text Range rect to container border-box inner edge < 4px horizontally or < 2px vertically -> flag (T1 for buttons/inputs, T2 otherwise)."
+    false_positive_guard: "Underlined text links, ghost buttons with no background or border, text that is intentionally full-bleed in a banner with large font."
+    source: https://www.refactoringui.com/
+
+  - id: DS-SPACE-004
+    area: spacing
+    severity: T2
+    title: "Related items are closer than unrelated items (proximity)"
+    why: "A label nearer to the wrong field, or a heading equidistant to two sections, breaks grouping."
+    check: dom
+    measure: "For each heading h2-h4: gap to following content must be < gap to preceding content (flag if following gap >= preceding gap and both > 0). For each visible form label: distance to its associated control must be smaller than distance to any other control (flag otherwise)."
+    false_positive_guard: "First heading in a container (no preceding content); inline label+checkbox pairs."
+    source: https://www.nngroup.com/articles/gestalt-proximity/
+
+  - id: DS-SPACE-005
+    area: spacing
+    severity: T2
+    title: "No unexplained large empty areas"
+    why: "Big blank gaps usually mean a component failed to render or a min-height bug."
+    check: both
+    measure: "Scroll the full page; find vertical bands >= 50% of viewport height (at 1280 px) or >= 70% (at 375 px) between content boxes where no visible element with text, image, or border is present -> candidate. Vision confirms whether it looks intentional (hero background art) or broken."
+    false_positive_guard: "Hero sections with background images/video, intentional spacers before the footer on short pages (min-height:100vh layouts)."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  # ---------------------------------------------------------------- IMAGES
+  - id: DS-IMG-001
+    area: images
+    severity: T1
+    title: "Images are not stretched or squashed"
+    why: "Distorted photos and logos look broken immediately."
+    check: dom
+    measure: "For visible <img> with naturalWidth > 0 and object-fit in (fill, unset): natural ratio = naturalWidth/naturalHeight; rendered ratio = content-box width/height; |rendered/natural - 1| > 0.05 -> flag (Lighthouse uses 5%). T1 for logos/product images."
+    false_positive_guard: "object-fit cover/contain/scale-down (crop or letterbox, not distort), SVGs with preserveAspectRatio, images < 16px, CSS background-images (handle with vision)."
+    source: https://developer.chrome.com/docs/lighthouse/best-practices/image-aspect-ratio
+
+  - id: DS-IMG-002
+    area: images
+    severity: T2
+    title: "Images are not pixelated (enough resolution for rendered size)"
+    why: "Upscaled low-res images look blurry on modern screens."
+    check: dom
+    measure: "For visible raster <img> (not svg) with rendered size >= 64x64: required = rendered CSS px x min(devicePixelRatio, 2) x 0.75 (Lighthouse tolerance); flag if naturalWidth < required width or naturalHeight < required height. Run with deviceScaleFactor 2. T1 if naturalWidth < 0.5 x rendered CSS width (blurry even at 1x)."
+    false_positive_guard: "Intentional pixel art (image-rendering: pixelated), blurred placeholders during lazy load (wait until complete), thumbnails of video."
+    source: https://github.com/GoogleChrome/lighthouse/blob/main/core/audits/image-size-responsive.js
+
+  - id: DS-IMG-003
+    area: images
+    severity: T1
+    title: "No broken images"
+    why: "Broken image icons or empty boxes look unprofessional and hide content."
+    check: dom
+    measure: "After network idle + scroll to bottom (trigger lazy load): <img> with complete == true and naturalWidth == 0 -> flag; also capture failed requests (status >= 400) for image resource type; CSS background-image URLs with failed responses on visible elements -> flag. T0 if it is the logo or main product image."
+    false_positive_guard: "Tracking pixels (1x1, display none or rendered size < 4px), images inside closed <details> or inactive carousel slides still loading."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  - id: DS-IMG-004
+    area: images
+    severity: T1
+    title: "Informative images have alt text; decorative ones are hidden"
+    why: "WCAG 1.1.1 requires a text alternative; file names as alt are as bad as none."
+    check: dom
+    measure: "<img> without alt attribute -> flag T1; [role=img] or svg with role=img without accessible name -> flag; alt that looks like a file name (ends in .jpg/.png/.webp/.svg, contains IMG_ or DSC), equals 'image', 'photo', 'picture', 'logo' alone, or duplicates adjacent caption verbatim -> flag T2. Images that are the only content of a link/button with empty alt -> flag T1."
+    false_positive_guard: "alt='' is correct for decorative images that are not inside links/buttons; images with aria-hidden=true; CSS backgrounds."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html
+
+  - id: DS-IMG-005
+    area: images
+    severity: T2
+    title: "Images reserve space to avoid layout shift"
+    why: "Images without dimensions push content down when they load."
+    check: dom
+    measure: "<img> above the fold or in main content with neither width+height attributes nor CSS aspect-ratio nor a fixed-size parent; confirm via PerformanceObserver layout-shift entries whose sources include the image or its next sibling."
+    false_positive_guard: "Images inside fixed-size containers (height set), icons < 32px."
+    source: https://web.dev/articles/optimize-cls
+
+  - id: DS-IMG-006
+    area: images
+    severity: T2
+    title: "Image crops do not cut faces or key subject"
+    why: "object-fit cover can crop heads or product parts in some breakpoints."
+    check: vision
+    measure: "Screenshot each image with object-fit cover at 375/768/1280; ask vision model whether a face, product or text in the image is cut off at an edge. Prefilter with dom: only images where rendered ratio differs from natural ratio by > 30%."
+    false_positive_guard: "Abstract/background textures, intentionally tight artistic crops."
+    source: https://developer.mozilla.org/en-US/docs/Web/CSS/object-position
+
+  # ---------------------------------------------------------------- CONTENT
+  - id: DS-CONTENT-001
+    area: content
+    severity: T1
+    title: "No placeholder, debug or template text visible"
+    why: "Lorem ipsum, 'undefined' or raw template braces tell users the page is broken."
+    check: dom
+    measure: "Visible innerText (plus placeholder, title, alt, aria-label, value attributes) matched case-insensitively against: 'lorem ipsum', 'dolor sit amet', standalone words 'undefined', 'NaN', 'null' (whole word, not inside longer words), '[object Object]', '{{' or '}}', '${', '<%', '%s', 'TODO', 'FIXME', 'TBD', 'xxx' as a whole token, 'test test', 'asdf', 'Invalid Date', 'Infinity', 'function (', '#ERROR', 'Error: ' followed by stack-like text ('at ' + file:line). T0 if in a heading, price, button or form label."
+    false_positive_guard: "Pages documenting code (inside <code>/<pre>), blog posts about JavaScript, product names containing the words (e.g. 'Null Island'), a user-entered value shown back. Require whole-word match and exclude <code>, <pre>, <kbd>, <samp>."
+    source: https://www.nngroup.com/articles/error-message-guidelines/
+
+  - id: DS-CONTENT-002
+    area: content
+    severity: T1
+    title: "No raw technical errors or stack traces shown"
+    why: "Exceptions shown to users are confusing and leak internals."
+    check: dom
+    measure: "Visible text matching: 'Traceback (most recent call last)', 'Exception', 'TypeError', 'ReferenceError', 'Cannot read properties of', 'SQLSTATE', 'Warning: ' + '.php on line', 'stack trace', 'Internal Server Error', '500', 'ECONNREFUSED' inside a box of < 2000 chars; also any HTTP 4xx/5xx main document response. Also check browser console for uncaught errors (report T2 if UI looks fine)."
+    false_positive_guard: "Developer docs pages and status pages that intentionally show error codes."
+    source: https://www.nngroup.com/articles/error-message-guidelines/
+
+  - id: DS-CONTENT-003
+    area: content
+    severity: T2
+    title: "Numbers, dates and prices are formatted for humans"
+    why: "Raw ISO timestamps, floats like 19.990000001 or unformatted 1234567 look like bugs."
+    check: dom
+    measure: "Visible text tokens matching: ISO datetime with 'T' and 'Z' or milliseconds (e.g. 2026-11-03T10:22:01.123Z); decimals with > 4 fractional digits; currency symbol followed by a number with != 0 or 2 decimals (e.g. $19.9); integers >= 10000 without grouping separators outside IDs/years/phone/zip; Unix timestamps (10 or 13 digit numbers starting with 1)."
+    false_positive_guard: "Codes, order IDs, SKUs, ZIP codes, years, phone numbers, technical/data pages."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  - id: DS-CONTENT-004
+    area: content
+    severity: T1
+    title: "Empty states explain what is missing and what to do"
+    why: "A blank list or table with no message looks broken and gives no next step."
+    check: both
+    measure: "Containers that normally hold repeated items (ul/ol, table tbody, [role=list|grid|feed], elements with class matching list|grid|results|items|table) that are visible with 0 item children and height < 40px or no text -> flag T1. If there is text, it must have >= 3 words and (on app pages) an interactive element within the container or 200px below -> else T2. Vision checks the empty state does not look like a loading or error state."
+    false_positive_guard: "Containers waiting for a loading state (spinner/skeleton present; re-check after 5s), hidden tab panels."
+    source: https://www.nngroup.com/articles/empty-state-interface-design/
+
+  - id: DS-CONTENT-005
+    area: content
+    severity: T2
+    title: "Page has a meaningful title and language"
+    why: "Tab title and lang attribute are basic quality and accessibility signals."
+    check: dom
+    measure: "document.title empty, equals URL/hostname, equals generic ('React App', 'Vite + React', 'Untitled', 'Document', 'Home' on non-home pages), or is identical across >= 3 different crawled pages -> flag. <html> missing lang -> flag."
+    false_positive_guard: "Single-page apps on the same route group may share a prefix; compare the full title."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/page-titled.html
+
+  - id: DS-CONTENT-006
+    area: content
+    severity: T2
+    title: "Link text describes the destination"
+    why: "Repeated 'click here' or 'read more' links are vague out of context."
+    check: dom
+    measure: "Links whose accessible name (trimmed, lowercased) is in [click here, here, read more, more, learn more, link, this, details] and with no aria-label/aria-describedby adding context -> flag; >= 2 links with identical name but different href on the same page -> flag T2."
+    false_positive_guard: "Card links where the whole card provides context via aria-labelledby; pagination numbers."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html
+
+  - id: DS-CONTENT-007
+    area: content
+    severity: T2
+    title: "No broken characters or encoding garbage"
+    why: "Mojibake and missing-glyph boxes look broken."
+    check: both
+    measure: "Visible text containing U+FFFD replacement character, sequences like 'Ã©', 'â€™', 'â€œ', '&amp;amp;', '&nbsp;' as literal text, or HTML tags rendered as text ('<br>', '</p>') -> flag. Vision: tofu boxes (missing glyphs) in screenshots of text in non-Latin scripts."
+    false_positive_guard: "Code samples in <code>/<pre>."
+    source: https://www.w3.org/International/questions/qa-what-is-encoding
+
+  # ---------------------------------------------------------------- CONSISTENCY / TYPOGRAPHY SYSTEM
+  - id: DS-CONS-001
+    area: consistency
+    severity: T2
+    title: "At most 3 font families in use"
+    why: "Many typefaces make a page look chaotic; fallback fonts reveal failed web-font loads."
+    check: dom
+    measure: "Collect the first resolved family actually rendered for visible text (CDP CSS.getPlatformFontsForNode, or document.fonts check) grouped by family. Flag if > 3 families (excluding monospace for code and icon fonts). Flag T1 if a declared web font failed to load (document.fonts entries with status 'error') and text renders in fallback (Times/serif default)."
+    false_positive_guard: "Icon fonts (Font Awesome, Material Icons/Symbols), monospace in <code>, third-party embeds (iframes)."
+    source: https://www.refactoringui.com/
+
+  - id: DS-CONS-002
+    area: consistency
+    severity: T2
+    title: "Limited set of font sizes (type scale)"
+    why: "Dozens of near-identical sizes indicate no type scale and look uneven."
+    check: dom
+    measure: "Distinct computed font-size values on visible text, rounded to 0.5px. Flag if > 10 distinct sizes on one page, or if >= 2 pairs of sizes differ by < 1px (e.g. 14 and 14.5)."
+    false_positive_guard: "Fluid type (clamp/vw) produces fractional sizes: round to nearest 1px and treat values within 1px as one size if they come from the same CSS class/tag role. Exclude user content (rich text) and embeds."
+    source: https://design-system.service.gov.uk/styles/type-scale/
+
+  - id: DS-CONS-003
+    area: consistency
+    severity: T2
+    title: "Limited set of font weights and border radii"
+    why: "Too many weights or corner radii make components look unrelated."
+    check: dom
+    measure: "Distinct font-weight values on visible text > 4 -> flag; distinct non-zero border-radius values on visible bordered/filled elements > 5 (excluding 50%/9999px pills and circles) -> flag."
+    false_positive_guard: "Third-party widgets and embedded iframes."
+    source: https://www.refactoringui.com/
+
+  - id: DS-CONS-004
+    area: consistency
+    severity: T2
+    title: "Same component looks the same across pages"
+    why: "Header, footer, buttons and inputs that change style between pages feel like different products (WCAG 3.2.4 for identification)."
+    check: dom
+    measure: "Crawl >= 3 pages. For header, footer, nav, primary button, text input: fingerprint = (height +-2px, background-color, font-family, font-size, border-radius, border-color, padding). Flag when the same role's fingerprint differs between pages. Also flag nav link order differences across pages (WCAG 3.2.3)."
+    false_positive_guard: "Intentional variants: transparent header on home hero vs solid elsewhere; checkout pages with minimal header."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/consistent-navigation.html
+
+  - id: DS-CONS-005
+    area: consistency
+    severity: T2
+    title: "Same-role elements use the same text style"
+    why: "Card titles or section headings in different sizes/weights look unintentional."
+    check: dom
+    measure: "Among repeated siblings (cards, list items) compare the matching child in each (same structural path): flag if font-size, font-weight, color or line-height differ. Among all h2 on a page: flag if > 2 distinct (font-size, font-weight, color) styles."
+    false_positive_guard: "Featured/highlighted card with an explicit badge; responsive changes across viewports."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html
+
+  - id: DS-CONS-006
+    area: consistency
+    severity: T2
+    title: "Visual look is coherent (vision review)"
+    why: "Some oddities (mismatched illustration styles, misplaced elements) need a human-like eye."
+    check: vision
+    measure: "Send full-page screenshots at 375 and 1280 to a vision model with a fixed rubric: misaligned elements, overlapping elements, inconsistent icon styles (outline vs filled mixed), mismatched illustration styles, element that looks out of place, unbalanced whitespace, cramped areas. Require bounding box + reason per finding; only keep findings confirmed by a dom rule or with confidence >= 0.8."
+    false_positive_guard: "Do not flag subjective brand choices (colors, fonts) that are applied consistently."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  # ---------------------------------------------------------------- FORMS
+  - id: DS-FORM-001
+    area: forms
+    severity: T1
+    title: "Every input has a visible, persistent label"
+    why: "Placeholder-only fields lose their label once typing starts (WCAG 3.3.2 / 2.5.3)."
+    check: dom
+    measure: "For visible input (not hidden/submit/button/image), select, textarea and custom role=textbox/combobox: accessible name empty -> T1; accessible name comes only from placeholder or aria-label with no visible text label (label element, aria-labelledby target visible, or visible text within 48px above/left) -> T2; floating labels must remain visible after typing (fill 'abc' and re-check)."
+    false_positive_guard: "Single search inputs with a visible search button/icon and aria-label; inputs inside table cells labelled by column headers."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html
+
+  - id: DS-FORM-002
+    area: forms
+    severity: T1
+    title: "Error messages appear next to the field and say how to fix it"
+    why: "Errors far from the field or only at the top of the form are hard to act on."
+    check: dom
+    measure: "Submit the form empty (and with invalid email 'abc'). For each field that becomes aria-invalid or gets a new error-styled element: an error text element must be visible within 64px vertical distance of the field rect, be referenced via aria-describedby/aria-errormessage (T2 if not), and contain >= 3 words (not just 'Invalid' or 'Error'). Flag T1 if submit fails with no visible message at all."
+    false_positive_guard: "Forms that use an error summary at top PLUS inline messages pass; native browser validation bubbles count as messages (check validationMessage non-empty) but flag T2 for inconsistency."
+    source: https://design-system.service.gov.uk/components/error-message/
+
+  - id: DS-FORM-003
+    area: forms
+    severity: T2
+    title: "Required and optional fields are marked consistently"
+    why: "Users should know which fields they must fill before they submit."
+    check: dom
+    measure: "Fields with required or aria-required=true: if a form has >= 2 required and >= 1 optional field, each required field label must contain a marker (*, 'required') or each optional field 'optional'; mixed or missing markers -> flag. Asterisk markers must have an explanation text in the form ('* required') -> else T2. Field marked with * but not required (submission succeeds empty) -> flag."
+    false_positive_guard: "Forms where all fields are required and the form states 'All fields required'; single-field forms."
+    source: https://www.nngroup.com/articles/required-fields/
+
+  - id: DS-FORM-004
+    area: forms
+    severity: T2
+    title: "Inputs use the right type, inputmode and autocomplete"
+    why: "Correct types bring up the right mobile keyboard and enable autofill (WCAG 1.3.5)."
+    check: dom
+    measure: "Match label/name/id/placeholder text: email -> type=email; phone/mobile/tel -> type=tel; password -> type=password; zip/postal/card/cvv/otp/code/amount/quantity -> inputmode numeric or decimal; for personal data fields (name, email, tel, address, postal code, cc-number) autocomplete attribute missing or 'off' -> flag."
+    false_positive_guard: "Search fields, free-text fields that mention 'email' in a message, admin fields where autofill is undesired (report T2 only)."
+    source: https://baymard.com/blog/mobile-touch-keyboards
+
+  - id: DS-FORM-005
+    area: forms
+    severity: T2
+    title: "Input fields are sized to the expected content"
+    why: "A 600px ZIP field or a tiny email field misleads about the expected input."
+    check: dom
+    measure: "Flag text inputs for short values (zip, postal, cvv, otp, year, month, age) wider than 300px at 1280px; flag email/address/name inputs narrower than 15 x font-size; flag inputs taller than 64px or shorter than 32px (single line)."
+    false_positive_guard: "Mobile layouts where all inputs are full width by convention (375 px viewport)."
+    source: https://design-system.service.gov.uk/components/text-input/
+
+  - id: DS-FORM-006
+    area: forms
+    severity: T1
+    title: "Labels and inputs in a form are aligned consistently"
+    why: "Label positions or input widths that jump around make forms hard to scan."
+    check: dom
+    measure: "Within one form: label-to-input relation (above vs left) must be the same for >= 90% of fields; input left edges within the same column within 1px; input heights for same type within 2px; flag deviations."
+    false_positive_guard: "Checkbox/radio groups (label right of control), inline multi-field rows (city/state/zip)."
+    source: https://www.nngroup.com/articles/web-form-design/
+
+  - id: DS-FORM-007
+    area: forms
+    severity: T2
+    title: "Placeholder text is not used as instructions and looks distinct"
+    why: "Placeholders vanish on typing and are often mistaken for prefilled values."
+    check: dom
+    measure: "Placeholder with > 6 words, or containing format hints that are not repeated in visible label/hint text -> flag; ::placeholder color contrast vs input background < 3.0 (unreadable) or >= the input's value text color contrast (looks like a real value) -> flag."
+    false_positive_guard: "Search inputs with short placeholders like 'Search products'."
+    source: https://www.nngroup.com/articles/form-design-placeholders/
+
+  - id: DS-FORM-008
+    area: forms
+    severity: T1
+    title: "Mobile inputs do not trigger zoom and stay visible above the keyboard"
+    why: "iOS zooms into inputs with font-size < 16px, shifting the layout."
+    check: dom
+    measure: "At 375 px with iPhone emulation: input/select/textarea computed font-size < 16px -> flag T2. Focus each input with an emulated keyboard (shrink viewport height by 300px): input rect must be within the visible viewport after focus (scrollIntoView behaviour) and not covered by fixed footer -> else T1."
+    false_positive_guard: "Pages with viewport maximum-scale (already flagged by DS-RESP-004)."
+    source: https://baymard.com/blog/mobile-touch-keyboards
+
+  # ---------------------------------------------------------------- FOCUS / KEYBOARD / ACCESSIBILITY
+  - id: DS-FOCUS-001
+    area: accessibility
+    severity: T0
+    title: "Keyboard focus is always visible"
+    why: "WCAG 2.4.7: keyboard users must see where they are; outline:none without replacement fails."
+    check: dom
+    measure: "Press Tab repeatedly (up to 200 stops). For each document.activeElement: compare screenshot crop of element rect +4px before vs after focus; if pixel diff < 1% AND computed outline-style none/outline-width 0 AND box-shadow/border/background unchanged -> flag. T0 for primary navigation and form submit."
+    false_positive_guard: "Focus moved to a container whose child shows the indicator; elements with :focus-visible indicator only (use keyboard Tab, not mouse click, to trigger)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html
+
+  - id: DS-FOCUS-002
+    area: accessibility
+    severity: T1
+    title: "Focus order follows the visual order"
+    why: "Focus that jumps around the page disorients keyboard users (WCAG 2.4.3)."
+    check: dom
+    measure: "Record Tab sequence rects. Flag positive tabindex values (> 0). Flag backward jumps: next focused rect.top < previous rect.top - 100px when both are in the same column (horizontal overlap) and not entering a new landmark region. Flag focus landing on invisible elements (rect 0x0 or opacity 0 or offscreen) -> T1."
+    false_positive_guard: "Skip links that jump to main; multi-column layouts that read column by column; sticky header revisited after a modal close."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html
+
+  - id: DS-FOCUS-003
+    area: accessibility
+    severity: T0
+    title: "All interactive elements are reachable by keyboard"
+    why: "Clickable divs without tabindex lock out keyboard and switch users (WCAG 2.1.1)."
+    check: dom
+    measure: "Elements with cursor:pointer and a click listener (CDP DOMDebugger.getEventListeners) that are not natively focusable and lack tabindex >= 0 and role -> flag. Also flag if Tab sequence never reaches a visible control that is reachable by mouse. No keyboard trap: if Tab 30 times keeps focus inside a non-modal element -> T0."
+    false_positive_guard: "Event delegation on body/document (listener on ancestor of everything); elements duplicated by a focusable equivalent."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html
+
+  - id: DS-A11Y-001
+    area: accessibility
+    severity: T1
+    title: "Page passes axe-core critical and serious rules"
+    why: "Automated a11y engine catches ~30-50% of WCAG issues reliably with low false positives."
+    check: dom
+    measure: "Run @axe-core/playwright with tags wcag2a, wcag2aa, wcag21aa, wcag22aa. Map impact critical -> T0/T1, serious -> T1, moderate -> T2. Dedupe against DS-* rules by rule id (color-contrast, image-alt, label, button-name, link-name, target-size, meta-viewport)."
+    false_positive_guard: "Treat axe 'incomplete' results as review items for vision/human, not failures."
+    source: https://github.com/dequelabs/axe-core
+
+  - id: DS-A11Y-002
+    area: accessibility
+    severity: T2
+    title: "Page has landmarks and a skip link"
+    why: "Landmarks and skip links let keyboard and screen-reader users jump to content."
+    check: dom
+    measure: "Flag if no <main>/[role=main], or no <nav> when >= 5 links are in the header area; flag if the first Tab stop is not a skip link and the header contains >= 10 focusable elements before main."
+    false_positive_guard: "Single-purpose pages (login, 404) with few elements."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html
+
+  # ---------------------------------------------------------------- NAVIGATION
+  - id: DS-NAV-001
+    area: navigation
+    severity: T2
+    title: "Current page is indicated in navigation"
+    why: "'You are here' cues orient users (NN/g); aria-current makes it accessible."
+    check: dom
+    measure: "Find nav links whose href resolves to the current URL path. Flag if none has aria-current or a computed style that differs from its siblings (color, font-weight, border, background, text-decoration)."
+    false_positive_guard: "Pages not represented in the main nav (deep detail pages); breadcrumb-based orientation counts as passing."
+    source: https://www.nngroup.com/articles/navigation-you-are-here/
+
+  - id: DS-NAV-002
+    area: navigation
+    severity: T2
+    title: "Logo links to the home page"
+    why: "Users expect the top-left logo to return home."
+    check: dom
+    measure: "Find header img/svg whose alt/aria-label/src/class contains 'logo' or the brand name, or the first image in <header>. Flag if it is not inside an <a> whose href resolves to '/' or the site origin (or the app dashboard root for logged-in apps)."
+    false_positive_guard: "Checkout flows that intentionally remove exit links; the home page itself (link may be omitted)."
+    source: https://www.nngroup.com/articles/homepage-links/
+
+  - id: DS-NAV-003
+    area: navigation
+    severity: T2
+    title: "Footer exists with key utility links"
+    why: "Users scroll to the footer for contact, legal and help links."
+    check: dom
+    measure: "For marketing/content sites: <footer> or [role=contentinfo] missing -> flag; footer links missing all of (contact|support|help), (privacy), (terms) -> flag T2."
+    false_positive_guard: "Logged-in web apps with a sidebar shell, infinite-scroll feeds, single-screen tools."
+    source: https://www.nngroup.com/articles/footers/
+
+  - id: DS-NAV-004
+    area: navigation
+    severity: T1
+    title: "No broken internal links"
+    why: "Dead links (404) and empty href='#' links break navigation."
+    check: dom
+    measure: "Collect same-origin a[href] (dedupe). HEAD/GET each (limit 200): status >= 400 -> flag T1. Links with href '#', 'javascript:void(0)', or empty and no click handler/role=button -> flag T2."
+    false_positive_guard: "Logout links (do not visit), links requiring POST, rate-limited endpoints; anchors '#id' whose target exists."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  - id: DS-NAV-005
+    area: navigation
+    severity: T2
+    title: "Dropdown menus open and stay open long enough"
+    why: "Hover menus that close when moving the pointer diagonally frustrate users."
+    check: dom
+    measure: "For nav items with aria-haspopup/aria-expanded or a hidden submenu child: hover -> submenu visible within 500ms; move pointer diagonally to the 3rd submenu item over 300ms -> submenu still visible; keyboard Enter/Space opens it, Escape closes it and returns focus."
+    false_positive_guard: "Mega menus opened by click only (then test click instead of hover)."
+    source: https://www.nngroup.com/articles/timing-exposing-content/
+
+  # ---------------------------------------------------------------- MODALS / OVERLAYS
+  - id: DS-MODAL-001
+    area: navigation
+    severity: T1
+    title: "Modals have a visible close button and close on Escape"
+    why: "APG dialog pattern: users must be able to dismiss a dialog by button and Escape."
+    check: dom
+    measure: "For each open [role=dialog], [role=alertdialog], <dialog open> or a fixed element covering > 30% of viewport with a backdrop: require a visible button with accessible name matching close|dismiss|cancel|x|no thanks (T1 if missing); press Escape -> dialog hidden within 500ms (T1 if not, except alertdialog)."
+    false_positive_guard: "Blocking alertdialogs requiring an explicit choice (still need clear buttons); mandatory consent walls with accept/reject buttons."
+    source: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+
+  - id: DS-MODAL-002
+    area: navigation
+    severity: T1
+    title: "Modal traps focus and returns it on close"
+    why: "Focus escaping behind a modal or lost after closing disorients keyboard users."
+    check: dom
+    measure: "Open the dialog: activeElement must be inside it within 500ms; Tab 20 times -> activeElement always inside dialog; close -> activeElement equals the opener element (or a logical element) and not <body>."
+    false_positive_guard: "Non-modal dialogs (aria-modal false, no backdrop) such as toasts or chat widgets."
+    source: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+
+  - id: DS-MODAL-003
+    area: layout
+    severity: T2
+    title: "Background scroll is locked behind a modal and the modal fits the viewport"
+    why: "Page scrolling behind an open modal, or a modal taller than the screen with no scroll, looks broken."
+    check: dom
+    measure: "With modal open: wheel scroll 500px over the backdrop -> window.scrollY must not change (T2). Modal rect height > viewport height and modal (or its body) has no overflow-y auto/scroll -> T1 (actions unreachable). At 375 px modal rect width > viewport width -> T1."
+    false_positive_guard: "Full-page modals that are the scroll container; bottom sheets that intentionally allow scroll."
+    source: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+
+  - id: DS-MODAL-004
+    area: layout
+    severity: T1
+    title: "Popups, tooltips and dropdowns are not clipped or off-screen"
+    why: "Menus cut off by overflow:hidden parents or the viewport edge hide options."
+    check: dom
+    measure: "Open each menu/combobox/tooltip/popover; for the newly visible popup element: rect must be fully inside viewport (allow 1px) and not clipped by an ancestor with overflow hidden (compare rect with ancestor rect). Any option item whose rect is outside -> flag."
+    false_positive_guard: "Long listboxes that scroll internally (overflow-y auto on the listbox itself)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html
+
+  # ---------------------------------------------------------------- FEEDBACK
+  - id: DS-FEED-001
+    area: feedback
+    severity: T1
+    title: "Actions that take over 1 second show a loading indicator"
+    why: "NN/g: beyond 1 s users lose flow; beyond 10 s they need progress."
+    check: dom
+    measure: "Instrument clicks on buttons/submit: start a timer; if no DOM change (MutationObserver) or no visible change within 1000 ms while network requests are pending -> flag T1 (no feedback). If the request takes > 10 s, require a progress/percentage or step indicator -> else T2. Also check the button becomes disabled or shows aria-busy during submit (double-submit guard) -> T2."
+    false_positive_guard: "Fire-and-forget analytics requests; actions that navigate (page load indicator is browser's)."
+    source: https://www.nngroup.com/articles/response-times-3-important-limits/
+
+  - id: DS-FEED-002
+    area: feedback
+    severity: T1
+    title: "Success and failure of actions are confirmed"
+    why: "Visibility of system status: users must know whether the save/send worked."
+    check: both
+    measure: "After a form submit or state-changing button: within 3 s, expect one of: navigation, new visible text in a [role=status|alert] or aria-live region, toast, inline message, or changed button label. Flag if no change. Force a failure (route.abort or 500 on the XHR via page.route) and expect a visible error message; flag T1 if UI shows nothing or shows success."
+    false_positive_guard: "Optimistic UI where the change itself is the feedback (e.g. a toggle that switches state, item added to visible list)."
+    source: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+  - id: DS-FEED-003
+    area: feedback
+    severity: T2
+    title: "Status messages are announced (aria-live / role=status)"
+    why: "WCAG 4.1.3: toasts and inline confirmations must be exposed to assistive tech."
+    check: dom
+    measure: "Toasts/snackbars/alerts that appear after an action (new fixed element or new element with text in top/bottom 20% of viewport) must be inside role=status|alert|log or aria-live=polite|assertive container -> else flag."
+    false_positive_guard: "Messages that move focus to themselves (e.g. error summary that receives focus)."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html
+
+  - id: DS-FEED-004
+    area: feedback
+    severity: T1
+    title: "Loading spinners and skeletons do not persist"
+    why: "A spinner that never ends, or a skeleton left on screen, looks like a hang."
+    check: dom
+    measure: "10 s after network idle: visible elements with role=progressbar, aria-busy=true, class/attr matching spinner|loader|loading|skeleton|shimmer, or infinite CSS animations on small square elements -> flag T1."
+    false_positive_guard: "Background sync indicators intentionally persistent (with explicit label), live/streaming widgets."
+    source: https://www.nngroup.com/articles/progress-indicators/
+
+  - id: DS-FEED-005
+    area: feedback
+    severity: T2
+    title: "Toasts stay long enough and can be dismissed"
+    why: "Messages disappearing in under 3-5 s may be missed; WCAG 2.2.1 timing."
+    check: dom
+    measure: "Measure visible lifetime of a toast/snackbar: < 4000ms with > 5 words -> flag; toast containing an action button that disappears in < 10s -> flag; no close button and no pause on hover/focus -> T2."
+    false_positive_guard: "Simple confirmations of <= 3 words ('Saved', 'Copied')."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html
+
+  # ---------------------------------------------------------------- MOTION / STABILITY
+  - id: DS-MOTION-001
+    area: motion
+    severity: T1
+    title: "Layout does not shift unexpectedly (CLS <= 0.1)"
+    why: "Content jumping as it loads causes mis-clicks and looks broken."
+    check: dom
+    measure: "PerformanceObserver type layout-shift (buffered) excluding hadRecentInput: session-window CLS > 0.1 -> T2, > 0.25 -> T1. Report sources[].node for the biggest shifts. Also after first paint, record a rect of the primary CTA every 100ms for 5s; movement > 20px -> flag."
+    false_positive_guard: "Shifts caused by user interaction within 500ms (excluded by hadRecentInput), intentional animations (transform-based moves do not count)."
+    source: https://web.dev/articles/cls
+
+  - id: DS-MOTION-002
+    area: motion
+    severity: T2
+    title: "Motion respects prefers-reduced-motion"
+    why: "Large animations can trigger vestibular disorders (WCAG 2.3.3)."
+    check: dom
+    measure: "emulateMedia({reducedMotion:'reduce'}); document.getAnimations() filtered to running animations on elements > 100px or with transform/translate/scale over > 50px distance (or parallax scroll handlers) -> flag if still running."
+    false_positive_guard: "Spinners/progress indicators, opacity-only fades < 300ms, user-started video."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html
+
+  - id: DS-MOTION-003
+    area: motion
+    severity: T1
+    title: "Auto-moving content longer than 5 s can be paused"
+    why: "WCAG 2.2.2: carousels, marquees and autoplay video must have pause/stop."
+    check: dom
+    measure: "Detect content that changes on its own: carousel slides changing (aria-roledescription=carousel, or element transforms changing over 6 s without input), <video autoplay> visible > 5 s, marquee/scrolling tickers. Flag if no visible pause/stop control with accessible name matching pause|stop."
+    false_positive_guard: "Muted decorative background video < 5 s loop is still in scope but T2; progress spinners excluded."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html
+
+  - id: DS-MOTION-004
+    area: motion
+    severity: T0
+    title: "No flashing more than 3 times per second"
+    why: "WCAG 2.3.1: flashing content can trigger seizures."
+    check: vision
+    measure: "Record 3 s screen video (CDP Page.startScreencast at 30 fps); compute per-frame luminance of regions > 341x256 px (approx 10 degree field at 1024x768); count opposing changes of >= 10% relative luminance; > 3 flash pairs in any 1 s window -> flag."
+    false_positive_guard: "Small flashing areas below the threshold region size."
+    source: https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html
+
+  # ---------------------------------------------------------------- COOKIES / INTERSTITIALS
+  - id: DS-LAYOUT-001
+    area: layout
+    severity: T1
+    title: "Cookie banners and interstitials do not block content on load"
+    why: "Overlays that cover the main content without an easy dismiss hurt first impression and usability."
+    check: dom
+    measure: "On first load (fresh context): fixed overlays covering > 30% of viewport at 375 px -> require visible dismiss/accept/reject buttons each >= 24x24 px; reject must be as reachable as accept (same layer, not hidden behind 'settings'), flag T2 otherwise. Overlays covering > 50% with no close -> T1."
+    false_positive_guard: "Legally required age gates; login walls on logged-in apps."
+    source: https://developers.google.com/search/docs/appearance/avoid-intrusive-interstitials
+
+  - id: DS-LAYOUT-002
+    area: layout
+    severity: T1
+    title: "Elements are not collapsed to zero size while holding content"
+    why: "Containers with height 0 and visible overflow or hidden content signal a layout bug."
+    check: dom
+    measure: "Visible-styled elements (display != none) with rect height < 2 or width < 2 that contain text nodes or images with non-zero natural size, and whose overflow is hidden (content invisible) -> flag; if overflow visible and children overlap following siblings -> flag under DS-OVER-005."
+    false_positive_guard: "sr-only/visually-hidden utilities (1px clip), collapsed accordions with aria-expanded=false, closed <details>."
+    source: https://github.com/luptonm/boxy
+
+  - id: DS-LAYOUT-003
+    area: layout
+    severity: T2
+    title: "Visual hierarchy: one clear focal point per screen"
+    why: "When everything is bold and large, nothing stands out; users scan in F/Z patterns."
+    check: vision
+    measure: "Vision model on first-viewport screenshot answers: is there a single dominant heading or CTA; are there competing elements of equal visual weight. Dom prefilter: count elements in first viewport with font-size >= 1.5 x body size and font-weight >= 600; > 4 -> candidate."
+    false_positive_guard: "Dashboards with KPI tiles of equal weight by design."
+    source: https://www.nngroup.com/articles/visual-hierarchy-ux-definition/
+
+detectors:
+  - name: axe-core (@axe-core/playwright)
+    repo: https://github.com/dequelabs/axe-core
+    license: MPL-2.0
+    checks: "WCAG 2.0-2.2 A/AA rules on the live DOM: contrast (incl. computed bg), alt text, labels, button/link names, ARIA validity, landmarks, target-size, meta-viewport, focusable-order basics."
+    live_logged_in_playwright: "Yes. Inject into the existing authenticated page via AxeBuilder({page}); can scope with include/exclude."
+  - name: Lighthouse
+    repo: https://github.com/GoogleChrome/lighthouse
+    license: Apache-2.0
+    checks: "Performance (CLS, LCP), accessibility (axe subset), best practices (image-aspect-ratio, image-size-responsive, console errors), SEO (font-size legibility, viewport). Also tap-target audit in older versions."
+    live_logged_in_playwright: "Partly. Runs over CDP on the same Chromium (port via --remote-debugging-port, e.g. playwright-lighthouse); reuses cookies if run against the logged-in browser, but navigates itself, so SPA state after interactions is lost (use timespan/snapshot mode for current state)."
+  - name: Pa11y / pa11y-ci
+    repo: https://github.com/pa11y/pa11y
+    license: LGPL-3.0
+    checks: "Accessibility via HTML_CodeSniffer and/or axe runners against WCAG2A/AA; supports scripted actions before testing."
+    live_logged_in_playwright: "Not directly (drives its own Puppeteer browser); login via 'actions' or cookies headers. For a Playwright session use axe/HTML_CodeSniffer directly instead."
+  - name: HTML_CodeSniffer
+    repo: https://github.com/squizlabs/HTML_CodeSniffer
+    license: BSD-3-Clause
+    checks: "Client-side WCAG 2.1 / Section 508 sniffs including contrast and structure."
+    live_logged_in_playwright: "Yes. Inject the script with page.addScriptTag and run HTMLCS.process on the current DOM."
+  - name: IBM Equal Access Accessibility Checker
+    repo: https://github.com/IBMa/equal-access
+    license: Apache-2.0
+    checks: "WCAG 2.2 + IBM rules on rendered DOM; npm accessibility-checker integrates with Playwright."
+    live_logged_in_playwright: "Yes. getCompliance(page, label) works on the current Playwright page."
+  - name: Siteimprove Alfa
+    repo: https://github.com/Siteimprove/alfa
+    license: MIT
+    checks: "ACT-rules based accessibility conformance on a serialized rendered page (contrast, names, focus, reflow-related rules)."
+    live_logged_in_playwright: "Yes. @siteimprove/alfa-playwright converts the current page handle to an Alfa document."
+  - name: Impeccable detector (npx impeccable detect)
+    repo: https://github.com/pbakaus/impeccable
+    license: Apache-2.0
+    checks: "~60 deterministic design-quality and AI-slop rules (overused fonts, cramped padding, skipped headings, low contrast, tiny text, etc.); --list-rules prints the set; --json output; exit code 2 on findings."
+    live_logged_in_playwright: "Partly. Scans source files or a URL using installed Chrome/Edge in its own browser, so a logged-in page needs a reachable URL with session (e.g. localhost proxy) and is not attached to the Playwright context; also a Chrome extension overlay for manual use."
+  - name: BackstopJS
+    repo: https://github.com/garris/BackstopJS
+    license: MIT
+    checks: "Screenshot visual regression against a baseline (pixel diff with misMatchThreshold) per selector and viewport."
+    live_logged_in_playwright: "Yes with Playwright engine and onBefore/onReady scripts that log in or load a storage state; it launches its own browser per scenario."
+  - name: Playwright visual comparisons (toHaveScreenshot)
+    repo: https://github.com/microsoft/playwright
+    license: Apache-2.0
+    checks: "Pixel-diff baseline screenshots per element/page with maxDiffPixelRatio, masks for dynamic regions; ARIA snapshot assertions (toMatchAriaSnapshot) for structure."
+    live_logged_in_playwright: "Yes, native; runs inside the logged-in context (storageState)."
+  - name: Galen Framework
+    repo: https://github.com/galenframework/galen
+    license: Apache-2.0
+    checks: "Layout spec language: relative positions (above, left-of, aligned horizontally/vertically, inside, near), sizes and visibility per device/viewport; image comparison."
+    live_logged_in_playwright: "No. Selenium/WebDriver only and inactive since about 2022; reuse its spec ideas in our own geometry checks."
+  - name: Boxy (boxy-layout)
+    repo: https://github.com/luptonm/boxy
+    license: MIT
+    checks: "DOM-geometry lint without baseline: clipping by overflow parents, positioned-element overlap, collapsed elements with content, off-screen elements; baseline regression on spacing/position/size/visibility/computed CSS."
+    live_logged_in_playwright: "Yes, built as a Playwright test hook; very new and unproven (0 stars), use as reference."
+  - name: reg-suit
+    repo: https://github.com/reg-viz/reg-suit
+    license: MIT
+    checks: "Visual regression comparison and reporting of screenshot sets (bring your own screenshots), stores baselines in S3/GCS."
+    live_logged_in_playwright: "Yes indirectly: compares screenshots that our Playwright run produces."
+  - name: Lost Pixel
+    repo: https://github.com/lost-pixel/lost-pixel
+    license: MIT
+    checks: "Visual regression for pages/Storybook/Ladle with pixel diff and thresholds."
+    live_logged_in_playwright: "Partly. Page mode uses its own Playwright browser; custom shots mode accepts screenshots from our logged-in run."
+  - name: pixelmatch / odiff
+    repo: https://github.com/mapbox/pixelmatch
+    license: ISC (pixelmatch); MIT (odiff, https://github.com/dmtrKovalenko/odiff)
+    checks: "Low-level anti-aliasing-aware pixel diff for screenshot comparisons, focus-indicator before/after diffs (DS-FOCUS-001, DS-CONTRAST-003)."
+    live_logged_in_playwright: "Yes, operates on screenshots taken from any page."
+  - name: web-vitals
+    repo: https://github.com/GoogleChrome/web-vitals
+    license: Apache-2.0
+    checks: "CLS, LCP, INP measured in the page with attribution (which element shifted)."
+    live_logged_in_playwright: "Yes. Inject with addInitScript into the logged-in context."
+  - name: Project Wallace css-analyzer
+    repo: https://github.com/projectwallace/css-analyzer
+    license: MIT
+    checks: "Counts unique font families, font sizes, colors, spacing values, z-index values in CSS (design-token sprawl)."
+    live_logged_in_playwright: "Yes for CSS text pulled from the page (document.styleSheets / CDP CSS.getStyleSheetText); measures declared CSS, not rendered usage."
